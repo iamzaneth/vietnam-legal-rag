@@ -83,24 +83,3 @@ PYTHONPATH=src .venv/bin/python -m unittest discover -s tests/unit -v
 
 Kiểm thử bao gồm sitemap, tệp tải lỗi, loại bỏ CSS/JavaScript nhưng giữ cấu trúc,
 và việc cập nhật kết quả/dọn dữ liệu tạm khi có lỗi.
-
-
-## Đối chiếu trực tiếp với nguồn
-
-```bash
-.venv/bin/python scripts/verify_vbpl.py
-```
-
-Lệnh mở lại từng văn bản, cuộn hết toàn văn và đối chiếu HTML đã lưu với DOM
-nguồn: chữ (chuẩn hóa khoảng trắng), thứ tự đoạn, từng ô bảng và ô gộp,
-danh sách, chỉ số trên/dưới và liên kết tham chiếu. TXT được so sánh với toàn
-văn hiển thị sau cùng phép chuẩn hóa mà crawler sử dụng. Mọi tệp đính kèm
-được tải lại vào thư mục tạm để so sánh tên, kích thước và SHA-256.
-
-Kết quả nằm trong `evaluation/results/vbpl-verification.json`; từng manifest
-cũng ghi lần xác minh thành công gần nhất. Việc đối chiếu chỉ xác nhận nội dung
-nguồn tại thời điểm kiểm tra, không khẳng định HTML sạch giống từng byte với
-HTML giao diện có CSS/JavaScript. Nếu nguồn thay đổi, lệnh báo sai khác.
-
-`--repair-links` chỉ khôi phục liên kết tham chiếu đã bị bỏ ở phiên bản crawler
-cũ khi toàn bộ chữ và cấu trúc bảng vẫn khớp nguồn. Các sai khác khác sẽ báo lỗi.
