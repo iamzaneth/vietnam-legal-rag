@@ -3,7 +3,12 @@
 ## Pipeline xây dựng kho tri thức
 
 1. `ingestion`: thu thập tài liệu, ghi URL nguồn, thời điểm lấy dữ liệu và mã kiểm tra nội dung.
-2. `preprocessing`: đọc PDF/HTML/DOCX, xử lý OCR khi cần, chuẩn hóa và nhận diện cấu trúc văn bản.
+   Với vbpl.vn, mặc định lưu toàn văn HTML/TXT, các tab Thuộc tính/Lược đồ/Lịch sử
+   dạng HTML/TXT/JSON và manifest; tệp đính kèm chỉ tải
+   khi bật `--download-attachments`. Dữ liệu được phân nhóm theo breadcrumb nguồn
+   tại `data/raw/vbpl/trung_uong/<id>/` hoặc `data/raw/vbpl/dia_phuong/<id>/`.
+2. `preprocessing`: đọc HTML/TXT; đọc thêm PDF/DOCX và xử lý OCR khi có tệp đính kèm,
+   chuẩn hóa và nhận diện cấu trúc văn bản.
 3. `preprocessing`: tạo đoạn trích theo điều/khoản/điểm khi có thể; giữ liên kết về tài liệu gốc.
 4. `indexing`: tạo embedding và chỉ mục, ghi phiên bản mô hình cùng cấu hình xử lý.
 

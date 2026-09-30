@@ -14,7 +14,7 @@ dependencies = []
 crawl = ["playwright>=1.51,<2"]
 
 [project.scripts]
-vbpl-crawl-one = "vietnam_legal_rag.ingestion.vbpl:main"
+vbpl-crawl-one = "vietnam_legal_rag.ingestion.crawl_legal_documents:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -44,6 +44,25 @@ def is_document_url(url: str) -> bool:
     return parsed.scheme == "https" and parsed.hostname == "vbpl.vn" and parsed.path.startswith(DOCUMENT_PATH)
 
 
+
+# Use the document breadcrumb, never navigation menus or mentions in its text.
+DOCUMENT_SCOPES = {
+    "/van-ban/trung-uong": "trung_uong",
+    "/van-ban/dia-phuong": "dia_phuong",
+}
+
+
+def classify_document_scope(breadcrumb_urls: list[str]) -> str:
+    scopes = {
+        DOCUMENT_SCOPES[parsed.path.rstrip("/")]
+        for url in breadcrumb_urls
+        if (parsed := urlparse(urljoin("https://vbpl.vn/", url))).hostname == "vbpl.vn"
+        and parsed.path.rstrip("/") in DOCUMENT_SCOPES
+    }
+    if len(scopes) != 1:
+        raise CrawlError("Không xác định được duy nhất nhóm trung ương/địa phương từ breadcrumb")
+    return scopes.pop()
+
 def safe_filename(name: str) -> str:
     name = name.replace("\\", "/").rsplit("/", 1)[-1]
     return re.sub(r'[\x00-\x1f<>:"|?*]', "_", name).strip(". ") or "attachment.bin"
@@ -229,11 +248,110 @@ def publish_capture(staged: Path, destination: Path) -> None:
         raise
 
 
-def capture_document(url: str, run_dir: Path, manifest: dict, channel: str, headed: bool, timeout_ms: int) -> None:
+
+METADATA_TABS = (("properties", "Thuộc tính"), ("relations", "Lược đồ"), ("history", "Lịch sử"))
+
+# Retain source labels and values instead of inferring dates or legal status.
+TAB_DATA_SCRIPT = r"""panel => {
+    const text = e => e ? e.innerText.trim() : '';
+    const link = a => a && a.hasAttribute('href') && /^https?:/.test(a.href) ? a.href : null;
+    return {
+        fields: Array.from(panel.querySelectorAll('.ant-descriptions-item-container')).map(e => ({
+            label: text(e.querySelector('.ant-descriptions-item-label')),
+            value: text(e.querySelector('.ant-descriptions-item-content'))
+        })),
+        groups: Array.from(panel.querySelectorAll('.ant-card-body')).map(e => ({
+            label: text(e.querySelector(':scope > span')),
+            items: Array.from(e.querySelectorAll('li')).filter(li => text(li) !== '--').map(li => ({
+                title: text(li.querySelector('a')), text: text(li), url: link(li.querySelector('a'))
+            }))
+        })),
+        columns: Array.from(panel.querySelectorAll('thead th')).map(text),
+        rows: Array.from(panel.querySelectorAll('tbody tr.ant-table-row')).map(row => ({
+            source_key: row.getAttribute('data-row-key'),
+            cells: Array.from(row.querySelectorAll('td')).map(text),
+            links: Array.from(row.querySelectorAll('a')).map(a => ({text: text(a), url: link(a)}))
+        })),
+        empty: !!panel.querySelector('.ant-empty'),
+        links: Array.from(panel.querySelectorAll('a')).map(a => ({text: text(a), url: link(a)}))
+    };
+}"""
+
+
+def validate_tab_data(key: str, data: dict) -> None:
+    if key == "properties" and not data["fields"]:
+        raise CrawlError("Tab Thuộc tính thiếu các trường dữ liệu")
+    if key == "relations":
+        if not data["groups"] and not data["empty"]:
+            raise CrawlError("Không xác nhận được dữ liệu Lược đồ")
+        for group in data["groups"]:
+            count = re.search(r"\((\d+)\)\s*$", group["label"])
+            if not count or int(count[1]) != len(group["items"]):
+                raise CrawlError(f"Lược đồ chưa đủ mục: {group['label']}")
+    if key == "history" and not data["rows"] and not data["empty"]:
+        raise CrawlError("Không xác nhận được dữ liệu Lịch sử")
+
+
+def capture_metadata_tabs(page, run_dir: Path, manifest: dict, pending: set, timeout_ms: int) -> None:
+    """Save each metadata tab, including all history pages, before publishing."""
+    manifest["tabs"] = {"content": {"label": "Nội dung", "status": "complete",
+                                    "files": ["content.html", "content.txt"]}}
+    for key, label in METADATA_TABS:
+        tab = page.get_by_role("tab", name=label, exact=True)
+        tab.wait_for(state="visible")
+        tab.click()
+        panel = page.locator('[role="tabpanel"]:visible')
+        panel.wait_for(state="visible")
+        pages = []
+        seen = set()
+        while True:
+            text = clean_content_text(wait_for_panel(page, panel, pending, timeout_ms))
+            data = panel.evaluate(TAB_DATA_SCRIPT)
+            validate_tab_data(key, data)
+            signature = json.dumps(data, ensure_ascii=False, sort_keys=True)
+            if signature in seen:
+                raise CrawlError(f"Phân trang {label} không tiến tới trang tiếp theo")
+            seen.add(signature)
+            pages.append({"text": text, "html": panel.inner_html(), "data": data})
+            next_page = panel.locator('.ant-pagination-next:not(.ant-pagination-disabled)')
+            if not next_page.count():
+                break
+            previous_text = panel.inner_text().strip()
+            next_page.click()
+            # Wait for the actual rows to change, not just a spinner to disappear.
+            deadline = time.monotonic() + timeout_ms / 1000
+            while panel.inner_text().strip() == previous_text:
+                if time.monotonic() >= deadline:
+                    raise CrawlError(f"Hết thời gian chờ trang tiếp theo của {label}")
+                page.wait_for_timeout(250)
+        paths = []
+        html = "\n".join(f"<section><h2>{escape(label)} — {i}</h2>{item['html']}</section>"
+                         for i, item in enumerate(pages, 1))
+        for suffix, value in (("html", clean_content_html(html.replace("</span>", "</span> "),
+                                                        f"{manifest['title']} — {label}",
+                                                        manifest["source_url"])),
+                              ("txt", "\n\n".join(item["text"] for item in pages))):
+            path = run_dir / f"{key}.{suffix}"
+            path.write_text(value, encoding="utf-8")
+            paths.append(path.name)
+            manifest["files"].append(file_record(path, run_dir))
+        path = run_dir / f"{key}.json"
+        write_json(path, {"source_url": manifest["source_url"], "tab": label,
+                          "retrieved_at": datetime.now(timezone.utc).isoformat(),
+                          "pages": [item["data"] for item in pages]})
+        paths.append(path.name)
+        manifest["files"].append(file_record(path, run_dir))
+        manifest["tabs"][key] = {"label": label, "status": "complete", "pages": len(pages), "files": paths}
+        print(f"  Tab: {label} ({len(pages)} trang)", flush=True)
+
+def capture_document(url: str, run_dir: Path, manifest: dict, channel: str, headed: bool, timeout_ms: int,
+                     download_attachments: bool = False) -> None:
     from playwright.sync_api import sync_playwright
 
     pending = set()
-    manifest.update({"attachments": [], "files": []})
+    manifest.update({"attachments": [], "files": [],
+                     "attachment_policy": "download" if download_attachments else "skip",
+                     "expected_attachments": None})
 
     def requested(request):
         host = urlparse(request.url).hostname or ""
@@ -247,7 +365,7 @@ def capture_document(url: str, run_dir: Path, manifest: dict, channel: str, head
         browser = playwright.chromium.launch(channel=channel or None, headless=not headed)
         try:
             context = browser.new_context(locale="vi-VN", user_agent=USER_AGENT,
-                                          viewport={"width": 1440, "height": 1000}, accept_downloads=True)
+                                          viewport={"width": 1440, "height": 1000}, accept_downloads=download_attachments)
             page = context.new_page()
             page.set_default_timeout(timeout_ms)
             page.on("request", requested)
@@ -270,6 +388,11 @@ def capture_document(url: str, run_dir: Path, manifest: dict, channel: str, head
             reject = page.get_by_role("button", name="Từ chối", exact=True).filter(visible=True)
             if reject.count():
                 reject.last.click()
+            breadcrumb_urls = page.locator(".ant-breadcrumb a[href]").evaluate_all(
+                "elements => elements.map(element => element.href)")
+            manifest.update({"document_scope": classify_document_scope(breadcrumb_urls),
+                             "classification": {"method": "source_breadcrumb",
+                                                "breadcrumb_urls": breadcrumb_urls}})
             manifest.update({"title": page.title(), "source_url": url,
                              "full_text_characters": len(full_text.strip())})
             html_file = run_dir / "content.html"
@@ -278,51 +401,60 @@ def capture_document(url: str, run_dir: Path, manifest: dict, channel: str, head
             text_file.write_text(full_text, encoding="utf-8")
             manifest["files"] = [file_record(html_file, run_dir), file_record(text_file, run_dir)]
 
-            page.get_by_role("tab", name="Tải về", exact=True).click()
-            panel = page.locator('[role="tabpanel"]:visible')
-            panel.wait_for(state="visible")
-            panel_text = wait_for_panel(page, panel, pending, timeout_ms)
-            buttons = panel.locator("button")
-            count = buttons.count()
-            manifest["expected_attachments"] = count
-            if count == 0 and not re.search(r"Không có|Chưa có|No data", panel_text, re.I):
-                raise CrawlError("Không xác nhận được danh sách tệp đính kèm")
-            if count:
-                (run_dir / "attachments").mkdir()
-            for i in range(count):
-                with page.expect_download(timeout=timeout_ms) as event:
-                    buttons.nth(i).click()
-                download = event.value
-                name = safe_filename(download.suggested_filename)
-                target = run_dir / "attachments" / name
-                suffix = 2
-                while target.exists():
-                    target = run_dir / "attachments" / f"{suffix}-{name}"
-                    suffix += 1
-                download.save_as(target)
-                if download.failure():
-                    raise CrawlError(f"Không tải được {name}: {download.failure()}")
-                validate_attachment(target)
-                manifest["attachments"].append(file_record(
-                    target, run_dir, original_filename=download.suggested_filename))
-                print(f"  Tệp: {name} ({target.stat().st_size:,} bytes)", flush=True)
-                page.wait_for_timeout(500)
-            if len(manifest["attachments"]) != count:
-                raise CrawlError("Chưa tải đủ tệp đính kèm")
+            capture_metadata_tabs(page, run_dir, manifest, pending, timeout_ms)
+
+            if download_attachments:
+                page.get_by_role("tab", name="Tải về", exact=True).click()
+                panel = page.locator('[role="tabpanel"]:visible')
+                panel.wait_for(state="visible")
+                panel_text = wait_for_panel(page, panel, pending, timeout_ms)
+                buttons = panel.locator("button")
+                count = buttons.count()
+                manifest["expected_attachments"] = count
+                if count == 0 and not re.search(r"Không có|Chưa có|No data", panel_text, re.I):
+                    raise CrawlError("Không xác nhận được danh sách tệp đính kèm")
+                if count:
+                    (run_dir / "attachments").mkdir()
+                for i in range(count):
+                    with page.expect_download(timeout=timeout_ms) as event:
+                        buttons.nth(i).click()
+                    download = event.value
+                    name = safe_filename(download.suggested_filename)
+                    target = run_dir / "attachments" / name
+                    suffix = 2
+                    while target.exists():
+                        target = run_dir / "attachments" / f"{suffix}-{name}"
+                        suffix += 1
+                    download.save_as(target)
+                    if download.failure():
+                        raise CrawlError(f"Không tải được {name}: {download.failure()}")
+                    validate_attachment(target)
+                    manifest["attachments"].append(file_record(
+                        target, run_dir, original_filename=download.suggested_filename))
+                    print(f"  Tệp: {name} ({target.stat().st_size:,} bytes)", flush=True)
+                    page.wait_for_timeout(500)
+                if len(manifest["attachments"]) != count:
+                    raise CrawlError("Chưa tải đủ tệp đính kèm")
             content_tab.click()
             wait_for_panel(page, page.locator('[role="tabpanel"]:visible'), pending, timeout_ms)
             if clean_content_text(preview.inner_text()) != full_text:
                 raise CrawlError("Toàn văn thay đổi trong lần thu thập; cần chạy lại")
-            manifest["validation"] = {"content_stable": True, "all_listed_attachments_downloaded": True}
+            manifest["validation"] = {
+                "content_stable": True,
+                "metadata_tabs_complete": True,
+                "all_listed_attachments_downloaded": True if download_attachments else None,
+            }
         finally:
             browser.close()
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Crawl một văn bản vbpl.vn: nội dung HTML/TXT sạch và tệp đính kèm")
+    parser = argparse.ArgumentParser(description="Crawl một văn bản vbpl.vn: toàn văn, thuộc tính, lược đồ, lịch sử; mặc định không tải tệp đính kèm")
     parser.add_argument("--output", type=Path, default=Path("data/raw/vbpl"))
     parser.add_argument("--url", help="URL có trong sitemap (mặc định chọn văn bản đầu tiên)")
     parser.add_argument("--channel", default="chrome", help="chrome (đã cài) hoặc chromium (Playwright)")
+    parser.add_argument("--download-attachments", action="store_true",
+                        help="Tải thêm tệp đính kèm (mặc định bỏ qua để tiết kiệm dung lượng)")
     parser.add_argument("--headed", action="store_true", help="Hiển thị cửa sổ trình duyệt")
     parser.add_argument("--timeout", type=int, default=60, help="Thời gian chờ mỗi bước, tính bằng giây")
     args = parser.parse_args(argv)
@@ -339,14 +471,19 @@ def main(argv: list[str] | None = None) -> int:
         manifest = {"source": "vbpl.vn", "document_id": f"vbpl:{identifier}",
                     "retrieved_at": datetime.now(timezone.utc).isoformat(), "discovery": discovery}
         args.output.mkdir(parents=True, exist_ok=True)
-        destination = args.output / identifier
         print(f"Văn bản duy nhất: {url}", flush=True)
         # Failed attempts leave no partial document folder. A previous successful
         # result remains intact until the replacement is fully downloaded.
         with tempfile.TemporaryDirectory(prefix=".crawl-", dir=args.output) as temporary:
             staged = Path(temporary) / "document"
             staged.mkdir()
-            capture_document(url, staged, manifest, args.channel, args.headed, args.timeout * 1000)
+            capture_document(url, staged, manifest, args.channel, args.headed, args.timeout * 1000,
+                             args.download_attachments)
+            scope = manifest.get("document_scope")
+            if scope not in DOCUMENT_SCOPES.values():
+                raise CrawlError("Kết quả crawl thiếu nhóm trung ương/địa phương hợp lệ")
+            destination = args.output / scope / identifier
+            destination.parent.mkdir(parents=True, exist_ok=True)
             manifest.update({"status": "complete", "completed_at": datetime.now(timezone.utc).isoformat()})
             write_json(staged / "manifest.json", manifest)
             publish_capture(staged, destination)

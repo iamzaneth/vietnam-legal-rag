@@ -33,6 +33,13 @@ cho phép bổ sung metadata ở cấp điều/khoản khi triển khai schema.
 Không gộp đoạn từ các văn bản hoặc phiên bản khác nhau thành cùng một đoạn.
 Giữ nguyên dấu tiếng Việt trong nội dung; dùng tên tệp đơn giản, nhất quán.
 
+## Phân nhóm dữ liệu crawl vbpl.vn
+
+Crawler hiện ghi `document_scope` là `trung_uong` hoặc `dia_phuong` trong manifest.
+Trường `classification` lưu phương thức `source_breadcrumb` và các URL breadcrumb.
+Mỗi văn bản nằm tại `data/raw/vbpl/<document_scope>/<id>/`; đường dẫn tệp trong
+manifest vẫn tương đối so với thư mục văn bản. Nhóm chưa xác định sẽ báo lỗi.
+
 ## Lưu trữ và Git
 
 Dữ liệu trong `raw/`, `interim/`, `processed/`, chỉ mục, cache và kết quả đánh giá

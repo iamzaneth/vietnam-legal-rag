@@ -75,17 +75,21 @@ khi triển khai cấu hình ứng dụng.
 ## Nguồn dữ liệu đầu tiên: vbpl.vn
 
 Crawler đọc [sitemap](https://vbpl.vn/sitemap.xml), chọn đúng một văn bản,
-chạy JavaScript bằng Chrome, trích toàn văn thành HTML/TXT sạch và tải tệp đính kèm.
+chạy JavaScript bằng Chrome, trích toàn văn thành HTML/TXT sạch, lưu thêm các tab Thuộc tính, Lược đồ và Lịch sử
+dưới dạng HTML/TXT/JSON cùng metadata. Mặc định không tải tệp đính kèm.
 
 ```bash
 uv pip install --python .venv/bin/python -e '.[crawl]'
 .venv/bin/vbpl-crawl-one
 ```
 
-Kết quả nằm trong `data/raw/vbpl/<mã văn bản>/`. Mở `content.html` để đọc
+Module crawler: `src/vietnam_legal_rag/ingestion/crawl_legal_documents.py`.
+Crawler tự phân loại theo breadcrumb của nguồn thành `trung_uong` và `dia_phuong`.
+Kết quả nằm trong `data/raw/vbpl/<trung_uong|dia_phuong>/<mã văn bản>/`. Mở `content.html` để đọc
 toàn văn offline hoặc `content.txt` để xem văn bản thuần. HTML đã bỏ CSS và
 JavaScript. `manifest.json` ghi nguồn và danh sách tệp; chạy lại cùng văn bản
 sẽ cập nhật thư mục hiện có sau khi tải thành công.
+Để tải thêm PDF/DOCX, chạy `vbpl-crawl-one --download-attachments`.
 Xem [hướng dẫn crawler](docs/vbpl-crawl.md) để cài Chromium, chọn URL và kiểm thử.
 
 ## Quy ước làm việc
