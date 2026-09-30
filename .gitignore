@@ -1,0 +1,43 @@
+# Local settings and secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Generated data and local storage
+/data/raw/*
+!/data/raw/.gitkeep
+/data/interim/*
+!/data/interim/.gitkeep
+/data/processed/*
+!/data/processed/.gitkeep
+/storage/indexes/*
+!/storage/indexes/.gitkeep
+/storage/cache/*
+!/storage/cache/.gitkeep
+/evaluation/results/*
+!/evaluation/results/.gitkeep
+
+# Notebooks, frontend and runtime files
+.ipynb_checkpoints/
+node_modules/
+.next/
+.vite/
+coverage/
+*.log
+.DS_Store
+Thumbs.db

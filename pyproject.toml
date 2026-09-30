@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vietnam-legal-rag"
+version = "0.1.0"
+description = "Chatbot RAG tra cứu pháp luật Việt Nam"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+crawl = ["playwright>=1.51,<2"]
+
+[project.scripts]
+vbpl-crawl-one = "vietnam_legal_rag.ingestion.vbpl:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
