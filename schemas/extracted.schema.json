@@ -1,0 +1,1864 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vietnam-legal-rag.local/extracted/2.3.2",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "parser_version",
+    "document_id",
+    "tab",
+    "source_url",
+    "source_ref",
+    "issues"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "2.3.2"
+    },
+    "parser_version": {
+      "const": "2.3.2"
+    },
+    "document_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tab": {
+      "type": "string"
+    },
+    "source_url": {
+      "type": "string"
+    },
+    "source_ref": {
+      "$ref": "#/$defs/fileSource"
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/issue"
+      }
+    },
+    "content": {
+      "$ref": "#/$defs/tree"
+    },
+    "context": {
+      "$ref": "#/$defs/tree"
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/field"
+      }
+    },
+    "context_fields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/field"
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/event"
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/group"
+      }
+    },
+    "status": {
+      "enum": [
+        "success",
+        "success_with_warnings",
+        "failed"
+      ]
+    },
+    "issue_summary": {
+      "$ref": "#/$defs/summary"
+    },
+    "pages": false,
+    "blocks": false,
+    "structure": false,
+    "links": false,
+    "text": false,
+    "items": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {
+            "$ref": "#/$defs/document"
+          },
+          {
+            "type": "object",
+            "required": [
+              "resolved_document_id",
+              "order",
+              "source_ref",
+              "resolution_status"
+            ],
+            "properties": {
+              "resolved_document_id": {
+                "type": "null"
+              },
+              "order": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "source_ref": {
+                "$ref": "#/$defs/unitSource"
+              },
+              "text": {
+                "not": {
+                  "enum": [
+                    "--",
+                    "—",
+                    "-"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "order",
+          "source_ref"
+        ],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "source_ref": {
+            "$ref": "#/$defs/unitSource"
+          }
+        }
+      }
+    },
+    "ignored_elements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "reason",
+          "order",
+          "source_ref"
+        ],
+        "properties": {
+          "reason": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "source_ref": {
+            "$ref": "#/$defs/unitSource"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "document": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/legalDocument"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "hierarchy_validation": {
+      "type": "object",
+      "required": [
+        "document_sections",
+        "legal_hierarchy",
+        "annex_hierarchy",
+        "tables",
+        "unresolved",
+        "max_depth",
+        "schema_valid",
+        "order_valid",
+        "parent_child_valid",
+        "semantic_complete",
+        "status"
+      ],
+      "properties": {
+        "document_sections": {
+          "type": "object",
+          "required": [
+            "header",
+            "title_block",
+            "preamble",
+            "enacting_formula",
+            "body",
+            "closing",
+            "annexes"
+          ],
+          "properties": {
+            "header": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "title_block": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "preamble": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "enacting_formula": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "body": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "closing": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "annexes": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "legal_hierarchy": {
+          "type": "object",
+          "required": [
+            "parts",
+            "chapters",
+            "sections",
+            "subsections",
+            "articles",
+            "clauses",
+            "points"
+          ],
+          "properties": {
+            "parts": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "chapters": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "sections": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "subsections": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "articles": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "clauses": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "points": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "annex_hierarchy": {
+          "type": "object",
+          "required": [
+            "annexes",
+            "numbered_sections",
+            "numbered_items",
+            "max_depth"
+          ],
+          "properties": {
+            "annexes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "numbered_sections": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "numbered_items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "max_depth": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "tables": {
+          "type": "object",
+          "required": [
+            "layout",
+            "data",
+            "matrix",
+            "form",
+            "key_value",
+            "annex_form",
+            "ambiguous"
+          ],
+          "properties": {
+            "layout": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "data": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "matrix": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "form": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "key_value": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "annex_form": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "ambiguous": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "unresolved": {
+          "type": "object",
+          "required": [
+            "numbered_candidates",
+            "orphan_nodes",
+            "ambiguous_tables"
+          ],
+          "properties": {
+            "numbered_candidates": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "orphan_nodes": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "ambiguous_tables": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "max_depth": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "schema_valid": {
+          "type": "boolean"
+        },
+        "order_valid": {
+          "type": "boolean"
+        },
+        "parent_child_valid": {
+          "type": "boolean"
+        },
+        "semantic_complete": {
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "valid",
+            "valid_with_warnings",
+            "invalid"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "form_validation": {
+      "type": "object",
+      "required": [
+        "forms",
+        "fields",
+        "subfields",
+        "placeholders",
+        "footnotes",
+        "placeholder_references",
+        "unresolved_numbered_form_items",
+        "split_form_candidates",
+        "inconsistent_footnote_sequences",
+        "bibliography_fields_misclassified",
+        "structured_table_cell_lists",
+        "generic_structured_paragraphs",
+        "unexplained_structured_paragraphs",
+        "semantic_complete",
+        "unexplained_form_label_paragraphs",
+        "suspicious_value_text",
+        "semantic_empty_string_fields",
+        "physical_empty_cells",
+        "form_nodes_missing_field_kind",
+        "form_nodes_missing_field_evidence"
+      ],
+      "properties": {
+        "forms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fields": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "subfields": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "placeholders": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "footnotes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "placeholder_references": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unresolved_numbered_form_items": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "split_form_candidates": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "inconsistent_footnote_sequences": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "bibliography_fields_misclassified": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "structured_table_cell_lists": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "generic_structured_paragraphs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unexplained_structured_paragraphs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "semantic_complete": {
+          "type": "boolean"
+        },
+        "unexplained_form_label_paragraphs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "suspicious_value_text": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "semantic_empty_string_fields": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "physical_empty_cells": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "form_nodes_missing_field_kind": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "form_nodes_missing_field_evidence": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "structured_paragraph_audit": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "order",
+          "source_ref",
+          "text",
+          "scope",
+          "reason",
+          "justified",
+          "neighboring_types"
+        ],
+        "properties": {
+          "source_ref": {
+            "$ref": "#/$defs/unitSource"
+          },
+          "justified": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "required": [
+        "meaningful_text_preserved",
+        "deterministic",
+        "schema_valid",
+        "semantic_complete"
+      ],
+      "properties": {
+        "meaningful_text_preserved": {
+          "type": "boolean"
+        },
+        "deterministic": {
+          "type": "boolean"
+        },
+        "schema_valid": {
+          "type": "boolean"
+        },
+        "semantic_complete": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "diagnostic_info_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "warning_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "error_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "fatal_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "stage": {
+      "const": "extracted"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/outputFile"
+      }
+    },
+    "source_files": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/fileSource"
+      }
+    },
+    "tabs": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "label",
+          "status",
+          "source_ref",
+          "output",
+          "issue_summary",
+          "issue_refs",
+          "validation"
+        ],
+        "properties": {
+          "source_ref": {
+            "$ref": "#/$defs/fileSource"
+          },
+          "issue_summary": {
+            "$ref": "#/$defs/summary"
+          },
+          "issue_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "validation": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "document_number_candidates": false
+  },
+  "$defs": {
+    "fileSource": {
+      "type": "object",
+      "required": [
+        "layer",
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "layer": {
+          "const": "raw"
+        },
+        "path": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "unitSource": {
+      "type": "object",
+      "required": [
+        "dom_order"
+      ],
+      "properties": {
+        "dom_order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "line": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "column": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tag": {
+          "type": "string"
+        }
+      }
+    },
+    "issue": {
+      "type": "object",
+      "required": [
+        "issue_id",
+        "code",
+        "severity",
+        "message"
+      ],
+      "properties": {
+        "issue_id": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "info",
+            "warning",
+            "error",
+            "fatal"
+          ]
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "info",
+        "warning",
+        "error",
+        "fatal"
+      ],
+      "properties": {
+        "info": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "warning": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "error": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fatal": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "tree": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/node"
+      }
+    },
+    "node": {
+      "type": "object",
+      "required": [
+        "type",
+        "order",
+        "children",
+        "source_ref"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "part",
+            "chapter",
+            "section",
+            "subsection",
+            "article",
+            "clause",
+            "point",
+            "paragraph",
+            "heading",
+            "list",
+            "list_item",
+            "table",
+            "document_type_heading",
+            "document_title",
+            "issuing_authority",
+            "document_number",
+            "place_and_date",
+            "legal_basis",
+            "proposal_basis",
+            "signature_block",
+            "recipient_block",
+            "layout_block",
+            "unknown",
+            "legal_document",
+            "header",
+            "title_block",
+            "preamble",
+            "enacting_formula",
+            "body",
+            "closing",
+            "national_heading",
+            "national_motto",
+            "issuing_authority_title",
+            "signer_authority",
+            "recipients",
+            "recipient",
+            "signature",
+            "delegation_title",
+            "signer_title",
+            "signature_status",
+            "signer_name",
+            "numbered_paragraph",
+            "annexes",
+            "annex",
+            "annex_heading",
+            "annex_note",
+            "numbered_section",
+            "numbered_item",
+            "bullet_item",
+            "form",
+            "form_field",
+            "note",
+            "footnote",
+            "signature_marker",
+            "separator",
+            "form_header",
+            "form_title",
+            "form_subtitle",
+            "form_subfield",
+            "form_signature",
+            "form_number",
+            "form_placeholder",
+            "footnote_group",
+            "bibliography",
+            "bibliography_entry"
+          ]
+        },
+        "number": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "children": {
+          "$ref": "#/$defs/tree"
+        },
+        "source_ref": {
+          "$ref": "#/$defs/unitSource"
+        },
+        "attributes": false,
+        "blocks": false,
+        "structure": false,
+        "rows": false,
+        "grid": false,
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reference"
+          },
+          "uniqueItems": true
+        },
+        "annotations": {
+          "$ref": "#/$defs/annotations"
+        },
+        "source_refs": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/unitSource"
+          },
+          "uniqueItems": true
+        },
+        "source_offset": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label_suffix": {
+          "type": "string"
+        },
+        "candidate_role": {
+          "enum": [
+            "part",
+            "chapter",
+            "section",
+            "subsection",
+            "article",
+            "clause",
+            "point"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "parent_status": {
+          "const": "unresolved"
+        },
+        "title_source_ref": {
+          "$ref": "#/$defs/unitSource"
+        },
+        "title_source_offset": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "title_annotations": {
+          "$ref": "#/$defs/annotations"
+        },
+        "label_annotations": {
+          "$ref": "#/$defs/annotations"
+        },
+        "number_path": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "minItems": 1
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "parent_number": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title_source_spans": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "start",
+              "end",
+              "source_ref",
+              "source_offset"
+            ],
+            "properties": {
+              "start": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "end": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "source_offset": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "source_ref": {
+                "$ref": "#/$defs/unitSource"
+              }
+            }
+          }
+        },
+        "title_ref": false,
+        "marker": {
+          "type": "string",
+          "minLength": 1
+        },
+        "placeholder_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^\\d+$"
+          }
+        },
+        "field_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "value_text": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "field_kind": {
+          "enum": [
+            "input",
+            "input_label",
+            "instruction",
+            "composite",
+            "display",
+            "unknown"
+          ]
+        },
+        "boundary_evidence": false,
+        "document_number_candidates": false,
+        "evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "heading_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "field_evidence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "classification_evidence": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "table"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "table_id",
+              "table_kind",
+              "grid_shape",
+              "cells",
+              "semantics",
+              "issues"
+            ],
+            "properties": {
+              "table_id": {
+                "type": "string"
+              },
+              "table_kind": {
+                "enum": [
+                  "layout",
+                  "data",
+                  "form",
+                  "matrix",
+                  "key_value",
+                  "annex_form",
+                  "ambiguous"
+                ]
+              },
+              "grid_shape": {
+                "type": "object",
+                "required": [
+                  "rows",
+                  "columns"
+                ],
+                "properties": {
+                  "rows": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "columns": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              },
+              "cells": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/cell"
+                }
+              },
+              "semantics": {
+                "type": "object"
+              },
+              "issues": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "part",
+                  "chapter",
+                  "section",
+                  "subsection",
+                  "article",
+                  "clause",
+                  "point"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "number"
+            ],
+            "properties": {
+              "number": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "form_field",
+                  "form_subfield"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "field_name",
+              "field_kind",
+              "field_evidence",
+              "value_text"
+            ],
+            "properties": {}
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "footnote"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "marker"
+            ],
+            "properties": {}
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "numbered_section",
+                  "numbered_item"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "number",
+              "number_path",
+              "level"
+            ],
+            "properties": {
+              "number": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "field_kind"
+            ],
+            "properties": {
+              "field_kind": {
+                "const": "instruction"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value_text": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "table_kind"
+            ],
+            "properties": {
+              "table_kind": {
+                "enum": [
+                  "layout",
+                  "form",
+                  "annex_form",
+                  "key_value"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "cells": {
+                "items": {
+                  "not": {
+                    "required": [
+                      "role",
+                      "confidence"
+                    ],
+                    "properties": {
+                      "role": {
+                        "const": "unknown"
+                      },
+                      "confidence": {
+                        "const": 0.0
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "cell": {
+      "type": "object",
+      "required": [
+        "cell_id",
+        "row",
+        "column",
+        "rowspan",
+        "colspan",
+        "original_rowspan",
+        "original_colspan",
+        "text",
+        "cell_type",
+        "order",
+        "section",
+        "source_ref",
+        "effective_text",
+        "text_segments"
+      ],
+      "properties": {
+        "cell_id": {
+          "type": "string"
+        },
+        "row": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "column": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rowspan": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "colspan": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "original_rowspan": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "original_colspan": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "cell_type": {
+          "enum": [
+            "header",
+            "data",
+            "unknown"
+          ]
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "section": {
+          "enum": [
+            "thead",
+            "tbody",
+            "tfoot",
+            "implicit"
+          ]
+        },
+        "source_ref": {
+          "$ref": "#/$defs/unitSource"
+        },
+        "content": {
+          "$ref": "#/$defs/tree"
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reference"
+          }
+        },
+        "annotations": {
+          "$ref": "#/$defs/annotations"
+        },
+        "role": {
+          "enum": [
+            "data",
+            "unknown",
+            "ambiguous",
+            "row_header",
+            "column_header",
+            "row_group_header",
+            "column_group_header",
+            "compound_header",
+            "dual_axis_header"
+          ]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "header_refs": {
+          "type": "object",
+          "properties": {
+            "row": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "column": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "other": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "orientation": {
+          "enum": [
+            "unknown",
+            "explicit"
+          ]
+        },
+        "effective_text": {
+          "type": "string"
+        },
+        "text_segments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "field": {
+      "type": "object",
+      "required": [
+        "label",
+        "value",
+        "order",
+        "source_ref",
+        "evidence"
+      ],
+      "properties": {
+        "label": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "value": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_ref": {
+          "$ref": "#/$defs/unitSource"
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reference"
+          }
+        },
+        "value_content": {
+          "$ref": "#/$defs/tree"
+        }
+      }
+    },
+    "document": {
+      "type": "object",
+      "required": [
+        "text",
+        "url",
+        "primary_document_number_candidate",
+        "mentioned_document_numbers"
+      ],
+      "properties": {
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "document_number_candidates": false,
+        "references": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reference"
+          }
+        },
+        "content": {
+          "$ref": "#/$defs/tree"
+        },
+        "primary_document_number_candidate": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mentioned_document_numbers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "resolution_status": {
+          "enum": [
+            "candidate_only",
+            "source_reference",
+            "unidentified"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "text": {
+                "type": "null"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "content"
+            ],
+            "properties": {
+              "content": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "event": {
+      "type": "object",
+      "required": [
+        "date",
+        "status",
+        "source_document",
+        "order",
+        "source_ref",
+        "source_cells"
+      ],
+      "properties": {
+        "date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_document": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/document"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_ref": {
+          "$ref": "#/$defs/unitSource"
+        },
+        "source_cells": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "field",
+              "source_ref"
+            ],
+            "properties": {
+              "field": {
+                "type": "string"
+              },
+              "source_ref": {
+                "$ref": "#/$defs/unitSource"
+              }
+            }
+          }
+        }
+      }
+    },
+    "group": {
+      "type": "object",
+      "required": [
+        "label_raw",
+        "relation_type_raw",
+        "declared_count",
+        "items",
+        "order",
+        "source_ref"
+      ],
+      "properties": {
+        "label_raw": {
+          "type": "string"
+        },
+        "relation_type_raw": {
+          "type": "string"
+        },
+        "declared_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_ref": {
+          "$ref": "#/$defs/unitSource"
+        },
+        "context": {
+          "$ref": "#/$defs/tree"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/document"
+              },
+              {
+                "type": "object",
+                "required": [
+                  "resolved_document_id",
+                  "order",
+                  "source_ref",
+                  "resolution_status"
+                ],
+                "properties": {
+                  "resolved_document_id": {
+                    "type": "null"
+                  },
+                  "order": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "source_ref": {
+                    "$ref": "#/$defs/unitSource"
+                  },
+                  "text": {
+                    "not": {
+                      "enum": [
+                        "--",
+                        "—",
+                        "-"
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "required": [
+        "href",
+        "url",
+        "identifiers",
+        "source_ref"
+      ],
+      "properties": {
+        "href": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "identifiers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "attribute",
+              "value"
+            ],
+            "properties": {
+              "attribute": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "source_ref": {
+          "$ref": "#/$defs/unitSource"
+        }
+      }
+    },
+    "annotations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "start",
+          "end",
+          "source_ref"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "superscript",
+              "subscript"
+            ]
+          },
+          "start": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "end": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "source_ref": {
+            "$ref": "#/$defs/unitSource"
+          }
+        }
+      }
+    },
+    "legalDocument": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/node"
+        },
+        {
+          "properties": {
+            "type": {
+              "const": "legal_document"
+            },
+            "children": {
+              "type": "array",
+              "items": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/node"
+                  },
+                  {
+                    "properties": {
+                      "type": {
+                        "enum": [
+                          "header",
+                          "title_block",
+                          "preamble",
+                          "enacting_formula",
+                          "body",
+                          "closing",
+                          "annexes"
+                        ]
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "outputFile": {
+      "type": "object",
+      "required": [
+        "path",
+        "sha256",
+        "bytes"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  },
+  "not": {
+    "required": [
+      "document",
+      "content"
+    ]
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "document"
+        ],
+        "properties": {
+          "document": {
+            "type": "object"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "hierarchy_validation",
+          "form_validation",
+          "structured_paragraph_audit"
+        ]
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "document"
+        ],
+        "properties": {
+          "document": {
+            "type": "null"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "validation"
+        ],
+        "properties": {
+          "validation": {
+            "required": [
+              "unparsed_source"
+            ],
+            "properties": {
+              "unparsed_source": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": [
+          "stage"
+        ],
+        "properties": {
+          "stage": {
+            "const": "extracted"
+          },
+          "status": {
+            "enum": [
+              "success",
+              "success_with_warnings"
+            ]
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "quality",
+          "files",
+          "source_files",
+          "tabs",
+          "diagnostic_info_count",
+          "warning_count",
+          "error_count",
+          "fatal_count"
+        ]
+      }
+    }
+  ]
+}

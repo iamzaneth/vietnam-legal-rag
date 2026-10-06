@@ -1,6 +1,7 @@
 # Quy ước dữ liệu pháp luật
 
-Đây là đề xuất ban đầu để triển khai schema; chưa phải schema đã được thực thi.
+Schema extracted đã được triển khai: xem [extracted 2.1.0](extracted-schema.md).
+Các trường tài liệu canonical và đoạn trích bên dưới vẫn là đề xuất cho các bước sau.
 
 ## Tài liệu
 
@@ -37,12 +38,27 @@ Giữ nguyên dấu tiếng Việt trong nội dung; dùng tên tệp đơn gi�
 
 Crawler hiện ghi `document_scope` là `trung_uong` hoặc `dia_phuong` trong manifest.
 Trường `classification` lưu phương thức `source_breadcrumb` và các URL breadcrumb.
-Mỗi văn bản nằm tại `data/raw/vbpl/<document_scope>/<id>/`; đường dẫn tệp trong
-manifest vẫn tương đối so với thư mục văn bản. Nhóm chưa xác định sẽ báo lỗi.
+Raw dùng `vbpl/<document_scope>/<id>/`; extracted dùng `vbpl/<id>/`:
+
+- `raw`: chỉ HTML nguồn và `manifest.json`; trường `files` và `tabs.*.files`
+  chỉ tham chiếu HTML trong thư mục văn bản. `tabs` ghi các tab thực tế đã lấy;
+  `excluded_tabs` ghi các tab Tải về/Văn bản gốc đã bỏ qua.
+- `extracted`: chỉ JSON được trích xuất từ HTML raw, cùng `manifest.json`
+  ghi `document_id` nguyên giá trị từ raw, schema/parser version, source refs,
+  source/file hashes và issues. Không ghi timestamp chạy extract để đảm bảo deterministic.
+- `normalized`: dành cho dữ liệu chuẩn hóa, chưa triển khai.
+- `chunks`: dành cho đoạn trích, chưa triển khai.
+
+Đường dẫn trong các bản ghi tệp là tương đối với thư mục văn bản của lớp đó.
+Trong extracted, source_ref cấp file dùng đường dẫn tương đối với root raw
+và SHA-256. Source_ref cấp record kế thừa file đó, thêm vị trí nguồn để audit.
+Không có đường dẫn tuyệt đối hoặc timestamp của lần extract.
+Nhóm chưa xác định sẽ báo lỗi. `data/samples/` là nơi để mẫu chia sẻ,
+không phải một lớp của pipeline.
 
 ## Lưu trữ và Git
 
-Dữ liệu trong `raw/`, `interim/`, `processed/`, chỉ mục, cache và kết quả đánh giá
+Dữ liệu trong `raw/`, `extracted/`, `normalized/`, `chunks/`, chỉ mục, cache và kết quả đánh giá
 được bỏ qua bởi Git. Các tệp `.gitkeep` chỉ giúp giữ cây thư mục khi commit.
 Dữ liệu gốc cần có phương án sao lưu riêng khi bắt đầu thu thập.
 

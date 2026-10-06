@@ -1,0 +1,3244 @@
+{
+  "schema_version": "2.3.2",
+  "parser_version": "2.3.2",
+  "freeze_status": "ready",
+  "verified_json_files": 25,
+  "baseline_version": "2.3.1",
+  "schema_validation": true,
+  "source_text_and_table_geometry_unchanged": true,
+  "source_anchors_and_identifiers_unchanged": true,
+  "metadata_regressions": 0,
+  "node_types": {
+    "annex": 5,
+    "annex_heading": 1,
+    "annex_note": 7,
+    "annexes": 2,
+    "article": 94,
+    "bibliography": 1,
+    "bibliography_entry": 3,
+    "body": 5,
+    "chapter": 15,
+    "clause": 267,
+    "closing": 5,
+    "delegation_title": 7,
+    "document_number": 5,
+    "document_title": 5,
+    "document_type_heading": 5,
+    "enacting_formula": 5,
+    "footnote": 54,
+    "footnote_group": 10,
+    "form": 27,
+    "form_field": 202,
+    "form_header": 19,
+    "form_number": 13,
+    "form_placeholder": 6,
+    "form_signature": 3,
+    "form_subfield": 40,
+    "form_subtitle": 14,
+    "form_title": 21,
+    "header": 5,
+    "heading": 8,
+    "issuing_authority": 16,
+    "issuing_authority_title": 1,
+    "legal_basis": 23,
+    "legal_document": 5,
+    "list": 19,
+    "list_item": 66,
+    "national_heading": 17,
+    "national_motto": 17,
+    "note": 15,
+    "numbered_item": 26,
+    "numbered_section": 5,
+    "paragraph": 827,
+    "place_and_date": 20,
+    "point": 257,
+    "preamble": 5,
+    "proposal_basis": 5,
+    "recipient": 86,
+    "recipients": 17,
+    "signature": 5,
+    "signature_marker": 1,
+    "signature_status": 1,
+    "signer_name": 5,
+    "signer_title": 8,
+    "table": 62,
+    "title_block": 5
+  },
+  "node_type_changes": {
+    "form_field": {
+      "before": 200,
+      "after": 202
+    },
+    "form_subfield": {
+      "before": 39,
+      "after": 40
+    },
+    "paragraph": {
+      "before": 829,
+      "after": 827
+    }
+  },
+  "table_kinds": {
+    "allowed": [
+      "layout",
+      "data",
+      "matrix",
+      "form",
+      "key_value",
+      "annex_form",
+      "ambiguous"
+    ],
+    "produced": {
+      "annex_form": 59,
+      "key_value": 2,
+      "matrix": 1
+    },
+    "semanticized_layout_tables": 23
+  },
+  "field_kinds": {
+    "allowed": [
+      "composite",
+      "display",
+      "input",
+      "input_label",
+      "instruction",
+      "unknown"
+    ],
+    "produced": {
+      "composite": 4,
+      "display": 2,
+      "input": 126,
+      "input_label": 29,
+      "instruction": 41
+    }
+  },
+  "deprecated_fields_removed": [
+    "title_ref (replaced by title_source_ref)",
+    "unknown role / zero confidence on cells of non-axis table kinds"
+  ],
+  "legacy_candidates": {
+    "document_number_candidates": "remains absent and explicitly forbidden by schema"
+  },
+  "fallback_types_produced": {
+    "paragraph": 827
+  },
+  "property_vocabulary": [
+    {
+      "property": "annotations",
+      "node_types": {
+        "form_field": 1,
+        "form_number": 1
+      },
+      "count": 2
+    },
+    {
+      "property": "cells",
+      "node_types": {
+        "table": 62
+      },
+      "count": 62
+    },
+    {
+      "property": "children",
+      "node_types": {
+        "annex": 5,
+        "annex_heading": 1,
+        "annex_note": 7,
+        "annexes": 2,
+        "article": 94,
+        "bibliography": 1,
+        "bibliography_entry": 3,
+        "body": 5,
+        "chapter": 15,
+        "clause": 267,
+        "closing": 5,
+        "delegation_title": 7,
+        "document_number": 5,
+        "document_title": 5,
+        "document_type_heading": 5,
+        "enacting_formula": 5,
+        "footnote": 54,
+        "footnote_group": 10,
+        "form": 27,
+        "form_field": 202,
+        "form_header": 19,
+        "form_number": 13,
+        "form_placeholder": 6,
+        "form_signature": 3,
+        "form_subfield": 40,
+        "form_subtitle": 14,
+        "form_title": 21,
+        "header": 5,
+        "heading": 8,
+        "issuing_authority": 16,
+        "issuing_authority_title": 1,
+        "legal_basis": 23,
+        "legal_document": 5,
+        "list": 19,
+        "list_item": 66,
+        "national_heading": 17,
+        "national_motto": 17,
+        "note": 15,
+        "numbered_item": 26,
+        "numbered_section": 5,
+        "paragraph": 827,
+        "place_and_date": 20,
+        "point": 257,
+        "preamble": 5,
+        "proposal_basis": 5,
+        "recipient": 86,
+        "recipients": 17,
+        "signature": 5,
+        "signature_marker": 1,
+        "signature_status": 1,
+        "signer_name": 5,
+        "signer_title": 8,
+        "table": 62,
+        "title_block": 5
+      },
+      "count": 2368
+    },
+    {
+      "property": "classification_evidence",
+      "node_types": {
+        "table": 62
+      },
+      "count": 62
+    },
+    {
+      "property": "evidence",
+      "node_types": {
+        "article": 94,
+        "chapter": 15,
+        "clause": 267,
+        "form": 27,
+        "paragraph": 1,
+        "point": 257
+      },
+      "count": 661
+    },
+    {
+      "property": "field_evidence",
+      "node_types": {
+        "form_field": 202,
+        "form_subfield": 10
+      },
+      "count": 212
+    },
+    {
+      "property": "field_kind",
+      "node_types": {
+        "form_field": 202,
+        "form_subfield": 13
+      },
+      "count": 215
+    },
+    {
+      "property": "field_name",
+      "node_types": {
+        "form_field": 202,
+        "form_subfield": 25
+      },
+      "count": 227
+    },
+    {
+      "property": "grid_shape",
+      "node_types": {
+        "table": 62
+      },
+      "count": 62
+    },
+    {
+      "property": "heading_evidence",
+      "node_types": {
+        "annex": 5,
+        "annex_heading": 1,
+        "article": 88,
+        "chapter": 15,
+        "delegation_title": 4,
+        "document_title": 3,
+        "document_type_heading": 3,
+        "form": 26,
+        "form_field": 9,
+        "form_placeholder": 1,
+        "form_subtitle": 14,
+        "form_title": 21,
+        "heading": 8,
+        "issuing_authority": 14,
+        "national_heading": 15,
+        "national_motto": 15,
+        "note": 15,
+        "numbered_section": 5,
+        "paragraph": 78,
+        "recipients": 15,
+        "signature_marker": 1,
+        "signer_name": 3,
+        "signer_title": 6
+      },
+      "count": 365
+    },
+    {
+      "property": "issues",
+      "node_types": {
+        "table": 62
+      },
+      "count": 62
+    },
+    {
+      "property": "label",
+      "node_types": {
+        "annex": 5,
+        "article": 94,
+        "bibliography_entry": 3,
+        "chapter": 15,
+        "clause": 267,
+        "footnote": 52,
+        "form": 26,
+        "form_field": 91,
+        "form_subfield": 30,
+        "list_item": 32,
+        "numbered_item": 26,
+        "numbered_section": 5,
+        "point": 257,
+        "recipient": 22
+      },
+      "count": 925
+    },
+    {
+      "property": "label_suffix",
+      "node_types": {
+        "article": 94
+      },
+      "count": 94
+    },
+    {
+      "property": "level",
+      "node_types": {
+        "numbered_item": 26,
+        "numbered_section": 5
+      },
+      "count": 31
+    },
+    {
+      "property": "list_kind",
+      "node_types": {
+        "bibliography": 1,
+        "list": 19
+      },
+      "count": 20
+    },
+    {
+      "property": "marker",
+      "node_types": {
+        "footnote": 54,
+        "form_field": 30,
+        "form_subfield": 30,
+        "list_item": 62,
+        "recipient": 22
+      },
+      "count": 198
+    },
+    {
+      "property": "number",
+      "node_types": {
+        "annex": 5,
+        "article": 94,
+        "bibliography_entry": 3,
+        "chapter": 15,
+        "clause": 267,
+        "document_number": 5,
+        "form": 27,
+        "form_field": 61,
+        "list_item": 4,
+        "numbered_item": 26,
+        "numbered_section": 5,
+        "point": 257
+      },
+      "count": 769
+    },
+    {
+      "property": "number_path",
+      "node_types": {
+        "numbered_item": 26,
+        "numbered_section": 5
+      },
+      "count": 31
+    },
+    {
+      "property": "numbering",
+      "node_types": {
+        "bibliography": 1,
+        "list": 19
+      },
+      "count": 20
+    },
+    {
+      "property": "order",
+      "node_types": {
+        "annex": 5,
+        "annex_heading": 1,
+        "annex_note": 7,
+        "annexes": 2,
+        "article": 94,
+        "bibliography": 1,
+        "bibliography_entry": 3,
+        "body": 5,
+        "chapter": 15,
+        "clause": 267,
+        "closing": 5,
+        "delegation_title": 7,
+        "document_number": 5,
+        "document_title": 5,
+        "document_type_heading": 5,
+        "enacting_formula": 5,
+        "footnote": 54,
+        "footnote_group": 10,
+        "form": 27,
+        "form_field": 202,
+        "form_header": 19,
+        "form_number": 13,
+        "form_placeholder": 6,
+        "form_signature": 3,
+        "form_subfield": 40,
+        "form_subtitle": 14,
+        "form_title": 21,
+        "header": 5,
+        "heading": 8,
+        "issuing_authority": 16,
+        "issuing_authority_title": 1,
+        "legal_basis": 23,
+        "legal_document": 5,
+        "list": 19,
+        "list_item": 66,
+        "national_heading": 17,
+        "national_motto": 17,
+        "note": 15,
+        "numbered_item": 26,
+        "numbered_section": 5,
+        "paragraph": 827,
+        "place_and_date": 20,
+        "point": 257,
+        "preamble": 5,
+        "proposal_basis": 5,
+        "recipient": 86,
+        "recipients": 17,
+        "signature": 5,
+        "signature_marker": 1,
+        "signature_status": 1,
+        "signer_name": 5,
+        "signer_title": 8,
+        "table": 62,
+        "title_block": 5
+      },
+      "count": 2368
+    },
+    {
+      "property": "parent_number",
+      "node_types": {
+        "numbered_item": 26
+      },
+      "count": 26
+    },
+    {
+      "property": "placeholder_refs",
+      "node_types": {
+        "form_field": 29,
+        "form_placeholder": 3,
+        "form_subfield": 2,
+        "paragraph": 17,
+        "place_and_date": 5
+      },
+      "count": 56
+    },
+    {
+      "property": "promotion_evidence",
+      "node_types": {
+        "clause": 42
+      },
+      "count": 42
+    },
+    {
+      "property": "references",
+      "node_types": {
+        "annex_note": 1,
+        "document_number": 1,
+        "legal_basis": 15,
+        "paragraph": 10
+      },
+      "count": 27
+    },
+    {
+      "property": "row_groups",
+      "node_types": {
+        "table": 62
+      },
+      "count": 62
+    },
+    {
+      "property": "semantic",
+      "node_types": {
+        "signature_marker": 1
+      },
+      "count": 1
+    },
+    {
+      "property": "semantics",
+      "node_types": {
+        "table": 62
+      },
+      "count": 62
+    },
+    {
+      "property": "source_layouts",
+      "node_types": {
+        "annexes": 2,
+        "closing": 5,
+        "header": 5
+      },
+      "count": 12
+    },
+    {
+      "property": "source_offset",
+      "node_types": {
+        "delegation_title": 2,
+        "document_title": 1,
+        "document_type_heading": 1,
+        "form_field": 3,
+        "form_subfield": 1,
+        "issuing_authority": 1,
+        "national_heading": 3,
+        "national_motto": 3,
+        "paragraph": 534,
+        "signer_name": 1,
+        "signer_title": 3
+      },
+      "count": 553
+    },
+    {
+      "property": "source_ref",
+      "node_types": {
+        "annex": 5,
+        "annex_heading": 1,
+        "annex_note": 7,
+        "annexes": 2,
+        "article": 94,
+        "bibliography": 1,
+        "bibliography_entry": 3,
+        "body": 5,
+        "chapter": 15,
+        "clause": 267,
+        "closing": 5,
+        "delegation_title": 7,
+        "document_number": 5,
+        "document_title": 5,
+        "document_type_heading": 5,
+        "enacting_formula": 5,
+        "footnote": 54,
+        "footnote_group": 10,
+        "form": 27,
+        "form_field": 202,
+        "form_header": 19,
+        "form_number": 13,
+        "form_placeholder": 6,
+        "form_signature": 3,
+        "form_subfield": 40,
+        "form_subtitle": 14,
+        "form_title": 21,
+        "header": 5,
+        "heading": 8,
+        "issuing_authority": 16,
+        "issuing_authority_title": 1,
+        "legal_basis": 23,
+        "legal_document": 5,
+        "list": 19,
+        "list_item": 66,
+        "national_heading": 17,
+        "national_motto": 17,
+        "note": 15,
+        "numbered_item": 26,
+        "numbered_section": 5,
+        "paragraph": 827,
+        "place_and_date": 20,
+        "point": 257,
+        "preamble": 5,
+        "proposal_basis": 5,
+        "recipient": 86,
+        "recipients": 17,
+        "signature": 5,
+        "signature_marker": 1,
+        "signature_status": 1,
+        "signer_name": 5,
+        "signer_title": 8,
+        "table": 62,
+        "title_block": 5
+      },
+      "count": 2368
+    },
+    {
+      "property": "source_refs",
+      "node_types": {
+        "chapter": 11,
+        "form": 11
+      },
+      "count": 22
+    },
+    {
+      "property": "style",
+      "node_types": {
+        "bibliography": 1,
+        "list": 19
+      },
+      "count": 20
+    },
+    {
+      "property": "table_id",
+      "node_types": {
+        "table": 62
+      },
+      "count": 62
+    },
+    {
+      "property": "table_kind",
+      "node_types": {
+        "table": 62
+      },
+      "count": 62
+    },
+    {
+      "property": "text",
+      "node_types": {
+        "annex_heading": 1,
+        "annex_note": 7,
+        "bibliography_entry": 3,
+        "delegation_title": 7,
+        "document_number": 5,
+        "document_title": 5,
+        "document_type_heading": 5,
+        "enacting_formula": 5,
+        "footnote": 54,
+        "footnote_group": 1,
+        "form": 26,
+        "form_field": 202,
+        "form_number": 13,
+        "form_placeholder": 6,
+        "form_subfield": 40,
+        "form_subtitle": 14,
+        "form_title": 21,
+        "heading": 8,
+        "issuing_authority": 16,
+        "issuing_authority_title": 1,
+        "legal_basis": 23,
+        "list_item": 66,
+        "national_heading": 17,
+        "national_motto": 17,
+        "note": 15,
+        "numbered_item": 26,
+        "numbered_section": 5,
+        "paragraph": 827,
+        "place_and_date": 20,
+        "proposal_basis": 5,
+        "recipient": 86,
+        "recipients": 17,
+        "signature_marker": 1,
+        "signature_status": 1,
+        "signer_name": 5,
+        "signer_title": 8,
+        "table": 62
+      },
+      "count": 1641
+    },
+    {
+      "property": "title",
+      "node_types": {
+        "annex": 5,
+        "article": 94,
+        "chapter": 15,
+        "clause": 267,
+        "form": 27,
+        "numbered_item": 26,
+        "numbered_section": 5,
+        "point": 257
+      },
+      "count": 696
+    },
+    {
+      "property": "title_evidence",
+      "node_types": {
+        "article": 86,
+        "chapter": 15,
+        "numbered_item": 12
+      },
+      "count": 113
+    },
+    {
+      "property": "title_source_offset",
+      "node_types": {
+        "article": 7,
+        "chapter": 1
+      },
+      "count": 8
+    },
+    {
+      "property": "title_source_ref",
+      "node_types": {
+        "article": 7,
+        "chapter": 12,
+        "form": 12
+      },
+      "count": 31
+    },
+    {
+      "property": "title_source_spans",
+      "node_types": {
+        "chapter": 2
+      },
+      "count": 2
+    },
+    {
+      "property": "type",
+      "node_types": {
+        "annex": 5,
+        "annex_heading": 1,
+        "annex_note": 7,
+        "annexes": 2,
+        "article": 94,
+        "bibliography": 1,
+        "bibliography_entry": 3,
+        "body": 5,
+        "chapter": 15,
+        "clause": 267,
+        "closing": 5,
+        "delegation_title": 7,
+        "document_number": 5,
+        "document_title": 5,
+        "document_type_heading": 5,
+        "enacting_formula": 5,
+        "footnote": 54,
+        "footnote_group": 10,
+        "form": 27,
+        "form_field": 202,
+        "form_header": 19,
+        "form_number": 13,
+        "form_placeholder": 6,
+        "form_signature": 3,
+        "form_subfield": 40,
+        "form_subtitle": 14,
+        "form_title": 21,
+        "header": 5,
+        "heading": 8,
+        "issuing_authority": 16,
+        "issuing_authority_title": 1,
+        "legal_basis": 23,
+        "legal_document": 5,
+        "list": 19,
+        "list_item": 66,
+        "national_heading": 17,
+        "national_motto": 17,
+        "note": 15,
+        "numbered_item": 26,
+        "numbered_section": 5,
+        "paragraph": 827,
+        "place_and_date": 20,
+        "point": 257,
+        "preamble": 5,
+        "proposal_basis": 5,
+        "recipient": 86,
+        "recipients": 17,
+        "signature": 5,
+        "signature_marker": 1,
+        "signature_status": 1,
+        "signer_name": 5,
+        "signer_title": 8,
+        "table": 62,
+        "title_block": 5
+      },
+      "count": 2368
+    },
+    {
+      "property": "unit",
+      "node_types": {
+        "form_subfield": 3
+      },
+      "count": 3
+    },
+    {
+      "property": "value_text",
+      "node_types": {
+        "form_field": 202,
+        "form_subfield": 25
+      },
+      "count": 227
+    }
+  ],
+  "one_off_properties": [
+    {
+      "property": "semantic",
+      "node_types": {
+        "signature_marker": 1
+      },
+      "count": 1,
+      "justification": "Known source signature_marker [daky] expresses signed status without inferring the signer."
+    }
+  ],
+  "documents": [
+    {
+      "document_id": "vbpl:0c389a00-78f6-11f1-a726-87c913cf8f30",
+      "directory": "0c389a00-78f6-11f1-a726-87c913cf8f30",
+      "document_number": "16111 /QĐ-BCT",
+      "quality": {
+        "meaningful_text_preserved": true,
+        "deterministic": true,
+        "schema_valid": true,
+        "semantic_complete": false,
+        "order_valid": true,
+        "parent_child_valid": true
+      },
+      "legal_hierarchy": {
+        "parts": 0,
+        "chapters": 0,
+        "sections": 0,
+        "subsections": 0,
+        "articles": 3,
+        "clauses": 2,
+        "points": 0
+      },
+      "annex_hierarchy": {
+        "annexes": 0,
+        "numbered_sections": 0,
+        "numbered_items": 0,
+        "max_depth": 0
+      },
+      "max_depth": 3,
+      "issues": {
+        "info": 4,
+        "warning": 1,
+        "error": 0,
+        "fatal": 0
+      },
+      "before_after": {
+        "forms": {
+          "before": 0,
+          "after": 0
+        },
+        "fields": {
+          "before": 0,
+          "after": 0
+        },
+        "subfields": {
+          "before": 0,
+          "after": 0
+        },
+        "placeholders": {
+          "before": 0,
+          "after": 0
+        },
+        "footnotes": {
+          "before": 0,
+          "after": 0
+        },
+        "placeholder_references": {
+          "before": 0,
+          "after": 0
+        },
+        "unresolved_numbered_form_items": {
+          "before": 0,
+          "after": 0
+        },
+        "split_form_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "inconsistent_footnote_sequences": {
+          "before": 0,
+          "after": 0
+        },
+        "bibliography_fields_misclassified": {
+          "before": 0,
+          "after": 0
+        },
+        "structured_table_cell_lists": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "suspicious_value_text": {
+          "before": 0,
+          "after": 0
+        },
+        "semantic_empty_string_fields": {
+          "before": 0,
+          "after": 0
+        },
+        "physical_empty_cells": {
+          "before": 0,
+          "after": 0
+        },
+        "unexplained_form_label_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "unexplained_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ignored_ui_artifacts": {
+          "before": 0,
+          "after": 0
+        },
+        "orphan_nodes": {
+          "before": 0,
+          "after": 0
+        },
+        "numbered_paragraph_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_decimal_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ambiguous_tables": {
+          "before": 0,
+          "after": 0
+        },
+        "warnings": {
+          "before": 1,
+          "after": 1
+        },
+        "errors": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_form_label_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_form_fields_including_values": {
+          "before": 0,
+          "after": 0
+        },
+        "duplicated_references": {
+          "before": 0,
+          "after": 0
+        },
+        "singleton_source_refs": {
+          "before": 0,
+          "after": 0
+        },
+        "title_ref_occurrences": {
+          "before": 0,
+          "after": 0
+        },
+        "meaningless_axis_cell_metadata": {
+          "before": 0,
+          "after": 0
+        }
+      },
+      "node_type_changes": {},
+      "remaining_form_paragraphs": [],
+      "value_text_audit_before": [],
+      "value_text_audit_after": [],
+      "remaining_structured_paragraphs": [],
+      "form_boundaries": [],
+      "content_size_bytes": {
+        "before": 20266,
+        "after": 20368
+      },
+      "size_contributors": {
+        "before": {
+          "measurement": "UTF-8 minified value bytes; independent contributions can overlap",
+          "semantic_nodes": 41,
+          "physical_cells": 0,
+          "physical_cell_fields_bytes": 0,
+          "primary_source_ref_bytes": 1946,
+          "coalesced_source_refs_bytes": 0,
+          "references_bytes": 0,
+          "physical_text_effective_segments_bytes": 0
+        },
+        "after": {
+          "measurement": "UTF-8 minified value bytes; independent contributions can overlap",
+          "semantic_nodes": 41,
+          "physical_cells": 0,
+          "physical_cell_fields_bytes": 0,
+          "primary_source_ref_bytes": 1946,
+          "coalesced_source_refs_bytes": 0,
+          "references_bytes": 0,
+          "physical_text_effective_segments_bytes": 0
+        }
+      },
+      "remaining_issues": [
+        {
+          "severity": "warning",
+          "code": "possible_page_number",
+          "message": "Bare source number retained; page-transition evidence is insufficient to remove it",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 13,
+            "line": 8,
+            "column": 3
+          },
+          "issue_id": "issue_b5fc6d8b49c2d264"
+        }
+      ]
+    },
+    {
+      "document_id": "vbpl:2308a290-bbb1-11f1-9e5f-8da308b3d359",
+      "directory": "2308a290-bbb1-11f1-9e5f-8da308b3d359",
+      "document_number": "365/2026/NĐ-CP",
+      "quality": {
+        "meaningful_text_preserved": true,
+        "deterministic": true,
+        "schema_valid": true,
+        "semantic_complete": true,
+        "order_valid": true,
+        "parent_child_valid": true
+      },
+      "legal_hierarchy": {
+        "parts": 0,
+        "chapters": 5,
+        "sections": 0,
+        "subsections": 0,
+        "articles": 28,
+        "clauses": 80,
+        "points": 110
+      },
+      "annex_hierarchy": {
+        "annexes": 1,
+        "numbered_sections": 0,
+        "numbered_items": 0,
+        "max_depth": 0
+      },
+      "max_depth": 5,
+      "issues": {
+        "info": 40,
+        "warning": 0,
+        "error": 0,
+        "fatal": 0
+      },
+      "before_after": {
+        "forms": {
+          "before": 11,
+          "after": 11
+        },
+        "fields": {
+          "before": 121,
+          "after": 121
+        },
+        "subfields": {
+          "before": 26,
+          "after": 26
+        },
+        "placeholders": {
+          "before": 3,
+          "after": 3
+        },
+        "footnotes": {
+          "before": 2,
+          "after": 2
+        },
+        "placeholder_references": {
+          "before": 0,
+          "after": 0
+        },
+        "unresolved_numbered_form_items": {
+          "before": 0,
+          "after": 0
+        },
+        "split_form_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "inconsistent_footnote_sequences": {
+          "before": 0,
+          "after": 0
+        },
+        "bibliography_fields_misclassified": {
+          "before": 0,
+          "after": 0
+        },
+        "structured_table_cell_lists": {
+          "before": 3,
+          "after": 3
+        },
+        "generic_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "suspicious_value_text": {
+          "before": 6,
+          "after": 0
+        },
+        "semantic_empty_string_fields": {
+          "before": 0,
+          "after": 0
+        },
+        "physical_empty_cells": {
+          "before": 203,
+          "after": 203
+        },
+        "unexplained_form_label_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "unexplained_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ignored_ui_artifacts": {
+          "before": 2,
+          "after": 2
+        },
+        "orphan_nodes": {
+          "before": 0,
+          "after": 0
+        },
+        "numbered_paragraph_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_decimal_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ambiguous_tables": {
+          "before": 0,
+          "after": 0
+        },
+        "warnings": {
+          "before": 0,
+          "after": 0
+        },
+        "errors": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_form_label_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_form_fields_including_values": {
+          "before": 0,
+          "after": 0
+        },
+        "duplicated_references": {
+          "before": 0,
+          "after": 0
+        },
+        "singleton_source_refs": {
+          "before": 0,
+          "after": 0
+        },
+        "title_ref_occurrences": {
+          "before": 11,
+          "after": 0
+        },
+        "meaningless_axis_cell_metadata": {
+          "before": 580,
+          "after": 0
+        }
+      },
+      "node_type_changes": {},
+      "remaining_form_paragraphs": [
+        {
+          "order": 1729,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 1729,
+            "line": 589,
+            "column": 8
+          },
+          "text": "NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA THƯƠNG NHÂN",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 2396,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 2396,
+            "line": 829,
+            "column": 8
+          },
+          "text": "NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA THƯƠNG NHÂN",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 4688,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 4688,
+            "line": 1727,
+            "column": 8
+          },
+          "text": "NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 4719,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 4719,
+            "line": 1739,
+            "column": 8
+          },
+          "text": "TÊN THƯƠNG NHÂN",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 5048,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5048,
+            "line": 1879,
+            "column": 8
+          },
+          "text": "NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 5267,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5267,
+            "line": 1954,
+            "column": 8
+          },
+          "text": "NGƯỜI ĐẠI DIỆN THEO",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 5742,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5742,
+            "line": 2140,
+            "column": 8
+          },
+          "text": "NGƯỜI ĐẠI DIỆN THEO",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 5991,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5991,
+            "line": 2223,
+            "column": 8
+          },
+          "text": "Số lượng nhập kho",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 6001,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 6001,
+            "line": 2226,
+            "column": 8
+          },
+          "text": "Số lượng xuất kho",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 6011,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 6011,
+            "line": 2229,
+            "column": 8
+          },
+          "text": "Số lượng tồn kho",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 6413,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 6413,
+            "line": 2393,
+            "column": 8
+          },
+          "text": "NGƯỜI ĐẠI DIỆN THEO",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 6669,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 6669,
+            "line": 2479,
+            "column": 8
+          },
+          "text": "NGƯỜI ĐẠI DIỆN THEO PHÁP LUẬT CỦA THƯƠNG NHÂN",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        }
+      ],
+      "value_text_audit_before": [
+        {
+          "order": 1366,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 1366,
+            "line": 448,
+            "column": 4
+          },
+          "field_name": "Địa chỉ trụ sở chính",
+          "value_text": "……………..Số điện thoại:………Số fax:…..….....",
+          "reason": "placeholder_followed_by_prompt_or_prose"
+        },
+        {
+          "order": 2338,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 2338,
+            "line": 809,
+            "column": 4
+          },
+          "field_name": "Địa chỉ trụ sở chính",
+          "value_text": "………….......Số điện thoại:……...…Số fax:…...",
+          "reason": "placeholder_followed_by_prompt_or_prose"
+        },
+        {
+          "order": 5373,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5373,
+            "line": 1991,
+            "column": 4
+          },
+          "field_name": "Địa chỉ trụ sở chính",
+          "value_text": "……………..Số điện thoại:………Số fax:…..….....",
+          "reason": "placeholder_followed_by_prompt_or_prose"
+        },
+        {
+          "order": 5862,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5862,
+            "line": 2180,
+            "column": 4
+          },
+          "field_name": "Mục địa chỉ",
+          "value_text": "Ghi cụ thể, chính xác số nhà (nếu có); đường/phố (hoặc thôn, xóm, ấp); xã/phường; tỉnh/thành phố.",
+          "reason": "instruction_in_value_text"
+        },
+        {
+          "order": 5952,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5952,
+            "line": 2209,
+            "column": 4
+          },
+          "field_name": "Địa chỉ trụ sở chính",
+          "value_text": "……………..Số điện thoại:………Số fax:…..….....",
+          "reason": "placeholder_followed_by_prompt_or_prose"
+        },
+        {
+          "order": 6626,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 6626,
+            "line": 2464,
+            "column": 4
+          },
+          "field_name": "Địa chỉ trụ sở chính",
+          "value_text": "……………..Số điện thoại:………Số fax:…..….....",
+          "reason": "placeholder_followed_by_prompt_or_prose"
+        }
+      ],
+      "value_text_audit_after": [],
+      "remaining_structured_paragraphs": [],
+      "form_boundaries": [
+        {
+          "annex": null,
+          "number": "01",
+          "title": "ĐƠN ĐỀ NGHỊ",
+          "order": 1288,
+          "child_count": 18,
+          "next_form_number": "02",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "ĐƠN ĐỀ NGHỊ",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 1340,
+                "line": 440,
+                "column": 4
+              }
+            },
+            {
+              "type": "form_subtitle",
+              "text": "Cấp giấy chứng nhận đủ điều kiện kinh doanh xuất khẩu gạo",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 1344,
+                "line": 441,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 1288,
+            "line": 421,
+            "column": 4
+          }
+        },
+        {
+          "annex": null,
+          "number": "02",
+          "title": "GIẤY CHỨNG NHẬN",
+          "order": 1793,
+          "child_count": 21,
+          "next_form_number": "03",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "GIẤY CHỨNG NHẬN",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 1842,
+                "line": 629,
+                "column": 4
+              }
+            },
+            {
+              "type": "form_subtitle",
+              "text": "ĐỦ ĐIỀU KIỆN KINH DOANH XUẤT KHẨU GẠO",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 1846,
+                "line": 630,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 1793,
+            "line": 611,
+            "column": 4
+          }
+        },
+        {
+          "annex": null,
+          "number": "03",
+          "title": "ĐƠN ĐỀ NGHỊ",
+          "order": 2253,
+          "child_count": 20,
+          "next_form_number": "04",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "ĐƠN ĐỀ NGHỊ",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 2302,
+                "line": 799,
+                "column": 4
+              }
+            },
+            {
+              "type": "form_subtitle",
+              "text": "Cấp lại/sửa đổi, bổ sung giấy chứng nhận",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 2306,
+                "line": 800,
+                "column": 4
+              }
+            },
+            {
+              "type": "form_subtitle",
+              "text": "đủ điều kiện kinh doanh xuất khẩu gạo",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 2313,
+                "line": 801,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 2253,
+            "line": 781,
+            "column": 4
+          }
+        },
+        {
+          "annex": null,
+          "number": "04",
+          "title": "GIẤY CHỨNG NHẬN",
+          "order": 2411,
+          "child_count": 22,
+          "next_form_number": "05",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "GIẤY CHỨNG NHẬN",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 2464,
+                "line": 853,
+                "column": 4
+              }
+            },
+            {
+              "type": "form_subtitle",
+              "text": "ĐỦ ĐIỀU KIỆN KINH DOANH XUẤT KHẨU GẠO",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 2468,
+                "line": 854,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 2411,
+            "line": 835,
+            "column": 4
+          }
+        },
+        {
+          "annex": null,
+          "number": "05",
+          "title": "GIẤY CHỨNG NHẬN",
+          "order": 2906,
+          "child_count": 22,
+          "next_form_number": "06",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "GIẤY CHỨNG NHẬN",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 2958,
+                "line": 1037,
+                "column": 4
+              }
+            },
+            {
+              "type": "form_subtitle",
+              "text": "ĐỦ ĐIỀU KIỆN KINH DOANH XUẤT KHẨU GẠO",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 2962,
+                "line": 1038,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 2906,
+            "line": 1018,
+            "column": 4
+          }
+        },
+        {
+          "annex": null,
+          "number": "06",
+          "title": "BÁO CÁO TÌNH HÌNH KÝ KẾT VÀ THỰC HIỆN HỢP ĐỒNG XUẤT KHẨU GẠO",
+          "order": 3386,
+          "child_count": 14,
+          "next_form_number": "07",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "BÁO CÁO TÌNH HÌNH KÝ KẾT VÀ THỰC HIỆN HỢP ĐỒNG XUẤT KHẨU GẠO",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 3440,
+                "line": 1217,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 3386,
+            "line": 1199,
+            "column": 4
+          }
+        },
+        {
+          "annex": null,
+          "number": "07",
+          "title": "BÁO CÁO LƯỢNG THÓC, GẠO THỰC TẾ TỒN KHO",
+          "order": 4706,
+          "child_count": 16,
+          "next_form_number": "08",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "BÁO CÁO LƯỢNG THÓC, GẠO THỰC TẾ TỒN KHO",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 4751,
+                "line": 1749,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 4706,
+            "line": 1734,
+            "column": 4
+          }
+        },
+        {
+          "annex": null,
+          "number": "08",
+          "title": "BÁO CÁO",
+          "order": 5072,
+          "child_count": 15,
+          "next_form_number": "09",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "BÁO CÁO",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 5124,
+                "line": 1907,
+                "column": 4
+              }
+            },
+            {
+              "type": "form_subtitle",
+              "text": "Hoạt động kinh doanh xuất khẩu gạo",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 5128,
+                "line": 1908,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5072,
+            "line": 1888,
+            "column": 4
+          }
+        },
+        {
+          "annex": null,
+          "number": "09",
+          "title": "THÔNG BÁO",
+          "order": 5298,
+          "child_count": 19,
+          "next_form_number": "10",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "THÔNG BÁO",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 5347,
+                "line": 1983,
+                "column": 4
+              }
+            },
+            {
+              "type": "form_subtitle",
+              "text": "Kế hoạch kinh doanh nhập khẩu gạo",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 5351,
+                "line": 1984,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5298,
+            "line": 1965,
+            "column": 4
+          }
+        },
+        {
+          "annex": null,
+          "number": "10",
+          "title": "BÁO CÁO",
+          "order": 5865,
+          "child_count": 16,
+          "next_form_number": "11",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "BÁO CÁO",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 5916,
+                "line": 2198,
+                "column": 4
+              }
+            },
+            {
+              "type": "form_subtitle",
+              "text": "Tình hình kinh doanh nhập khẩu gạo",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 5920,
+                "line": 2199,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5865,
+            "line": 2181,
+            "column": 4
+          }
+        },
+        {
+          "annex": null,
+          "number": "11",
+          "title": "VĂN BẢN ĐỀ NGHỊ",
+          "order": 6546,
+          "child_count": 16,
+          "next_form_number": null,
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "VĂN BẢN ĐỀ NGHỊ",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 6600,
+                "line": 2456,
+                "column": 4
+              }
+            },
+            {
+              "type": "form_subtitle",
+              "text": "Thu hồi Giấy chứng nhận đủ điều kiện kinh doanh xuất khẩu gạo",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 6604,
+                "line": 2457,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 6546,
+            "line": 2438,
+            "column": 4
+          }
+        }
+      ],
+      "content_size_bytes": {
+        "before": 1343979,
+        "after": 1294717
+      },
+      "size_contributors": {
+        "before": {
+          "measurement": "UTF-8 minified value bytes; independent contributions can overlap",
+          "semantic_nodes": 927,
+          "physical_cells": 580,
+          "physical_cell_fields_bytes": 226305,
+          "primary_source_ref_bytes": 76170,
+          "coalesced_source_refs_bytes": 501,
+          "references_bytes": 5003,
+          "physical_text_effective_segments_bytes": 50173
+        },
+        "after": {
+          "measurement": "UTF-8 minified value bytes; independent contributions can overlap",
+          "semantic_nodes": 927,
+          "physical_cells": 580,
+          "physical_cell_fields_bytes": 206585,
+          "primary_source_ref_bytes": 76170,
+          "coalesced_source_refs_bytes": 1648,
+          "references_bytes": 5003,
+          "physical_text_effective_segments_bytes": 50173
+        }
+      },
+      "remaining_issues": []
+    },
+    {
+      "document_id": "vbpl:3314d690-bbe3-11f1-9662-1d62ccad220d",
+      "directory": "3314d690-bbe3-11f1-9662-1d62ccad220d",
+      "document_number": "59/2026/TT-BCT",
+      "quality": {
+        "meaningful_text_preserved": true,
+        "deterministic": true,
+        "schema_valid": true,
+        "semantic_complete": false,
+        "order_valid": true,
+        "parent_child_valid": true
+      },
+      "legal_hierarchy": {
+        "parts": 0,
+        "chapters": 6,
+        "sections": 0,
+        "subsections": 0,
+        "articles": 45,
+        "clauses": 145,
+        "points": 142
+      },
+      "annex_hierarchy": {
+        "annexes": 0,
+        "numbered_sections": 0,
+        "numbered_items": 0,
+        "max_depth": 0
+      },
+      "max_depth": 5,
+      "issues": {
+        "info": 4,
+        "warning": 1,
+        "error": 0,
+        "fatal": 0
+      },
+      "before_after": {
+        "forms": {
+          "before": 0,
+          "after": 0
+        },
+        "fields": {
+          "before": 0,
+          "after": 0
+        },
+        "subfields": {
+          "before": 0,
+          "after": 0
+        },
+        "placeholders": {
+          "before": 0,
+          "after": 0
+        },
+        "footnotes": {
+          "before": 0,
+          "after": 0
+        },
+        "placeholder_references": {
+          "before": 0,
+          "after": 0
+        },
+        "unresolved_numbered_form_items": {
+          "before": 0,
+          "after": 0
+        },
+        "split_form_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "inconsistent_footnote_sequences": {
+          "before": 0,
+          "after": 0
+        },
+        "bibliography_fields_misclassified": {
+          "before": 0,
+          "after": 0
+        },
+        "structured_table_cell_lists": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "suspicious_value_text": {
+          "before": 0,
+          "after": 0
+        },
+        "semantic_empty_string_fields": {
+          "before": 0,
+          "after": 0
+        },
+        "physical_empty_cells": {
+          "before": 10,
+          "after": 10
+        },
+        "unexplained_form_label_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "unexplained_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ignored_ui_artifacts": {
+          "before": 1,
+          "after": 1
+        },
+        "orphan_nodes": {
+          "before": 0,
+          "after": 0
+        },
+        "numbered_paragraph_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_decimal_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ambiguous_tables": {
+          "before": 0,
+          "after": 0
+        },
+        "warnings": {
+          "before": 1,
+          "after": 1
+        },
+        "errors": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_form_label_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_form_fields_including_values": {
+          "before": 0,
+          "after": 0
+        },
+        "duplicated_references": {
+          "before": 0,
+          "after": 0
+        },
+        "singleton_source_refs": {
+          "before": 0,
+          "after": 0
+        },
+        "title_ref_occurrences": {
+          "before": 0,
+          "after": 0
+        },
+        "meaningless_axis_cell_metadata": {
+          "before": 0,
+          "after": 0
+        }
+      },
+      "node_type_changes": {},
+      "remaining_form_paragraphs": [],
+      "value_text_audit_before": [],
+      "value_text_audit_after": [],
+      "remaining_structured_paragraphs": [],
+      "form_boundaries": [],
+      "content_size_bytes": {
+        "before": 545975,
+        "after": 546078
+      },
+      "size_contributors": {
+        "before": {
+          "measurement": "UTF-8 minified value bytes; independent contributions can overlap",
+          "semantic_nodes": 712,
+          "physical_cells": 31,
+          "physical_cell_fields_bytes": 12867,
+          "primary_source_ref_bytes": 36715,
+          "coalesced_source_refs_bytes": 608,
+          "references_bytes": 4250,
+          "physical_text_effective_segments_bytes": 2571
+        },
+        "after": {
+          "measurement": "UTF-8 minified value bytes; independent contributions can overlap",
+          "semantic_nodes": 712,
+          "physical_cells": 31,
+          "physical_cell_fields_bytes": 12867,
+          "primary_source_ref_bytes": 36715,
+          "coalesced_source_refs_bytes": 608,
+          "references_bytes": 4250,
+          "physical_text_effective_segments_bytes": 2571
+        }
+      },
+      "remaining_issues": [
+        {
+          "severity": "warning",
+          "code": "table_semantics_unresolved",
+          "message": "Inspect source header declarations or table purpose; effective text and cell geometry are preserved",
+          "source_ref": {
+            "tag": "table",
+            "dom_order": 440,
+            "line": 91,
+            "column": 9
+          },
+          "details": {
+            "table_kind": "matrix",
+            "axis_headers_resolved": false,
+            "reasons": [
+              "ambiguous_compound_header",
+              "unresolved_table_semantics"
+            ],
+            "affected_cells": [
+              440,
+              446
+            ]
+          },
+          "issue_id": "issue_9d500ac3c7c86d28"
+        }
+      ]
+    },
+    {
+      "document_id": "vbpl:a9bea550-bbe3-11f1-a338-51a5cc429fc7",
+      "directory": "a9bea550-bbe3-11f1-a338-51a5cc429fc7",
+      "document_number": "60/2026/TT-BCT",
+      "quality": {
+        "meaningful_text_preserved": true,
+        "deterministic": true,
+        "schema_valid": true,
+        "semantic_complete": true,
+        "order_valid": true,
+        "parent_child_valid": true
+      },
+      "legal_hierarchy": {
+        "parts": 0,
+        "chapters": 4,
+        "sections": 0,
+        "subsections": 0,
+        "articles": 15,
+        "clauses": 36,
+        "points": 5
+      },
+      "annex_hierarchy": {
+        "annexes": 4,
+        "numbered_sections": 5,
+        "numbered_items": 26,
+        "max_depth": 2
+      },
+      "max_depth": 5,
+      "issues": {
+        "info": 41,
+        "warning": 0,
+        "error": 0,
+        "fatal": 0
+      },
+      "before_after": {
+        "forms": {
+          "before": 16,
+          "after": 16
+        },
+        "fields": {
+          "before": 79,
+          "after": 81
+        },
+        "subfields": {
+          "before": 13,
+          "after": 14
+        },
+        "placeholders": {
+          "before": 3,
+          "after": 3
+        },
+        "footnotes": {
+          "before": 52,
+          "after": 52
+        },
+        "placeholder_references": {
+          "before": 65,
+          "after": 65
+        },
+        "unresolved_numbered_form_items": {
+          "before": 0,
+          "after": 0
+        },
+        "split_form_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "inconsistent_footnote_sequences": {
+          "before": 0,
+          "after": 0
+        },
+        "bibliography_fields_misclassified": {
+          "before": 0,
+          "after": 0
+        },
+        "structured_table_cell_lists": {
+          "before": 1,
+          "after": 1
+        },
+        "generic_structured_paragraphs": {
+          "before": 2,
+          "after": 2
+        },
+        "suspicious_value_text": {
+          "before": 11,
+          "after": 0
+        },
+        "semantic_empty_string_fields": {
+          "before": 0,
+          "after": 0
+        },
+        "physical_empty_cells": {
+          "before": 207,
+          "after": 207
+        },
+        "unexplained_form_label_paragraphs": {
+          "before": 2,
+          "after": 0
+        },
+        "unexplained_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ignored_ui_artifacts": {
+          "before": 1,
+          "after": 1
+        },
+        "orphan_nodes": {
+          "before": 0,
+          "after": 0
+        },
+        "numbered_paragraph_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_decimal_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ambiguous_tables": {
+          "before": 0,
+          "after": 0
+        },
+        "warnings": {
+          "before": 0,
+          "after": 0
+        },
+        "errors": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_form_label_paragraphs": {
+          "before": 2,
+          "after": 0
+        },
+        "generic_form_fields_including_values": {
+          "before": 2,
+          "after": 0
+        },
+        "duplicated_references": {
+          "before": 0,
+          "after": 0
+        },
+        "singleton_source_refs": {
+          "before": 0,
+          "after": 0
+        },
+        "title_ref_occurrences": {
+          "before": 1,
+          "after": 0
+        },
+        "meaningless_axis_cell_metadata": {
+          "before": 512,
+          "after": 0
+        }
+      },
+      "node_type_changes": {
+        "form_field": {
+          "before": 79,
+          "after": 81
+        },
+        "form_subfield": {
+          "before": 13,
+          "after": 14
+        },
+        "paragraph": {
+          "before": 146,
+          "after": 144
+        }
+      },
+      "remaining_form_paragraphs": [
+        {
+          "order": 1311,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 1311,
+            "line": 459,
+            "column": 8
+          },
+          "text": "NGƯỜI RÀ SOÁT",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 1437,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 1437,
+            "line": 502,
+            "column": 4
+          },
+          "text": "Thông tin kiểm tra:",
+          "reason": "introductory_prose_for_following_content",
+          "justified": true
+        },
+        {
+          "order": 1616,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 1616,
+            "line": 577,
+            "column": 8
+          },
+          "text": "NGƯỜI KIỂM TRA",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 2745,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 2745,
+            "line": 990,
+            "column": 4
+          },
+          "text": "Đã nộp mẫu vật vào cơ quan lưu trữ gồm:",
+          "reason": "introductory_prose_for_following_content",
+          "justified": true
+        },
+        {
+          "order": 2905,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 2905,
+            "line": 1057,
+            "column": 4
+          },
+          "text": "Tài liệu kèm theo:",
+          "reason": "introductory_prose_for_following_content",
+          "justified": true
+        },
+        {
+          "order": 5120,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5120,
+            "line": 1843,
+            "column": 4
+          },
+          "text": "Người theo dõi Chủ nhiệm đề án",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 5468,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5468,
+            "line": 1988,
+            "column": 8
+          },
+          "text": "Người theo dõi Chủ nhiệm đề án",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        },
+        {
+          "order": 5741,
+          "source_ref": {
+            "tag": "div",
+            "dom_order": 5741,
+            "line": 2095,
+            "column": 5
+          },
+          "text": "cấp ngày tháng năm .Tại:",
+          "reason": "attached_source_field_continuation",
+          "justified": true
+        },
+        {
+          "order": 5789,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5789,
+            "line": 2120,
+            "column": 8
+          },
+          "text": "NGƯỜI YÊU CẦU",
+          "reason": "short_label_outside_confirmed_input_sequence",
+          "justified": true
+        }
+      ],
+      "value_text_audit_before": [
+        {
+          "order": 1768,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 1768,
+            "line": 622,
+            "column": 4
+          },
+          "field_name": "Do ông (bà)",
+          "value_text": "…………………………………………………làm đại diện.",
+          "reason": "placeholder_followed_by_prompt_or_prose"
+        },
+        {
+          "order": 1774,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 1774,
+            "line": 624,
+            "column": 4
+          },
+          "field_name": "Do ông (bà)",
+          "value_text": "…………………………………………………làm đại diện tiến hành giao nhận thông tin, dữ liệu của: ...(4)… do …(3)…..thành lập,…...(5) … chủ biên, được phê duyệt theo quyết định số ….. / ngày….. tháng .... năm 20.... của ……….(6)…….., đã được giao nộp đầy đủ vào …..(1)…………….",
+          "reason": "placeholder_followed_by_prompt_or_prose"
+        },
+        {
+          "order": 2724,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 2724,
+            "line": 984,
+            "column": 4
+          },
+          "field_name": "Do ông (bà)",
+          "value_text": "…………………………………………………làm đại diện.",
+          "reason": "placeholder_followed_by_prompt_or_prose"
+        },
+        {
+          "order": 2730,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 2730,
+            "line": 986,
+            "column": 4
+          },
+          "field_name": "Do ông (bà)",
+          "value_text": "…………………………………………………làm đại diện tiến hành giao nhận:",
+          "reason": "prompt_in_value_text"
+        },
+        {
+          "order": 2908,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 2908,
+            "line": 1058,
+            "column": 4
+          },
+          "field_name": "+ Phiếu mẫu vật địa chất",
+          "value_text": "(ghi rõ số lượng phiếu).",
+          "reason": "instruction_in_value_text"
+        },
+        {
+          "order": 4380,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 4380,
+            "line": 1554,
+            "column": 4
+          },
+          "field_name": "Trang đầu tiên",
+          "value_text": "ghi tên cơ quan chủ quản (nếu có), tổ chức, đơn vị chủ trì thực hiện đề án điều tra cơ bản địa chất, điều tra địa chất về khoáng sản; tên tổ chức, cá nhân thăm dò khoáng sản, thăm dò bổ sung, đơn vị thi công đề án, tên đề án, loại nhật ký như trang bìa và ghi cụ thể các thông tin:",
+          "reason": "instruction_in_value_text"
+        },
+        {
+          "order": 4411,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 4411,
+            "line": 1559,
+            "column": 4
+          },
+          "field_name": "Trang 2, 3",
+          "value_text": "ghi mục lục của nhật ký:",
+          "reason": "instruction_in_value_text"
+        },
+        {
+          "order": 4510,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 4510,
+            "line": 1602,
+            "column": 4
+          },
+          "field_name": "Trang 4",
+          "value_text": "Các ký hiệu, chữ viết tắt sử dụng trong nhật ký",
+          "reason": "instruction_in_value_text"
+        },
+        {
+          "order": 4513,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 4513,
+            "line": 1603,
+            "column": 4
+          },
+          "field_name": "Trang 5",
+          "value_text": "để trống",
+          "reason": "instruction_in_value_text"
+        },
+        {
+          "order": 4516,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 4516,
+            "line": 1604,
+            "column": 4
+          },
+          "field_name": "Từ trang 6",
+          "value_text": "Ghi nội dung khảo sát. Chỉ mô tả và đánh số ở trang bên phải, trang bên trái sử dụng để vẽ hình minh họa (trên sổ giấy) và ghi các kết quả phân tích mẫu.",
+          "reason": "instruction_in_value_text"
+        },
+        {
+          "order": 5730,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5730,
+            "line": 2089,
+            "column": 4
+          },
+          "field_name": "Người đại diện/Người yêu cầu",
+          "value_text": "Ông (bà):",
+          "reason": "prompt_in_value_text"
+        }
+      ],
+      "value_text_audit_after": [],
+      "remaining_structured_paragraphs": [
+        {
+          "order": 4133,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 4133,
+            "line": 1480,
+            "column": 4
+          },
+          "text": "- Tài liệu công trình khai đào.",
+          "scope": "annex",
+          "reason": "isolated_marker_without_adjacent_sequence",
+          "justified": true,
+          "neighboring_types": [
+            "paragraph"
+          ]
+        },
+        {
+          "order": 4172,
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 4172,
+            "line": 1493,
+            "column": 4
+          },
+          "text": "- Tài liệu công trình khoan",
+          "scope": "annex",
+          "reason": "isolated_marker_without_adjacent_sequence",
+          "justified": true,
+          "neighboring_types": [
+            "paragraph",
+            "paragraph"
+          ]
+        }
+      ],
+      "form_boundaries": [
+        {
+          "annex": "I",
+          "number": "01",
+          "title": "Danh mục thông tin, dữ liệu giao nộp",
+          "order": 602,
+          "child_count": 12,
+          "next_form_number": "02",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "DANH MỤC THÔNG TIN, DỮ LIỆU GIAO NỘP",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 675,
+                "line": 207,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 602,
+            "line": 184,
+            "column": 4
+          }
+        },
+        {
+          "annex": "I",
+          "number": "02",
+          "title": "Thông báo kết quả kiểm tra, đối chiếu\nthông tin, dữ liệu giao nộp",
+          "order": 967,
+          "child_count": 13,
+          "next_form_number": "03",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "THÔNG BÁO",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 1031,
+                "line": 345,
+                "column": 4
+              }
+            },
+            {
+              "type": "form_subtitle",
+              "text": "KẾT QUẢ KIỂM TRA, ĐỐI CHIẾU THÔNG TIN, DỮ LIỆU GIAO NỘP",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 1035,
+                "line": 346,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 967,
+            "line": 322,
+            "column": 4
+          }
+        },
+        {
+          "annex": "I",
+          "number": "03",
+          "title": "Thông báo kết quả kiểm tra mẫu vật địa chất, khoáng sản,\nmẫu vật bảo tàng giao nộp",
+          "order": 1361,
+          "child_count": 13,
+          "next_form_number": "04",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "THÔNG BÁO",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 1423,
+                "line": 498,
+                "column": 4
+              }
+            },
+            {
+              "type": "form_subtitle",
+              "text": "KẾT QUẢ KIỂM TRA MẪU VẬT ĐỊA CHẤT, KHOÁNG SẢN, MẪU VẬT BẢO TÀNG GIAO NỘP",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 1427,
+                "line": 499,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 1361,
+            "line": 476,
+            "column": 4
+          }
+        },
+        {
+          "annex": "I",
+          "number": "04",
+          "title": "Biên bản giao nhận thông tin, dữ liệu\nđịa chất, khoáng sản nộp lưu trữ",
+          "order": 1669,
+          "child_count": 20,
+          "next_form_number": "05",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "BIÊN BẢN",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 1742,
+                "line": 616,
+                "column": 4
+              }
+            },
+            {
+              "type": "form_subtitle",
+              "text": "GIAO NHẬN THÔNG TIN, DỮ LIỆU\nĐỊA CHẤT, KHOÁNG SẢN NỘP LƯU TRỮ",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 1746,
+                "line": 617,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 1669,
+            "line": 595,
+            "column": 4
+          }
+        },
+        {
+          "annex": "I",
+          "number": "05",
+          "title": "Biên bản giao nhận mẫu vậtđịa chất, khoáng sản, mẫuvậtbảo tàng",
+          "order": 2628,
+          "child_count": 21,
+          "next_form_number": null,
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "BIÊN BẢN",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 2698,
+                "line": 978,
+                "column": 4
+              }
+            },
+            {
+              "type": "form_subtitle",
+              "text": "GIAO NHẬN MẪU VẬT ĐỊA CHẤT, KHOÁNG SẢN, MẪU VẬT BẢO TÀNG",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 2702,
+                "line": 979,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 2628,
+            "line": 958,
+            "column": 4
+          }
+        },
+        {
+          "annex": "II",
+          "number": "01",
+          "title": "Bìa 1 Thuyết minh tài liệu, báo cáo",
+          "order": 3123,
+          "child_count": 2,
+          "next_form_number": "02",
+          "displayed_titles": [],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 3123,
+            "line": 1121,
+            "column": 4
+          }
+        },
+        {
+          "annex": "II",
+          "number": "02",
+          "title": "Bìa 2 Thuyết minh tài liệu, báo cáo",
+          "order": 3248,
+          "child_count": 11,
+          "next_form_number": "03",
+          "displayed_titles": [],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 3248,
+            "line": 1157,
+            "column": 4
+          }
+        },
+        {
+          "annex": "II",
+          "number": "03",
+          "title": "Danh mục tài liệu tham khảo",
+          "order": 3458,
+          "child_count": 3,
+          "next_form_number": "04",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "DANH MỤC TÀI LIỆU THAM KHẢO",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 3462,
+                "line": 1220,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 3458,
+            "line": 1219,
+            "column": 4
+          }
+        },
+        {
+          "annex": "II",
+          "number": "04",
+          "title": "Danh mục các phụ lục kèm theo",
+          "order": 3510,
+          "child_count": 2,
+          "next_form_number": "05",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "DANH MỤC PHỤ LỤC KÈM THEO TÀI LIỆU, BÁO CÁO",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 3517,
+                "line": 1234,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 3510,
+            "line": 1232,
+            "column": 4
+          }
+        },
+        {
+          "annex": "II",
+          "number": "05",
+          "title": "Danh mục bản vẽ kèm theo",
+          "order": 3606,
+          "child_count": 3,
+          "next_form_number": "06",
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "DANH MỤC BẢN VẼ KÈM THEO TÀI LIỆU, BÁO CÁO",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 3610,
+                "line": 1273,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 3606,
+            "line": 1272,
+            "column": 4
+          }
+        },
+        {
+          "annex": "II",
+          "number": "06",
+          "title": "Danh mục tài liệu nguyên thủy",
+          "order": 3777,
+          "child_count": 3,
+          "next_form_number": null,
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "DANH MỤC TÀI LIỆU NGUYÊN THỦY",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 3784,
+                "line": 1344,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 3777,
+            "line": 1342,
+            "column": 4
+          }
+        },
+        {
+          "annex": "III",
+          "number": "01",
+          "title": "Nhật ký địa chất",
+          "order": 4239,
+          "child_count": 10,
+          "next_form_number": "02",
+          "displayed_titles": [],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 4239,
+            "line": 1515,
+            "column": 4
+          }
+        },
+        {
+          "annex": "III",
+          "number": "02",
+          "title": "Sổ mô tả công trình khai đào (dọn vết lộ, hào, hố, lò, giếng)",
+          "order": 4560,
+          "child_count": 7,
+          "next_form_number": "03",
+          "displayed_titles": [],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 4560,
+            "line": 1618,
+            "column": 4
+          }
+        },
+        {
+          "annex": "III",
+          "number": "03",
+          "title": "Thiết đồ theo dõi, mô tả công trình khoan",
+          "order": 4852,
+          "child_count": 5,
+          "next_form_number": "04",
+          "displayed_titles": [],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 4852,
+            "line": 1734,
+            "column": 4
+          }
+        },
+        {
+          "annex": "III",
+          "number": "04",
+          "title": "Thiết đồ tổng hợp công trình khoan",
+          "order": 5192,
+          "child_count": 5,
+          "next_form_number": null,
+          "displayed_titles": [],
+          "evidence": "explicit_form_number",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5192,
+            "line": 1874,
+            "column": 4
+          }
+        },
+        {
+          "annex": "IV",
+          "number": null,
+          "title": "PHIẾU YÊU CẦU CUNG CẤP THÔNG TIN, DỮ LIỆU ĐỊA CHẤT, KHOÁNG SẢN",
+          "order": 5717,
+          "child_count": 16,
+          "next_form_number": null,
+          "displayed_titles": [
+            {
+              "type": "form_title",
+              "text": "PHIẾU YÊU CẦU CUNG CẤP THÔNG TIN, DỮ LIỆU ĐỊA CHẤT, KHOÁNG SẢN",
+              "source_ref": {
+                "tag": "p",
+                "dom_order": 5717,
+                "line": 2085,
+                "column": 4
+              }
+            }
+          ],
+          "evidence": "standalone_form_heading",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 5717,
+            "line": 2085,
+            "column": 4
+          }
+        }
+      ],
+      "content_size_bytes": {
+        "before": 993203,
+        "after": 949296
+      },
+      "size_contributors": {
+        "before": {
+          "measurement": "UTF-8 minified value bytes; independent contributions can overlap",
+          "semantic_nodes": 608,
+          "physical_cells": 512,
+          "physical_cell_fields_bytes": 196319,
+          "primary_source_ref_bytes": 56918,
+          "coalesced_source_refs_bytes": 99,
+          "references_bytes": 4160,
+          "physical_text_effective_segments_bytes": 46583
+        },
+        "after": {
+          "measurement": "UTF-8 minified value bytes; independent contributions can overlap",
+          "semantic_nodes": 609,
+          "physical_cells": 512,
+          "physical_cell_fields_bytes": 178911,
+          "primary_source_ref_bytes": 56969,
+          "coalesced_source_refs_bytes": 99,
+          "references_bytes": 4160,
+          "physical_text_effective_segments_bytes": 46583
+        }
+      },
+      "remaining_issues": []
+    },
+    {
+      "document_id": "vbpl:ef51a450-80bf-11f1-b76e-7b4564eab36e",
+      "directory": "ef51a450-80bf-11f1-b76e-7b4564eab36e",
+      "document_number": "34/2026/NQ-CP",
+      "quality": {
+        "meaningful_text_preserved": true,
+        "deterministic": true,
+        "schema_valid": true,
+        "semantic_complete": true,
+        "order_valid": true,
+        "parent_child_valid": true
+      },
+      "legal_hierarchy": {
+        "parts": 0,
+        "chapters": 0,
+        "sections": 0,
+        "subsections": 0,
+        "articles": 3,
+        "clauses": 4,
+        "points": 0
+      },
+      "annex_hierarchy": {
+        "annexes": 0,
+        "numbered_sections": 0,
+        "numbered_items": 0,
+        "max_depth": 0
+      },
+      "max_depth": 3,
+      "issues": {
+        "info": 4,
+        "warning": 0,
+        "error": 0,
+        "fatal": 0
+      },
+      "before_after": {
+        "forms": {
+          "before": 0,
+          "after": 0
+        },
+        "fields": {
+          "before": 0,
+          "after": 0
+        },
+        "subfields": {
+          "before": 0,
+          "after": 0
+        },
+        "placeholders": {
+          "before": 0,
+          "after": 0
+        },
+        "footnotes": {
+          "before": 0,
+          "after": 0
+        },
+        "placeholder_references": {
+          "before": 0,
+          "after": 0
+        },
+        "unresolved_numbered_form_items": {
+          "before": 0,
+          "after": 0
+        },
+        "split_form_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "inconsistent_footnote_sequences": {
+          "before": 0,
+          "after": 0
+        },
+        "bibliography_fields_misclassified": {
+          "before": 0,
+          "after": 0
+        },
+        "structured_table_cell_lists": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "suspicious_value_text": {
+          "before": 0,
+          "after": 0
+        },
+        "semantic_empty_string_fields": {
+          "before": 0,
+          "after": 0
+        },
+        "physical_empty_cells": {
+          "before": 0,
+          "after": 0
+        },
+        "unexplained_form_label_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "unexplained_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ignored_ui_artifacts": {
+          "before": 0,
+          "after": 0
+        },
+        "orphan_nodes": {
+          "before": 0,
+          "after": 0
+        },
+        "numbered_paragraph_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_decimal_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ambiguous_tables": {
+          "before": 0,
+          "after": 0
+        },
+        "warnings": {
+          "before": 0,
+          "after": 0
+        },
+        "errors": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_form_label_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_form_fields_including_values": {
+          "before": 0,
+          "after": 0
+        },
+        "duplicated_references": {
+          "before": 0,
+          "after": 0
+        },
+        "singleton_source_refs": {
+          "before": 0,
+          "after": 0
+        },
+        "title_ref_occurrences": {
+          "before": 0,
+          "after": 0
+        },
+        "meaningless_axis_cell_metadata": {
+          "before": 0,
+          "after": 0
+        }
+      },
+      "node_type_changes": {},
+      "remaining_form_paragraphs": [],
+      "value_text_audit_before": [],
+      "value_text_audit_after": [],
+      "remaining_structured_paragraphs": [],
+      "form_boundaries": [],
+      "content_size_bytes": {
+        "before": 28052,
+        "after": 28154
+      },
+      "size_contributors": {
+        "before": {
+          "measurement": "UTF-8 minified value bytes; independent contributions can overlap",
+          "semantic_nodes": 59,
+          "physical_cells": 0,
+          "physical_cell_fields_bytes": 0,
+          "primary_source_ref_bytes": 2801,
+          "coalesced_source_refs_bytes": 0,
+          "references_bytes": 0,
+          "physical_text_effective_segments_bytes": 0
+        },
+        "after": {
+          "measurement": "UTF-8 minified value bytes; independent contributions can overlap",
+          "semantic_nodes": 59,
+          "physical_cells": 0,
+          "physical_cell_fields_bytes": 0,
+          "primary_source_ref_bytes": 2801,
+          "coalesced_source_refs_bytes": 0,
+          "references_bytes": 0,
+          "physical_text_effective_segments_bytes": 0
+        }
+      },
+      "remaining_issues": []
+    }
+  ],
+  "totals": {
+    "forms": {
+      "before": 27,
+      "after": 27
+    },
+    "fields": {
+      "before": 200,
+      "after": 202
+    },
+    "subfields": {
+      "before": 39,
+      "after": 40
+    },
+    "placeholders": {
+      "before": 6,
+      "after": 6
+    },
+    "footnotes": {
+      "before": 54,
+      "after": 54
+    },
+    "placeholder_references": {
+      "before": 65,
+      "after": 65
+    },
+    "unresolved_numbered_form_items": {
+      "before": 0,
+      "after": 0
+    },
+    "split_form_candidates": {
+      "before": 0,
+      "after": 0
+    },
+    "inconsistent_footnote_sequences": {
+      "before": 0,
+      "after": 0
+    },
+    "bibliography_fields_misclassified": {
+      "before": 0,
+      "after": 0
+    },
+    "structured_table_cell_lists": {
+      "before": 4,
+      "after": 4
+    },
+    "generic_structured_paragraphs": {
+      "before": 2,
+      "after": 2
+    },
+    "suspicious_value_text": {
+      "before": 17,
+      "after": 0
+    },
+    "semantic_empty_string_fields": {
+      "before": 0,
+      "after": 0
+    },
+    "physical_empty_cells": {
+      "before": 420,
+      "after": 420
+    },
+    "unexplained_form_label_paragraphs": {
+      "before": 2,
+      "after": 0
+    },
+    "unexplained_structured_paragraphs": {
+      "before": 0,
+      "after": 0
+    },
+    "ignored_ui_artifacts": {
+      "before": 4,
+      "after": 4
+    },
+    "orphan_nodes": {
+      "before": 0,
+      "after": 0
+    },
+    "numbered_paragraph_candidates": {
+      "before": 0,
+      "after": 0
+    },
+    "generic_decimal_paragraphs": {
+      "before": 0,
+      "after": 0
+    },
+    "ambiguous_tables": {
+      "before": 0,
+      "after": 0
+    },
+    "warnings": {
+      "before": 2,
+      "after": 2
+    },
+    "errors": {
+      "before": 0,
+      "after": 0
+    },
+    "generic_form_label_paragraphs": {
+      "before": 2,
+      "after": 0
+    },
+    "generic_form_fields_including_values": {
+      "before": 2,
+      "after": 0
+    },
+    "duplicated_references": {
+      "before": 0,
+      "after": 0
+    },
+    "singleton_source_refs": {
+      "before": 0,
+      "after": 0
+    },
+    "title_ref_occurrences": {
+      "before": 12,
+      "after": 0
+    },
+    "meaningless_axis_cell_metadata": {
+      "before": 1092,
+      "after": 0
+    }
+  },
+  "physical_cell_property_vocabulary": {
+    "association_status": 30,
+    "cell_id": 1123,
+    "cell_type": 1123,
+    "colspan": 1123,
+    "column": 1123,
+    "column_axis": 1,
+    "confidence": 31,
+    "content": 85,
+    "effective_text": 1123,
+    "evidence": 705,
+    "labels": 1,
+    "order": 1123,
+    "orientation": 1,
+    "original_colspan": 1123,
+    "original_rowspan": 1123,
+    "role": 31,
+    "row": 1123,
+    "row_axis": 1,
+    "row_group_id": 1123,
+    "rowspan": 1123,
+    "section": 1123,
+    "source_ref": 1123,
+    "text": 1123,
+    "text_segments": 1123
+  },
+  "size_bytes": {
+    "before": 2931475,
+    "after": 2838613
+  },
+  "issue_summary": {
+    "info": 93,
+    "warning": 2,
+    "error": 0,
+    "fatal": 0
+  },
+  "known_ambiguities": "Two pre-existing source warnings retained: bare page-number candidate in Decision and matrix-axis orientation in technical Circular. Both have usable hierarchy and preserved text; semantic_complete remains false for these documents."
+}

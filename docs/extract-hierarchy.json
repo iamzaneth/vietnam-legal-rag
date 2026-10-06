@@ -1,0 +1,5517 @@
+{
+  "schema_version": "2.3.2",
+  "parser_version": "2.3.2",
+  "sample": "0c389a00-78f6-11f1-a726-87c913cf8f30",
+  "scope": "Every available raw capture, every generated JSON tab, serialized artifacts independently reparsed",
+  "depth_definition": "Edges from document through sections and legal/annex numbered nodes; paragraph/list/table/form wrappers excluded. Annex max_depth counts number_path components.",
+  "before_after_scope": "content.json; numbered_paragraph_candidates require candidate_role clause; generic decimals counted across the whole tree",
+  "documents": [
+    {
+      "document_id": "vbpl:0c389a00-78f6-11f1-a726-87c913cf8f30",
+      "directory": "0c389a00-78f6-11f1-a726-87c913cf8f30",
+      "document_number": "16111 /QĐ-BCT",
+      "hierarchy_validation": {
+        "document_sections": {
+          "header": 1,
+          "title_block": 1,
+          "preamble": 1,
+          "enacting_formula": 1,
+          "body": 1,
+          "closing": 1,
+          "annexes": 0
+        },
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 3,
+          "clauses": 2,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "tables": {
+          "layout": 2,
+          "data": 0,
+          "matrix": 0,
+          "form": 0,
+          "key_value": 0,
+          "annex_form": 0,
+          "ambiguous": 0
+        },
+        "unresolved": {
+          "numbered_candidates": 0,
+          "orphan_nodes": 0,
+          "ambiguous_tables": 0
+        },
+        "max_depth": 3,
+        "schema_valid": true,
+        "order_valid": true,
+        "parent_child_valid": true,
+        "semantic_complete": false,
+        "status": "valid_with_warnings"
+      },
+      "content_issues": {
+        "info": 2,
+        "warning": 1,
+        "error": 0,
+        "fatal": 0
+      },
+      "all_tab_issues": {
+        "info": 4,
+        "warning": 1,
+        "error": 0,
+        "fatal": 0
+      },
+      "tabs": [
+        {
+          "file": "content.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "5696cdbe64e2f18c4cde7c46977687675019bf57b781492d5127b3278b29d078",
+          "extracted_text_sha256": "5696cdbe64e2f18c4cde7c46977687675019bf57b781492d5127b3278b29d078",
+          "issue_summary": {
+            "info": 2,
+            "warning": 1,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "history.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "96e12ae61a3377e9aaaca140c2d1a91bb116a3604859640d0d0a09f0d1bf4167",
+          "extracted_text_sha256": "96e12ae61a3377e9aaaca140c2d1a91bb116a3604859640d0d0a09f0d1bf4167",
+          "issue_summary": {
+            "info": 0,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        },
+        {
+          "file": "properties.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "c6608179714edcba85978d0c4c2c5415ab25f6ab651ff25402f6f5c0a335e0c6",
+          "extracted_text_sha256": "c6608179714edcba85978d0c4c2c5415ab25f6ab651ff25402f6f5c0a335e0c6",
+          "issue_summary": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        },
+        {
+          "file": "relations.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "64e152d4f06cb7b5f2671652e7acf0462cd4f64768ec2401292bcf5e6ea58a26",
+          "extracted_text_sha256": "64e152d4f06cb7b5f2671652e7acf0462cd4f64768ec2401292bcf5e6ea58a26",
+          "issue_summary": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        }
+      ],
+      "inspection": {
+        "unresolved_nodes": [],
+        "promoted_clauses": [],
+        "coalesced_titles": [],
+        "generic_decimal_paragraphs_in_annex": [],
+        "table_review": [],
+        "form_validation": {
+          "forms": 0,
+          "fields": 0,
+          "subfields": 0,
+          "placeholders": 0,
+          "footnotes": 0,
+          "placeholder_references": 0,
+          "unresolved_numbered_form_items": 0,
+          "split_form_candidates": 0,
+          "inconsistent_footnote_sequences": 0,
+          "bibliography_fields_misclassified": 0,
+          "structured_table_cell_lists": 0,
+          "generic_structured_paragraphs": 0,
+          "form_nodes_missing_field_kind": 0,
+          "form_nodes_missing_field_evidence": 0,
+          "suspicious_value_text": 0,
+          "semantic_empty_string_fields": 0,
+          "physical_empty_cells": 0,
+          "unexplained_form_label_paragraphs": 0,
+          "unexplained_structured_paragraphs": 0,
+          "semantic_complete": true
+        },
+        "form_boundaries": [],
+        "remaining_structured_paragraphs": [],
+        "footnote_groups": []
+      },
+      "remaining_issues": [
+        {
+          "severity": "warning",
+          "code": "possible_page_number",
+          "message": "Bare source number retained; page-transition evidence is insufficient to remove it",
+          "source_ref": {
+            "tag": "p",
+            "dom_order": 13,
+            "line": 8,
+            "column": 3
+          },
+          "issue_id": "issue_b5fc6d8b49c2d264"
+        }
+      ],
+      "legal_and_annex_relationships_unchanged": true,
+      "source_table_geometry_unchanged": true,
+      "before_after": {
+        "forms": {
+          "before": 0,
+          "after": 0
+        },
+        "fields": {
+          "before": 0,
+          "after": 0
+        },
+        "subfields": {
+          "before": 0,
+          "after": 0
+        },
+        "placeholders": {
+          "before": 0,
+          "after": 0
+        },
+        "footnotes": {
+          "before": 0,
+          "after": 0
+        },
+        "placeholder_references": {
+          "before": 0,
+          "after": 0
+        },
+        "unresolved_numbered_form_items": {
+          "before": 0,
+          "after": 0
+        },
+        "split_form_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "inconsistent_footnote_sequences": {
+          "before": 0,
+          "after": 0
+        },
+        "bibliography_fields_misclassified": {
+          "before": 0,
+          "after": 0
+        },
+        "structured_table_cell_lists": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "form_nodes_missing_field_kind": {
+          "before": 0,
+          "after": 0
+        },
+        "form_nodes_missing_field_evidence": {
+          "before": 0,
+          "after": 0
+        },
+        "suspicious_value_text": {
+          "before": 0,
+          "after": 0
+        },
+        "semantic_empty_string_fields": {
+          "before": 0,
+          "after": 0
+        },
+        "physical_empty_cells": {
+          "before": 0,
+          "after": 0
+        },
+        "unexplained_form_label_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "unexplained_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ignored_ui_artifacts": {
+          "before": 0,
+          "after": 0
+        },
+        "orphan_nodes": {
+          "before": 0,
+          "after": 0
+        },
+        "numbered_paragraph_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_decimal_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ambiguous_tables": {
+          "before": 0,
+          "after": 0
+        },
+        "warnings": {
+          "before": 1,
+          "after": 1
+        },
+        "errors": {
+          "before": 0,
+          "after": 0
+        }
+      },
+      "tree": "legal_document\n├── header\n│   ├── paragraph\n│   ├── issuing_authority\n│   ├── document_number 16111 /QĐ-BCT\n│   ├── national_heading\n│   ├── national_motto\n│   └── place_and_date\n├── title_block\n│   ├── document_type_heading\n│   ├── document_title\n│   └── issuing_authority_title\n├── preamble\n│   ├── legal_basis\n│   ├── legal_basis\n│   ├── legal_basis\n│   └── proposal_basis\n├── enacting_formula\n├── body\n│   ├── article 1\n│   │   └── paragraph\n│   ├── article 2\n│   │   └── paragraph\n│   └── article 3\n│       ├── clause 1\n│       │   └── paragraph\n│       └── clause 2\n│           └── paragraph\n└── closing\n    ├── recipients\n    │   ├── recipient\n    │   ├── recipient\n    │   ├── recipient\n    │   ├── recipient\n    │   ├── recipient\n    │   └── recipient\n    └── signature\n        ├── delegation_title\n        ├── signer_title\n        ├── signature_status\n        └── signer_name"
+    },
+    {
+      "document_id": "vbpl:2308a290-bbb1-11f1-9e5f-8da308b3d359",
+      "directory": "2308a290-bbb1-11f1-9e5f-8da308b3d359",
+      "document_number": "365/2026/NĐ-CP",
+      "hierarchy_validation": {
+        "document_sections": {
+          "header": 1,
+          "title_block": 1,
+          "preamble": 1,
+          "enacting_formula": 1,
+          "body": 1,
+          "closing": 1,
+          "annexes": 1
+        },
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 5,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 28,
+          "clauses": 80,
+          "points": 110
+        },
+        "annex_hierarchy": {
+          "annexes": 1,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "tables": {
+          "layout": 12,
+          "data": 0,
+          "matrix": 0,
+          "form": 0,
+          "key_value": 1,
+          "annex_form": 26,
+          "ambiguous": 0
+        },
+        "unresolved": {
+          "numbered_candidates": 0,
+          "orphan_nodes": 0,
+          "ambiguous_tables": 0
+        },
+        "max_depth": 5,
+        "schema_valid": true,
+        "order_valid": true,
+        "parent_child_valid": true,
+        "semantic_complete": true,
+        "status": "valid"
+      },
+      "content_issues": {
+        "info": 38,
+        "warning": 0,
+        "error": 0,
+        "fatal": 0
+      },
+      "all_tab_issues": {
+        "info": 40,
+        "warning": 0,
+        "error": 0,
+        "fatal": 0
+      },
+      "tabs": [
+        {
+          "file": "content.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "d35e5451ff02ab905225df7c41d37c4dcf385e89c86fdb533263f7d65d828e4e",
+          "extracted_text_sha256": "d35e5451ff02ab905225df7c41d37c4dcf385e89c86fdb533263f7d65d828e4e",
+          "issue_summary": {
+            "info": 38,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "history.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "b2fcec10b5bae1c9dee60bf8cd42b9d9f7895186c26626afd7f225da66457fe5",
+          "extracted_text_sha256": "b2fcec10b5bae1c9dee60bf8cd42b9d9f7895186c26626afd7f225da66457fe5",
+          "issue_summary": {
+            "info": 0,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        },
+        {
+          "file": "properties.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "af90d3f0b135c495cf0b337fecc4ab4df4a77176adbb89b0a7daa5ddcf453a8d",
+          "extracted_text_sha256": "af90d3f0b135c495cf0b337fecc4ab4df4a77176adbb89b0a7daa5ddcf453a8d",
+          "issue_summary": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        },
+        {
+          "file": "relations.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "6982c69d10aa84855aa01a66873ddbe9d76859b3395c4786af2affbf275929ab",
+          "extracted_text_sha256": "6982c69d10aa84855aa01a66873ddbe9d76859b3395c4786af2affbf275929ab",
+          "issue_summary": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        }
+      ],
+      "inspection": {
+        "unresolved_nodes": [],
+        "promoted_clauses": [
+          {
+            "number": "1",
+            "order": 415,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 415,
+              "line": 128,
+              "column": 4
+            },
+            "evidence": {
+              "score": 0.75,
+              "signals": {
+                "article_parent": 0.35,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "2",
+            "order": 418,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 418,
+              "line": 129,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "3",
+            "order": 421,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 421,
+              "line": 130,
+              "column": 4
+            },
+            "evidence": {
+              "score": 0.75,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "1",
+            "order": 738,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 738,
+              "line": 230,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15,
+                "following_point_a": 0.3,
+                "following_point_b": 0.2
+              }
+            },
+            "points": [
+              "a",
+              "b",
+              "c",
+              "d",
+              "đ",
+              "e",
+              "g",
+              "h"
+            ]
+          },
+          {
+            "number": "1",
+            "order": 847,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 847,
+              "line": 266,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15,
+                "following_point_a": 0.3,
+                "following_point_b": 0.2
+              }
+            },
+            "points": [
+              "a",
+              "b",
+              "c",
+              "d",
+              "đ",
+              "e",
+              "g",
+              "h",
+              "i",
+              "k"
+            ]
+          }
+        ],
+        "coalesced_titles": [
+          {
+            "type": "chapter",
+            "number": "II",
+            "title": "ĐIỀU KIỆN KINH DOANH VÀ GIẤY CHỨNG NHẬN\nĐỦ ĐIỀU KIỆN KINH DOANH XUẤT KHẨU GẠO",
+            "source_refs": [
+              {
+                "tag": "p",
+                "dom_order": 187,
+                "line": 57,
+                "column": 4
+              },
+              {
+                "tag": "p",
+                "dom_order": 191,
+                "line": 58,
+                "column": 4
+              },
+              {
+                "tag": "p",
+                "dom_order": 195,
+                "line": 59,
+                "column": 4
+              }
+            ]
+          },
+          {
+            "type": "chapter",
+            "number": "III",
+            "title": "ĐIỀU HÀNH XUẤT KHẨU GẠO VÀ NHẬP KHẨU GẠO",
+            "source_refs": [
+              {
+                "tag": "p",
+                "dom_order": 397,
+                "line": 123,
+                "column": 4
+              },
+              {
+                "tag": "p",
+                "dom_order": 401,
+                "line": 124,
+                "column": 4
+              }
+            ]
+          },
+          {
+            "type": "chapter",
+            "number": "IV",
+            "title": "TRÁCH NHIỆM CỦA CƠ QUAN NHÀ NƯỚC\nVÀ CÁC TỔ CHỨC, CÁ NHÂN CÓ LIÊN QUAN",
+            "source_refs": [
+              {
+                "tag": "p",
+                "dom_order": 719,
+                "line": 225,
+                "column": 4
+              },
+              {
+                "tag": "p",
+                "dom_order": 723,
+                "line": 226,
+                "column": 4
+              },
+              {
+                "tag": "p",
+                "dom_order": 727,
+                "line": 227,
+                "column": 4
+              }
+            ]
+          },
+          {
+            "type": "chapter",
+            "number": "V",
+            "title": "ĐIỀU KHOẢN THI HÀNH",
+            "source_refs": [
+              {
+                "tag": "p",
+                "dom_order": 929,
+                "line": 293,
+                "column": 4
+              },
+              {
+                "tag": "p",
+                "dom_order": 933,
+                "line": 294,
+                "column": 4
+              }
+            ]
+          }
+        ],
+        "generic_decimal_paragraphs_in_annex": [],
+        "table_review": [
+          {
+            "table_id": "table_1136",
+            "table_kind": "key_value",
+            "classification_evidence": "repeated_source_label_value_pairs",
+            "grid_shape": {
+              "rows": 11,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 1136,
+              "line": 350,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": []
+          },
+          {
+            "table_id": "table_1388",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 4,
+              "columns": 8
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 1388,
+              "line": 455,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 1388,
+                  "line": 455,
+                  "column": 9
+                },
+                "issue_id": "issue_db15699142e3b5dd"
+              }
+            ]
+          },
+          {
+            "table_id": "table_1552",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 3,
+              "columns": 7
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 1552,
+              "line": 520,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 1552,
+                  "line": 520,
+                  "column": 9
+                },
+                "issue_id": "issue_b3c7ec25cc7c6cd1"
+              }
+            ]
+          },
+          {
+            "table_id": "table_1708",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 1708,
+              "line": 581,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 1708,
+                  "line": 581,
+                  "column": 9
+                },
+                "issue_id": "issue_dd63ff5dd35a3c67"
+              }
+            ]
+          },
+          {
+            "table_id": "table_1914",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 4,
+              "columns": 8
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 1914,
+              "line": 651,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 1914,
+                  "line": 651,
+                  "column": 9
+                },
+                "issue_id": "issue_9ab421aaef2dc47d"
+              }
+            ]
+          },
+          {
+            "table_id": "table_2081",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 3,
+              "columns": 7
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 2081,
+              "line": 716,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 2081,
+                  "line": 716,
+                  "column": 9
+                },
+                "issue_id": "issue_02a673022494558c"
+              }
+            ]
+          },
+          {
+            "table_id": "table_2375",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 2375,
+              "line": 821,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 2375,
+                  "line": 821,
+                  "column": 9
+                },
+                "issue_id": "issue_9b8d4041b1b06ea3"
+              }
+            ]
+          },
+          {
+            "table_id": "table_2534",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 4,
+              "columns": 8
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 2534,
+              "line": 874,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 2534,
+                  "line": 874,
+                  "column": 9
+                },
+                "issue_id": "issue_737e58dc1c5cce99"
+              }
+            ]
+          },
+          {
+            "table_id": "table_2708",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 3,
+              "columns": 7
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 2708,
+              "line": 942,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 2708,
+                  "line": 942,
+                  "column": 9
+                },
+                "issue_id": "issue_05a93bb22d84640c"
+              }
+            ]
+          },
+          {
+            "table_id": "table_2859",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 2859,
+              "line": 1000,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 2859,
+                  "line": 1000,
+                  "column": 9
+                },
+                "issue_id": "issue_4cd600bae5ece716"
+              }
+            ]
+          },
+          {
+            "table_id": "table_3025",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 4,
+              "columns": 8
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 3025,
+              "line": 1057,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 3025,
+                  "line": 1057,
+                  "column": 9
+                },
+                "issue_id": "issue_062c4cc126fbebd8"
+              }
+            ]
+          },
+          {
+            "table_id": "table_3195",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 3,
+              "columns": 7
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 3195,
+              "line": 1124,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 3195,
+                  "line": 1124,
+                  "column": 9
+                },
+                "issue_id": "issue_9ccc5d7722af08d1"
+              }
+            ]
+          },
+          {
+            "table_id": "table_3339",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 3339,
+              "line": 1181,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 3339,
+                  "line": 1181,
+                  "column": 9
+                },
+                "issue_id": "issue_185fec271b949d6e"
+              }
+            ]
+          },
+          {
+            "table_id": "table_3482",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 17,
+              "columns": 6
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 3482,
+              "line": 1235,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 3482,
+                  "line": 1235,
+                  "column": 9
+                },
+                "issue_id": "issue_7ec754c181488a12"
+              }
+            ]
+          },
+          {
+            "table_id": "table_3979",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 9,
+              "columns": 5
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 3979,
+              "line": 1444,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 3979,
+                  "line": 1444,
+                  "column": 9
+                },
+                "issue_id": "issue_52ae555042e50817"
+              }
+            ]
+          },
+          {
+            "table_id": "table_4223",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 5,
+              "columns": 9
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 4223,
+              "line": 1545,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 4223,
+                  "line": 1545,
+                  "column": 9
+                },
+                "issue_id": "issue_6af57167ac2520fd"
+              }
+            ]
+          },
+          {
+            "table_id": "table_4462",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 4,
+              "columns": 9
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 4462,
+              "line": 1640,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 4462,
+                  "line": 1640,
+                  "column": 9
+                },
+                "issue_id": "issue_49f38653e88db36e"
+              }
+            ]
+          },
+          {
+            "table_id": "table_4670",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 4670,
+              "line": 1720,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 4670,
+                  "line": 1720,
+                  "column": 9
+                },
+                "issue_id": "issue_897763534accac2f"
+              }
+            ]
+          },
+          {
+            "table_id": "table_4711",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 4711,
+              "line": 1735,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 4711,
+                  "line": 1735,
+                  "column": 9
+                },
+                "issue_id": "issue_eac6f7c00c6b9715"
+              }
+            ]
+          },
+          {
+            "table_id": "table_4799",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 10,
+              "columns": 4
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 4799,
+              "line": 1774,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 4799,
+                  "line": 1774,
+                  "column": 9
+                },
+                "issue_id": "issue_d63fbbc4057ea7d1"
+              }
+            ]
+          },
+          {
+            "table_id": "table_5027",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 5027,
+              "line": 1871,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 5027,
+                  "line": 1871,
+                  "column": 9
+                },
+                "issue_id": "issue_efbc859fd9b8e4e7"
+              }
+            ]
+          },
+          {
+            "table_id": "table_5235",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 5235,
+              "line": 1943,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 5235,
+                  "line": 1943,
+                  "column": 9
+                },
+                "issue_id": "issue_fa8bd13665d984df"
+              }
+            ]
+          },
+          {
+            "table_id": "table_5398",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 9,
+              "columns": 6
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 5398,
+              "line": 1999,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 5398,
+                  "line": 1999,
+                  "column": 9
+                },
+                "issue_id": "issue_6a513b6961288b55"
+              }
+            ]
+          },
+          {
+            "table_id": "table_5713",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 5713,
+              "line": 2130,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 5713,
+                  "line": 2130,
+                  "column": 9
+                },
+                "issue_id": "issue_2a8185cd523841f7"
+              }
+            ]
+          },
+          {
+            "table_id": "table_5965",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 9,
+              "columns": 8
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 5965,
+              "line": 2213,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 5965,
+                  "line": 2213,
+                  "column": 9
+                },
+                "issue_id": "issue_822831e8a0861fe2"
+              }
+            ]
+          },
+          {
+            "table_id": "table_6384",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 6384,
+              "line": 2383,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 6384,
+                  "line": 2383,
+                  "column": 9
+                },
+                "issue_id": "issue_f59e3064132fc679"
+              }
+            ]
+          },
+          {
+            "table_id": "table_6651",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 6651,
+              "line": 2472,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 6651,
+                  "line": 2472,
+                  "column": 9
+                },
+                "issue_id": "issue_e0352d561c9168a2"
+              }
+            ]
+          }
+        ],
+        "form_validation": {
+          "forms": 11,
+          "fields": 121,
+          "subfields": 26,
+          "placeholders": 3,
+          "footnotes": 2,
+          "placeholder_references": 0,
+          "unresolved_numbered_form_items": 0,
+          "split_form_candidates": 0,
+          "inconsistent_footnote_sequences": 0,
+          "bibliography_fields_misclassified": 0,
+          "structured_table_cell_lists": 3,
+          "generic_structured_paragraphs": 0,
+          "form_nodes_missing_field_kind": 0,
+          "form_nodes_missing_field_evidence": 0,
+          "suspicious_value_text": 0,
+          "semantic_empty_string_fields": 0,
+          "physical_empty_cells": 203,
+          "unexplained_form_label_paragraphs": 0,
+          "unexplained_structured_paragraphs": 0,
+          "semantic_complete": true
+        },
+        "form_boundaries": [
+          {
+            "annex": null,
+            "number": "01",
+            "title": "ĐƠN ĐỀ NGHỊ",
+            "order": 1288,
+            "child_count": 18,
+            "next_form_number": "02",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "ĐƠN ĐỀ NGHỊ",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 1340,
+                  "line": 440,
+                  "column": 4
+                }
+              },
+              {
+                "type": "form_subtitle",
+                "text": "Cấp giấy chứng nhận đủ điều kiện kinh doanh xuất khẩu gạo",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 1344,
+                  "line": 441,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 1288,
+              "line": 421,
+              "column": 4
+            }
+          },
+          {
+            "annex": null,
+            "number": "02",
+            "title": "GIẤY CHỨNG NHẬN",
+            "order": 1793,
+            "child_count": 21,
+            "next_form_number": "03",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "GIẤY CHỨNG NHẬN",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 1842,
+                  "line": 629,
+                  "column": 4
+                }
+              },
+              {
+                "type": "form_subtitle",
+                "text": "ĐỦ ĐIỀU KIỆN KINH DOANH XUẤT KHẨU GẠO",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 1846,
+                  "line": 630,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 1793,
+              "line": 611,
+              "column": 4
+            }
+          },
+          {
+            "annex": null,
+            "number": "03",
+            "title": "ĐƠN ĐỀ NGHỊ",
+            "order": 2253,
+            "child_count": 20,
+            "next_form_number": "04",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "ĐƠN ĐỀ NGHỊ",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 2302,
+                  "line": 799,
+                  "column": 4
+                }
+              },
+              {
+                "type": "form_subtitle",
+                "text": "Cấp lại/sửa đổi, bổ sung giấy chứng nhận",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 2306,
+                  "line": 800,
+                  "column": 4
+                }
+              },
+              {
+                "type": "form_subtitle",
+                "text": "đủ điều kiện kinh doanh xuất khẩu gạo",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 2313,
+                  "line": 801,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 2253,
+              "line": 781,
+              "column": 4
+            }
+          },
+          {
+            "annex": null,
+            "number": "04",
+            "title": "GIẤY CHỨNG NHẬN",
+            "order": 2411,
+            "child_count": 22,
+            "next_form_number": "05",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "GIẤY CHỨNG NHẬN",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 2464,
+                  "line": 853,
+                  "column": 4
+                }
+              },
+              {
+                "type": "form_subtitle",
+                "text": "ĐỦ ĐIỀU KIỆN KINH DOANH XUẤT KHẨU GẠO",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 2468,
+                  "line": 854,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 2411,
+              "line": 835,
+              "column": 4
+            }
+          },
+          {
+            "annex": null,
+            "number": "05",
+            "title": "GIẤY CHỨNG NHẬN",
+            "order": 2906,
+            "child_count": 22,
+            "next_form_number": "06",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "GIẤY CHỨNG NHẬN",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 2958,
+                  "line": 1037,
+                  "column": 4
+                }
+              },
+              {
+                "type": "form_subtitle",
+                "text": "ĐỦ ĐIỀU KIỆN KINH DOANH XUẤT KHẨU GẠO",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 2962,
+                  "line": 1038,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 2906,
+              "line": 1018,
+              "column": 4
+            }
+          },
+          {
+            "annex": null,
+            "number": "06",
+            "title": "BÁO CÁO TÌNH HÌNH KÝ KẾT VÀ THỰC HIỆN HỢP ĐỒNG XUẤT KHẨU GẠO",
+            "order": 3386,
+            "child_count": 14,
+            "next_form_number": "07",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "BÁO CÁO TÌNH HÌNH KÝ KẾT VÀ THỰC HIỆN HỢP ĐỒNG XUẤT KHẨU GẠO",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 3440,
+                  "line": 1217,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 3386,
+              "line": 1199,
+              "column": 4
+            }
+          },
+          {
+            "annex": null,
+            "number": "07",
+            "title": "BÁO CÁO LƯỢNG THÓC, GẠO THỰC TẾ TỒN KHO",
+            "order": 4706,
+            "child_count": 16,
+            "next_form_number": "08",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "BÁO CÁO LƯỢNG THÓC, GẠO THỰC TẾ TỒN KHO",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 4751,
+                  "line": 1749,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 4706,
+              "line": 1734,
+              "column": 4
+            }
+          },
+          {
+            "annex": null,
+            "number": "08",
+            "title": "BÁO CÁO",
+            "order": 5072,
+            "child_count": 15,
+            "next_form_number": "09",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "BÁO CÁO",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 5124,
+                  "line": 1907,
+                  "column": 4
+                }
+              },
+              {
+                "type": "form_subtitle",
+                "text": "Hoạt động kinh doanh xuất khẩu gạo",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 5128,
+                  "line": 1908,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 5072,
+              "line": 1888,
+              "column": 4
+            }
+          },
+          {
+            "annex": null,
+            "number": "09",
+            "title": "THÔNG BÁO",
+            "order": 5298,
+            "child_count": 19,
+            "next_form_number": "10",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "THÔNG BÁO",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 5347,
+                  "line": 1983,
+                  "column": 4
+                }
+              },
+              {
+                "type": "form_subtitle",
+                "text": "Kế hoạch kinh doanh nhập khẩu gạo",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 5351,
+                  "line": 1984,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 5298,
+              "line": 1965,
+              "column": 4
+            }
+          },
+          {
+            "annex": null,
+            "number": "10",
+            "title": "BÁO CÁO",
+            "order": 5865,
+            "child_count": 16,
+            "next_form_number": "11",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "BÁO CÁO",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 5916,
+                  "line": 2198,
+                  "column": 4
+                }
+              },
+              {
+                "type": "form_subtitle",
+                "text": "Tình hình kinh doanh nhập khẩu gạo",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 5920,
+                  "line": 2199,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 5865,
+              "line": 2181,
+              "column": 4
+            }
+          },
+          {
+            "annex": null,
+            "number": "11",
+            "title": "VĂN BẢN ĐỀ NGHỊ",
+            "order": 6546,
+            "child_count": 16,
+            "next_form_number": null,
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "VĂN BẢN ĐỀ NGHỊ",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 6600,
+                  "line": 2456,
+                  "column": 4
+                }
+              },
+              {
+                "type": "form_subtitle",
+                "text": "Thu hồi Giấy chứng nhận đủ điều kiện kinh doanh xuất khẩu gạo",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 6604,
+                  "line": 2457,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 6546,
+              "line": 2438,
+              "column": 4
+            }
+          }
+        ],
+        "remaining_structured_paragraphs": [],
+        "footnote_groups": [
+          {
+            "order": 6691,
+            "markers": [
+              "1",
+              "2"
+            ],
+            "source_ref": {
+              "tag": "ol",
+              "dom_order": 6691,
+              "line": 2489,
+              "column": 5
+            }
+          }
+        ]
+      },
+      "remaining_issues": [],
+      "legal_and_annex_relationships_unchanged": true,
+      "source_table_geometry_unchanged": true,
+      "before_after": {
+        "forms": {
+          "before": 11,
+          "after": 11
+        },
+        "fields": {
+          "before": 121,
+          "after": 121
+        },
+        "subfields": {
+          "before": 26,
+          "after": 26
+        },
+        "placeholders": {
+          "before": 3,
+          "after": 3
+        },
+        "footnotes": {
+          "before": 2,
+          "after": 2
+        },
+        "placeholder_references": {
+          "before": 0,
+          "after": 0
+        },
+        "unresolved_numbered_form_items": {
+          "before": 0,
+          "after": 0
+        },
+        "split_form_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "inconsistent_footnote_sequences": {
+          "before": 0,
+          "after": 0
+        },
+        "bibliography_fields_misclassified": {
+          "before": 0,
+          "after": 0
+        },
+        "structured_table_cell_lists": {
+          "before": 3,
+          "after": 3
+        },
+        "generic_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "form_nodes_missing_field_kind": {
+          "before": 26,
+          "after": 0
+        },
+        "form_nodes_missing_field_evidence": {
+          "before": 26,
+          "after": 0
+        },
+        "suspicious_value_text": {
+          "before": 0,
+          "after": 0
+        },
+        "semantic_empty_string_fields": {
+          "before": 0,
+          "after": 0
+        },
+        "physical_empty_cells": {
+          "before": 203,
+          "after": 203
+        },
+        "unexplained_form_label_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "unexplained_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ignored_ui_artifacts": {
+          "before": 2,
+          "after": 2
+        },
+        "orphan_nodes": {
+          "before": 0,
+          "after": 0
+        },
+        "numbered_paragraph_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_decimal_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ambiguous_tables": {
+          "before": 0,
+          "after": 0
+        },
+        "warnings": {
+          "before": 0,
+          "after": 0
+        },
+        "errors": {
+          "before": 0,
+          "after": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:3314d690-bbe3-11f1-9662-1d62ccad220d",
+      "directory": "3314d690-bbe3-11f1-9662-1d62ccad220d",
+      "document_number": "59/2026/TT-BCT",
+      "hierarchy_validation": {
+        "document_sections": {
+          "header": 1,
+          "title_block": 1,
+          "preamble": 1,
+          "enacting_formula": 1,
+          "body": 1,
+          "closing": 1,
+          "annexes": 0
+        },
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 6,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 45,
+          "clauses": 145,
+          "points": 142
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "tables": {
+          "layout": 2,
+          "data": 0,
+          "matrix": 1,
+          "form": 0,
+          "key_value": 0,
+          "annex_form": 0,
+          "ambiguous": 0
+        },
+        "unresolved": {
+          "numbered_candidates": 0,
+          "orphan_nodes": 0,
+          "ambiguous_tables": 0
+        },
+        "max_depth": 5,
+        "schema_valid": true,
+        "order_valid": true,
+        "parent_child_valid": true,
+        "semantic_complete": false,
+        "status": "valid_with_warnings"
+      },
+      "content_issues": {
+        "info": 2,
+        "warning": 1,
+        "error": 0,
+        "fatal": 0
+      },
+      "all_tab_issues": {
+        "info": 4,
+        "warning": 1,
+        "error": 0,
+        "fatal": 0
+      },
+      "tabs": [
+        {
+          "file": "content.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "bac197ad9c11331917939fd43448035140b3e0f4391772d0399ef7e7fca2e3ba",
+          "extracted_text_sha256": "bac197ad9c11331917939fd43448035140b3e0f4391772d0399ef7e7fca2e3ba",
+          "issue_summary": {
+            "info": 2,
+            "warning": 1,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "history.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "cd5667282ba64235360025dfa85092c35e84b0081065308ffa6ce3d083e3e667",
+          "extracted_text_sha256": "cd5667282ba64235360025dfa85092c35e84b0081065308ffa6ce3d083e3e667",
+          "issue_summary": {
+            "info": 0,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        },
+        {
+          "file": "properties.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "289cf10a43641aa25db507778e9951156e76856be71532976157f9b02753aff5",
+          "extracted_text_sha256": "289cf10a43641aa25db507778e9951156e76856be71532976157f9b02753aff5",
+          "issue_summary": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        },
+        {
+          "file": "relations.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "b9c2479c6ea4cb1179aa63e529855a9a9147a91ff6be747e34ee8f3d5b74c62e",
+          "extracted_text_sha256": "b9c2479c6ea4cb1179aa63e529855a9a9147a91ff6be747e34ee8f3d5b74c62e",
+          "issue_summary": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        }
+      ],
+      "inspection": {
+        "unresolved_nodes": [],
+        "promoted_clauses": [
+          {
+            "number": "1",
+            "order": 166,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 166,
+              "line": 40,
+              "column": 4
+            },
+            "evidence": {
+              "score": 0.75,
+              "signals": {
+                "article_parent": 0.35,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "2",
+            "order": 172,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 172,
+              "line": 41,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "3",
+            "order": 181,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 181,
+              "line": 42,
+              "column": 4
+            },
+            "evidence": {
+              "score": 0.75,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "1",
+            "order": 198,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 198,
+              "line": 47,
+              "column": 4
+            },
+            "evidence": {
+              "score": 0.75,
+              "signals": {
+                "article_parent": 0.35,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "2",
+            "order": 204,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 204,
+              "line": 48,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "3",
+            "order": 210,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 210,
+              "line": 49,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "4",
+            "order": 216,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 216,
+              "line": 50,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "5",
+            "order": 222,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 222,
+              "line": 51,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "6",
+            "order": 228,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 228,
+              "line": 52,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "7",
+            "order": 234,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 234,
+              "line": 53,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "8",
+            "order": 240,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 240,
+              "line": 54,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "9",
+            "order": 248,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 248,
+              "line": 55,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "10",
+            "order": 254,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 254,
+              "line": 56,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "11",
+            "order": 260,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 260,
+              "line": 57,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "12",
+            "order": 266,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 266,
+              "line": 58,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "13",
+            "order": 272,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 272,
+              "line": 59,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "14",
+            "order": 278,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 278,
+              "line": 60,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "15",
+            "order": 284,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 284,
+              "line": 61,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "16",
+            "order": 290,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 290,
+              "line": 62,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "17",
+            "order": 299,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 299,
+              "line": 63,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "18",
+            "order": 308,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 308,
+              "line": 64,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "19",
+            "order": 314,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 314,
+              "line": 65,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "20",
+            "order": 320,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 320,
+              "line": 66,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "21",
+            "order": 326,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 326,
+              "line": 67,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "22",
+            "order": 332,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 332,
+              "line": 68,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "23",
+            "order": 338,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 338,
+              "line": 69,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "24",
+            "order": 344,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 344,
+              "line": 70,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "25",
+            "order": 354,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 354,
+              "line": 71,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "26",
+            "order": 370,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 370,
+              "line": 72,
+              "column": 4
+            },
+            "evidence": {
+              "score": 0.75,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "1",
+            "order": 868,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 868,
+              "line": 249,
+              "column": 4
+            },
+            "evidence": {
+              "score": 0.75,
+              "signals": {
+                "article_parent": 0.35,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "2",
+            "order": 871,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 871,
+              "line": 250,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "3",
+            "order": 874,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 874,
+              "line": 251,
+              "column": 4
+            },
+            "evidence": {
+              "score": 0.75,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "1",
+            "order": 1122,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 1122,
+              "line": 326,
+              "column": 4
+            },
+            "evidence": {
+              "score": 0.75,
+              "signals": {
+                "article_parent": 0.35,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "2",
+            "order": 1125,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 1125,
+              "line": 327,
+              "column": 4
+            },
+            "evidence": {
+              "score": 0.75,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          }
+        ],
+        "coalesced_titles": [
+          {
+            "type": "chapter",
+            "number": "I",
+            "title": "NHỮNG QUY ĐỊNH CHUNG",
+            "source_refs": [
+              {
+                "tag": "p",
+                "dom_order": 142,
+                "line": 36,
+                "column": 4
+              },
+              {
+                "tag": "p",
+                "dom_order": 146,
+                "line": 37,
+                "column": 4
+              }
+            ]
+          },
+          {
+            "type": "chapter",
+            "number": "II",
+            "title": "PHÂN CẤP TRỮ LƯỢNG VÀ TÀI NGUYÊN KHOÁNG SẢN RẮN",
+            "source_refs": [
+              {
+                "tag": "p",
+                "dom_order": 379,
+                "line": 73,
+                "column": 4
+              },
+              {
+                "tag": "p",
+                "dom_order": 383,
+                "line": 74,
+                "column": 4
+              }
+            ]
+          },
+          {
+            "type": "chapter",
+            "number": "III",
+            "title": "PHƯƠNG PHÁP, KHỐI LƯỢNG CÔNG TÁC THĂM DÒ KHOÁNG SẢN ĐỐI VỚI TỪNG LOẠI KHOÁNG SẢN RẮN",
+            "source_refs": [
+              {
+                "tag": "p",
+                "dom_order": 802,
+                "line": 230,
+                "column": 4
+              },
+              {
+                "tag": "p",
+                "dom_order": 806,
+                "line": 231,
+                "column": 4
+              }
+            ]
+          },
+          {
+            "type": "chapter",
+            "number": "IV",
+            "title": "PHÂN CẤP TRỮ LƯỢNG, TÀI NGUYÊN VÀ PHƯƠNG PHÁP,\nKHỐI LƯỢNG THĂM DÒ NƯỚC KHOÁNG THIÊN NHIÊN,\nNƯỚC NÓNG THIÊN NHIÊN",
+            "source_refs": [
+              {
+                "tag": "p",
+                "dom_order": 1183,
+                "line": 342,
+                "column": 4
+              },
+              {
+                "tag": "p",
+                "dom_order": 1187,
+                "line": 343,
+                "column": 4
+              }
+            ]
+          },
+          {
+            "type": "chapter",
+            "number": "V",
+            "title": "ĐỀ ÁN THĂM DÒ KHOÁNG SẢN;\nBÁO CÁO KẾT QUẢ THĂM DÒ KHOÁNG SẢN, THĂM DÒ BỔ SUNG",
+            "source_refs": [
+              {
+                "tag": "p",
+                "dom_order": 1544,
+                "line": 446,
+                "column": 4
+              },
+              {
+                "tag": "p",
+                "dom_order": 1549,
+                "line": 447,
+                "column": 4
+              }
+            ]
+          },
+          {
+            "type": "chapter",
+            "number": "VI",
+            "title": "ĐIỀU KHOẢN THI HÀNH",
+            "source_refs": [
+              {
+                "tag": "p",
+                "dom_order": 1704,
+                "line": 496,
+                "column": 4
+              },
+              {
+                "tag": "p",
+                "dom_order": 1708,
+                "line": 497,
+                "column": 4
+              }
+            ]
+          }
+        ],
+        "generic_decimal_paragraphs_in_annex": [],
+        "table_review": [
+          {
+            "table_id": "table_440",
+            "table_kind": "matrix",
+            "classification_evidence": "compound_corner_and_numeric_grid",
+            "grid_shape": {
+              "rows": 7,
+              "columns": 6
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 440,
+              "line": 91,
+              "column": 9
+            },
+            "compound_headers": [
+              {
+                "cell_id": "cell_446",
+                "effective_text": "Mức độ nghiên cứu địa chất Mức độ hiệu quả kinh tế",
+                "labels": [
+                  "Mức độ nghiên cứu địa chất",
+                  "Mức độ hiệu quả kinh tế"
+                ],
+                "orientation": "unknown",
+                "row_axis": null,
+                "column_axis": null,
+                "source_ref": {
+                  "tag": "td",
+                  "dom_order": 446,
+                  "line": 94,
+                  "column": 7
+                }
+              }
+            ],
+            "issues": [
+              {
+                "severity": "warning",
+                "code": "table_semantics_unresolved",
+                "message": "Inspect source header declarations or table purpose; effective text and cell geometry are preserved",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 440,
+                  "line": 91,
+                  "column": 9
+                },
+                "details": {
+                  "table_kind": "matrix",
+                  "axis_headers_resolved": false,
+                  "reasons": [
+                    "ambiguous_compound_header",
+                    "unresolved_table_semantics"
+                  ],
+                  "affected_cells": [
+                    440,
+                    446
+                  ]
+                },
+                "issue_id": "issue_9d500ac3c7c86d28"
+              }
+            ]
+          }
+        ],
+        "form_validation": {
+          "forms": 0,
+          "fields": 0,
+          "subfields": 0,
+          "placeholders": 0,
+          "footnotes": 0,
+          "placeholder_references": 0,
+          "unresolved_numbered_form_items": 0,
+          "split_form_candidates": 0,
+          "inconsistent_footnote_sequences": 0,
+          "bibliography_fields_misclassified": 0,
+          "structured_table_cell_lists": 0,
+          "generic_structured_paragraphs": 0,
+          "form_nodes_missing_field_kind": 0,
+          "form_nodes_missing_field_evidence": 0,
+          "suspicious_value_text": 0,
+          "semantic_empty_string_fields": 0,
+          "physical_empty_cells": 10,
+          "unexplained_form_label_paragraphs": 0,
+          "unexplained_structured_paragraphs": 0,
+          "semantic_complete": true
+        },
+        "form_boundaries": [],
+        "remaining_structured_paragraphs": [],
+        "footnote_groups": []
+      },
+      "remaining_issues": [
+        {
+          "severity": "warning",
+          "code": "table_semantics_unresolved",
+          "message": "Inspect source header declarations or table purpose; effective text and cell geometry are preserved",
+          "source_ref": {
+            "tag": "table",
+            "dom_order": 440,
+            "line": 91,
+            "column": 9
+          },
+          "details": {
+            "table_kind": "matrix",
+            "axis_headers_resolved": false,
+            "reasons": [
+              "ambiguous_compound_header",
+              "unresolved_table_semantics"
+            ],
+            "affected_cells": [
+              440,
+              446
+            ]
+          },
+          "issue_id": "issue_9d500ac3c7c86d28"
+        }
+      ],
+      "legal_and_annex_relationships_unchanged": true,
+      "source_table_geometry_unchanged": true,
+      "before_after": {
+        "forms": {
+          "before": 0,
+          "after": 0
+        },
+        "fields": {
+          "before": 0,
+          "after": 0
+        },
+        "subfields": {
+          "before": 0,
+          "after": 0
+        },
+        "placeholders": {
+          "before": 0,
+          "after": 0
+        },
+        "footnotes": {
+          "before": 0,
+          "after": 0
+        },
+        "placeholder_references": {
+          "before": 0,
+          "after": 0
+        },
+        "unresolved_numbered_form_items": {
+          "before": 0,
+          "after": 0
+        },
+        "split_form_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "inconsistent_footnote_sequences": {
+          "before": 0,
+          "after": 0
+        },
+        "bibliography_fields_misclassified": {
+          "before": 0,
+          "after": 0
+        },
+        "structured_table_cell_lists": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "form_nodes_missing_field_kind": {
+          "before": 0,
+          "after": 0
+        },
+        "form_nodes_missing_field_evidence": {
+          "before": 0,
+          "after": 0
+        },
+        "suspicious_value_text": {
+          "before": 0,
+          "after": 0
+        },
+        "semantic_empty_string_fields": {
+          "before": 0,
+          "after": 0
+        },
+        "physical_empty_cells": {
+          "before": 10,
+          "after": 10
+        },
+        "unexplained_form_label_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "unexplained_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ignored_ui_artifacts": {
+          "before": 1,
+          "after": 1
+        },
+        "orphan_nodes": {
+          "before": 0,
+          "after": 0
+        },
+        "numbered_paragraph_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_decimal_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ambiguous_tables": {
+          "before": 0,
+          "after": 0
+        },
+        "warnings": {
+          "before": 1,
+          "after": 1
+        },
+        "errors": {
+          "before": 0,
+          "after": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:a9bea550-bbe3-11f1-a338-51a5cc429fc7",
+      "directory": "a9bea550-bbe3-11f1-a338-51a5cc429fc7",
+      "document_number": "60/2026/TT-BCT",
+      "hierarchy_validation": {
+        "document_sections": {
+          "header": 1,
+          "title_block": 1,
+          "preamble": 1,
+          "enacting_formula": 1,
+          "body": 1,
+          "closing": 1,
+          "annexes": 1
+        },
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 4,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 15,
+          "clauses": 36,
+          "points": 5
+        },
+        "annex_hierarchy": {
+          "annexes": 4,
+          "numbered_sections": 5,
+          "numbered_items": 26,
+          "max_depth": 2
+        },
+        "tables": {
+          "layout": 5,
+          "data": 0,
+          "matrix": 0,
+          "form": 0,
+          "key_value": 1,
+          "annex_form": 33,
+          "ambiguous": 0
+        },
+        "unresolved": {
+          "numbered_candidates": 0,
+          "orphan_nodes": 0,
+          "ambiguous_tables": 0
+        },
+        "max_depth": 5,
+        "schema_valid": true,
+        "order_valid": true,
+        "parent_child_valid": true,
+        "semantic_complete": true,
+        "status": "valid"
+      },
+      "content_issues": {
+        "info": 39,
+        "warning": 0,
+        "error": 0,
+        "fatal": 0
+      },
+      "all_tab_issues": {
+        "info": 41,
+        "warning": 0,
+        "error": 0,
+        "fatal": 0
+      },
+      "tabs": [
+        {
+          "file": "content.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "9af65268ff2a045834e25e27776d730a7d64a680453da3dd205cb077b5625698",
+          "extracted_text_sha256": "9af65268ff2a045834e25e27776d730a7d64a680453da3dd205cb077b5625698",
+          "issue_summary": {
+            "info": 39,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "history.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "65a7f2f98216d7c27e59b3f7e13e02451599dca97a585bd0338715fdaae81465",
+          "extracted_text_sha256": "65a7f2f98216d7c27e59b3f7e13e02451599dca97a585bd0338715fdaae81465",
+          "issue_summary": {
+            "info": 0,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        },
+        {
+          "file": "properties.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "43023a72c999313fb707b00f0cf71d5c7200824bfd6859f063a23f46f97eaf17",
+          "extracted_text_sha256": "43023a72c999313fb707b00f0cf71d5c7200824bfd6859f063a23f46f97eaf17",
+          "issue_summary": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        },
+        {
+          "file": "relations.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "9e6d891b53e486d3b9f290ac2abc7a3aab8081acfeaeb4c9064e2ef3cc1593ec",
+          "extracted_text_sha256": "9e6d891b53e486d3b9f290ac2abc7a3aab8081acfeaeb4c9064e2ef3cc1593ec",
+          "issue_summary": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        }
+      ],
+      "inspection": {
+        "unresolved_nodes": [],
+        "promoted_clauses": [
+          {
+            "number": "1",
+            "order": 156,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 156,
+              "line": 42,
+              "column": 4
+            },
+            "evidence": {
+              "score": 0.75,
+              "signals": {
+                "article_parent": 0.35,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "2",
+            "order": 162,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 162,
+              "line": 43,
+              "column": 4
+            },
+            "evidence": {
+              "score": 1.0,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "next_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          },
+          {
+            "number": "3",
+            "order": 171,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 171,
+              "line": 44,
+              "column": 4
+            },
+            "evidence": {
+              "score": 0.75,
+              "signals": {
+                "article_parent": 0.35,
+                "previous_sequential_number": 0.25,
+                "multiple_sibling_counters": 0.15
+              }
+            },
+            "points": []
+          }
+        ],
+        "coalesced_titles": [
+          {
+            "type": "chapter",
+            "number": "II",
+            "title": "GIAO NỘP, THU NHẬN THÔNG TIN, DỮ LIỆU VỀ\nĐỊA CHẤT, KHOÁNG SẢN",
+            "source_refs": [
+              {
+                "tag": "p",
+                "dom_order": 188,
+                "line": 49,
+                "column": 4
+              }
+            ]
+          },
+          {
+            "type": "chapter",
+            "number": "III",
+            "title": "CUNG CẤP, KHAI THÁC, SỬ DỤNG THÔNG TIN, DỮ LIỆU ĐỊA CHẤT, KHOÁNG SẢN",
+            "source_refs": [
+              {
+                "tag": "p",
+                "dom_order": 282,
+                "line": 77,
+                "column": 4
+              },
+              {
+                "tag": "p",
+                "dom_order": 286,
+                "line": 78,
+                "column": 4
+              }
+            ]
+          }
+        ],
+        "generic_decimal_paragraphs_in_annex": [],
+        "table_review": [
+          {
+            "table_id": "table_525",
+            "table_kind": "key_value",
+            "classification_evidence": "repeated_source_label_value_pairs",
+            "grid_shape": {
+              "rows": 5,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 525,
+              "line": 148,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": []
+          },
+          {
+            "table_id": "table_701",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 8,
+              "columns": 4
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 701,
+              "line": 214,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 701,
+                  "line": 214,
+                  "column": 9
+                },
+                "issue_id": "issue_32a6b4f11f9b1e34"
+              }
+            ]
+          },
+          {
+            "table_id": "table_905",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 905,
+              "line": 301,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 905,
+                  "line": 301,
+                  "column": 9
+                },
+                "issue_id": "issue_9fb512f7907bf0dd"
+              }
+            ]
+          },
+          {
+            "table_id": "table_980",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 2,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 980,
+              "line": 325,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 980,
+                  "line": 325,
+                  "column": 9
+                },
+                "issue_id": "issue_9df2bec55e8ce145"
+              }
+            ]
+          },
+          {
+            "table_id": "table_1061",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 8,
+              "columns": 5
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 1061,
+              "line": 353,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 1061,
+                  "line": 353,
+                  "column": 9
+                },
+                "issue_id": "issue_27e06ac06abfefd4"
+              }
+            ]
+          },
+          {
+            "table_id": "table_1303",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 3
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 1303,
+              "line": 455,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 1303,
+                  "line": 455,
+                  "column": 9
+                },
+                "issue_id": "issue_e94c019e000206fb"
+              }
+            ]
+          },
+          {
+            "table_id": "table_1372",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 2,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 1372,
+              "line": 478,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 1372,
+                  "line": 478,
+                  "column": 9
+                },
+                "issue_id": "issue_cd408c2a308c271f"
+              }
+            ]
+          },
+          {
+            "table_id": "table_1453",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 6,
+              "columns": 4
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 1453,
+              "line": 507,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 1453,
+                  "line": 507,
+                  "column": 9
+                },
+                "issue_id": "issue_8bdf4d1bc5f263a6"
+              }
+            ]
+          },
+          {
+            "table_id": "table_1608",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 3
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 1608,
+              "line": 573,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 1608,
+                  "line": 573,
+                  "column": 9
+                },
+                "issue_id": "issue_e850c42993895272"
+              }
+            ]
+          },
+          {
+            "table_id": "table_1790",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 1790,
+              "line": 629,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 1790,
+                  "line": 629,
+                  "column": 9
+                },
+                "issue_id": "issue_453b5c62dc030c2e"
+              }
+            ]
+          },
+          {
+            "table_id": "table_1867",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 11,
+              "columns": 6
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 1867,
+              "line": 649,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 1867,
+                  "line": 649,
+                  "column": 9
+                },
+                "issue_id": "issue_ba96480281a0a301"
+              }
+            ]
+          },
+          {
+            "table_id": "table_2303",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 12,
+              "columns": 4
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 2303,
+              "line": 822,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 2303,
+                  "line": 822,
+                  "column": 9
+                },
+                "issue_id": "issue_ea998c7c57b750a0"
+              }
+            ]
+          },
+          {
+            "table_id": "table_2757",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 6,
+              "columns": 4
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 2757,
+              "line": 993,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 2757,
+                  "line": 993,
+                  "column": 9
+                },
+                "issue_id": "issue_f4323ca482e09c7e"
+              }
+            ]
+          },
+          {
+            "table_id": "table_2925",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 2925,
+              "line": 1061,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 2925,
+                  "line": 1061,
+                  "column": 9
+                },
+                "issue_id": "issue_16759dcad0319dc4"
+              }
+            ]
+          },
+          {
+            "table_id": "table_3129",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 1
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 3129,
+              "line": 1122,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 3129,
+                  "line": 1122,
+                  "column": 9
+                },
+                "issue_id": "issue_c33f25f8b0059c40"
+              }
+            ]
+          },
+          {
+            "table_id": "table_3283",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 3283,
+              "line": 1163,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 3283,
+                  "line": 1163,
+                  "column": 9
+                },
+                "issue_id": "issue_3b12995afc2c6da9"
+              }
+            ]
+          },
+          {
+            "table_id": "table_3339",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 2,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 3339,
+              "line": 1184,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 3339,
+                  "line": 1184,
+                  "column": 9
+                },
+                "issue_id": "issue_1a7d5d8df5905873"
+              }
+            ]
+          },
+          {
+            "table_id": "table_3522",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 4,
+              "columns": 3
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 3522,
+              "line": 1235,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 3522,
+                  "line": 1235,
+                  "column": 9
+                },
+                "issue_id": "issue_cb7a4a9e15908bea"
+              }
+            ]
+          },
+          {
+            "table_id": "table_3615",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 6,
+              "columns": 4
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 3615,
+              "line": 1274,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 3615,
+                  "line": 1274,
+                  "column": 9
+                },
+                "issue_id": "issue_db306705f8705741"
+              }
+            ]
+          },
+          {
+            "table_id": "table_3789",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 9,
+              "columns": 4
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 3789,
+              "line": 1345,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 3789,
+                  "line": 1345,
+                  "column": 9
+                },
+                "issue_id": "issue_926ca305fda00cc5"
+              }
+            ]
+          },
+          {
+            "table_id": "table_4247",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 3,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 4247,
+              "line": 1517,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 4247,
+                  "line": 1517,
+                  "column": 9
+                },
+                "issue_id": "issue_a7c9946992a8eb3f"
+              }
+            ]
+          },
+          {
+            "table_id": "table_4415",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 3,
+              "columns": 7
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 4415,
+              "line": 1560,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 4415,
+                  "line": 1560,
+                  "column": 9
+                },
+                "issue_id": "issue_1a4deb84570cbca6"
+              }
+            ]
+          },
+          {
+            "table_id": "table_4577",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 3
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 4577,
+              "line": 1621,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 4577,
+                  "line": 1621,
+                  "column": 9
+                },
+                "issue_id": "issue_9a55162d2885d209"
+              }
+            ]
+          },
+          {
+            "table_id": "table_4629",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 2,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 4629,
+              "line": 1640,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 4629,
+                  "line": 1640,
+                  "column": 9
+                },
+                "issue_id": "issue_11445a2b5896faa7"
+              }
+            ]
+          },
+          {
+            "table_id": "table_4690",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 4,
+              "columns": 9
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 4690,
+              "line": 1665,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 4690,
+                  "line": 1665,
+                  "column": 9
+                },
+                "issue_id": "issue_992487761ba493cd"
+              }
+            ]
+          },
+          {
+            "table_id": "table_4828",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 4828,
+              "line": 1722,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 4828,
+                  "line": 1722,
+                  "column": 9
+                },
+                "issue_id": "issue_7764025a6525e9a7"
+              }
+            ]
+          },
+          {
+            "table_id": "table_4857",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 3
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 4857,
+              "line": 1735,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 4857,
+                  "line": 1735,
+                  "column": 9
+                },
+                "issue_id": "issue_954e83f7686b2e87"
+              }
+            ]
+          },
+          {
+            "table_id": "table_4913",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 4,
+              "columns": 14
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 4913,
+              "line": 1756,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 4913,
+                  "line": 1756,
+                  "column": 9
+                },
+                "issue_id": "issue_ce6b660ab1cbfbd3"
+              }
+            ]
+          },
+          {
+            "table_id": "table_5128",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 3,
+              "columns": 4
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 5128,
+              "line": 1845,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 5128,
+                  "line": 1845,
+                  "column": 9
+                },
+                "issue_id": "issue_073c42ac25f7a2af"
+              }
+            ]
+          },
+          {
+            "table_id": "table_5205",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 3
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 5205,
+              "line": 1877,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 5205,
+                  "line": 1877,
+                  "column": 9
+                },
+                "issue_id": "issue_0914a051e23afa0f"
+              }
+            ]
+          },
+          {
+            "table_id": "table_5255",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 5,
+              "columns": 21
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 5255,
+              "line": 1896,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "table_grid_gap",
+                "message": "Logical grid contains uncovered slots; no values were invented",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 5255,
+                  "line": 1896,
+                  "column": 9
+                },
+                "details": {
+                  "reason": "source_rows_have_different_spanned_widths",
+                  "table_kind": "annex_form",
+                  "axis_associations": "not_applicable",
+                  "geometry_preserved": true,
+                  "missing_values_filled": false
+                },
+                "issue_id": "issue_bae0a7034e2b623f"
+              },
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 5255,
+                  "line": 1896,
+                  "column": 9
+                },
+                "issue_id": "issue_f0dd7fe68ae38d82"
+              }
+            ]
+          },
+          {
+            "table_id": "table_5381",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 4,
+              "columns": 4
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 5381,
+              "line": 1949,
+              "column": 13
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 5381,
+                  "line": 1949,
+                  "column": 13
+                },
+                "issue_id": "issue_c38da1afff2045dd"
+              }
+            ]
+          },
+          {
+            "table_id": "table_5545",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 4,
+              "columns": 10
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 5545,
+              "line": 2019,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 5545,
+                  "line": 2019,
+                  "column": 9
+                },
+                "issue_id": "issue_3b0dca5f671bd4a4"
+              }
+            ]
+          },
+          {
+            "table_id": "table_5776",
+            "table_kind": "annex_form",
+            "classification_evidence": "annex_and_source_form_context",
+            "grid_shape": {
+              "rows": 1,
+              "columns": 2
+            },
+            "effective_cell_text_verified": true,
+            "source_ref": {
+              "tag": "table",
+              "dom_order": 5776,
+              "line": 2114,
+              "column": 9
+            },
+            "compound_headers": [],
+            "issues": [
+              {
+                "severity": "info",
+                "code": "form_table_preserved",
+                "message": "Form text and geometry preserved; axis associations are not applicable",
+                "source_ref": {
+                  "tag": "table",
+                  "dom_order": 5776,
+                  "line": 2114,
+                  "column": 9
+                },
+                "issue_id": "issue_1aa8ec049ab5af5d"
+              }
+            ]
+          }
+        ],
+        "form_validation": {
+          "forms": 16,
+          "fields": 81,
+          "subfields": 14,
+          "placeholders": 3,
+          "footnotes": 52,
+          "placeholder_references": 65,
+          "unresolved_numbered_form_items": 0,
+          "split_form_candidates": 0,
+          "inconsistent_footnote_sequences": 0,
+          "bibliography_fields_misclassified": 0,
+          "structured_table_cell_lists": 1,
+          "generic_structured_paragraphs": 2,
+          "form_nodes_missing_field_kind": 0,
+          "form_nodes_missing_field_evidence": 0,
+          "suspicious_value_text": 0,
+          "semantic_empty_string_fields": 0,
+          "physical_empty_cells": 207,
+          "unexplained_form_label_paragraphs": 0,
+          "unexplained_structured_paragraphs": 0,
+          "semantic_complete": true
+        },
+        "form_boundaries": [
+          {
+            "annex": "I",
+            "number": "01",
+            "title": "Danh mục thông tin, dữ liệu giao nộp",
+            "order": 602,
+            "child_count": 12,
+            "next_form_number": "02",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "DANH MỤC THÔNG TIN, DỮ LIỆU GIAO NỘP",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 675,
+                  "line": 207,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 602,
+              "line": 184,
+              "column": 4
+            }
+          },
+          {
+            "annex": "I",
+            "number": "02",
+            "title": "Thông báo kết quả kiểm tra, đối chiếu\nthông tin, dữ liệu giao nộp",
+            "order": 967,
+            "child_count": 13,
+            "next_form_number": "03",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "THÔNG BÁO",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 1031,
+                  "line": 345,
+                  "column": 4
+                }
+              },
+              {
+                "type": "form_subtitle",
+                "text": "KẾT QUẢ KIỂM TRA, ĐỐI CHIẾU THÔNG TIN, DỮ LIỆU GIAO NỘP",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 1035,
+                  "line": 346,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 967,
+              "line": 322,
+              "column": 4
+            }
+          },
+          {
+            "annex": "I",
+            "number": "03",
+            "title": "Thông báo kết quả kiểm tra mẫu vật địa chất, khoáng sản,\nmẫu vật bảo tàng giao nộp",
+            "order": 1361,
+            "child_count": 13,
+            "next_form_number": "04",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "THÔNG BÁO",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 1423,
+                  "line": 498,
+                  "column": 4
+                }
+              },
+              {
+                "type": "form_subtitle",
+                "text": "KẾT QUẢ KIỂM TRA MẪU VẬT ĐỊA CHẤT, KHOÁNG SẢN, MẪU VẬT BẢO TÀNG GIAO NỘP",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 1427,
+                  "line": 499,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 1361,
+              "line": 476,
+              "column": 4
+            }
+          },
+          {
+            "annex": "I",
+            "number": "04",
+            "title": "Biên bản giao nhận thông tin, dữ liệu\nđịa chất, khoáng sản nộp lưu trữ",
+            "order": 1669,
+            "child_count": 20,
+            "next_form_number": "05",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "BIÊN BẢN",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 1742,
+                  "line": 616,
+                  "column": 4
+                }
+              },
+              {
+                "type": "form_subtitle",
+                "text": "GIAO NHẬN THÔNG TIN, DỮ LIỆU\nĐỊA CHẤT, KHOÁNG SẢN NỘP LƯU TRỮ",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 1746,
+                  "line": 617,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 1669,
+              "line": 595,
+              "column": 4
+            }
+          },
+          {
+            "annex": "I",
+            "number": "05",
+            "title": "Biên bản giao nhận mẫu vậtđịa chất, khoáng sản, mẫuvậtbảo tàng",
+            "order": 2628,
+            "child_count": 21,
+            "next_form_number": null,
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "BIÊN BẢN",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 2698,
+                  "line": 978,
+                  "column": 4
+                }
+              },
+              {
+                "type": "form_subtitle",
+                "text": "GIAO NHẬN MẪU VẬT ĐỊA CHẤT, KHOÁNG SẢN, MẪU VẬT BẢO TÀNG",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 2702,
+                  "line": 979,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 2628,
+              "line": 958,
+              "column": 4
+            }
+          },
+          {
+            "annex": "II",
+            "number": "01",
+            "title": "Bìa 1 Thuyết minh tài liệu, báo cáo",
+            "order": 3123,
+            "child_count": 2,
+            "next_form_number": "02",
+            "displayed_titles": [],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 3123,
+              "line": 1121,
+              "column": 4
+            }
+          },
+          {
+            "annex": "II",
+            "number": "02",
+            "title": "Bìa 2 Thuyết minh tài liệu, báo cáo",
+            "order": 3248,
+            "child_count": 11,
+            "next_form_number": "03",
+            "displayed_titles": [],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 3248,
+              "line": 1157,
+              "column": 4
+            }
+          },
+          {
+            "annex": "II",
+            "number": "03",
+            "title": "Danh mục tài liệu tham khảo",
+            "order": 3458,
+            "child_count": 3,
+            "next_form_number": "04",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "DANH MỤC TÀI LIỆU THAM KHẢO",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 3462,
+                  "line": 1220,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 3458,
+              "line": 1219,
+              "column": 4
+            }
+          },
+          {
+            "annex": "II",
+            "number": "04",
+            "title": "Danh mục các phụ lục kèm theo",
+            "order": 3510,
+            "child_count": 2,
+            "next_form_number": "05",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "DANH MỤC PHỤ LỤC KÈM THEO TÀI LIỆU, BÁO CÁO",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 3517,
+                  "line": 1234,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 3510,
+              "line": 1232,
+              "column": 4
+            }
+          },
+          {
+            "annex": "II",
+            "number": "05",
+            "title": "Danh mục bản vẽ kèm theo",
+            "order": 3606,
+            "child_count": 3,
+            "next_form_number": "06",
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "DANH MỤC BẢN VẼ KÈM THEO TÀI LIỆU, BÁO CÁO",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 3610,
+                  "line": 1273,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 3606,
+              "line": 1272,
+              "column": 4
+            }
+          },
+          {
+            "annex": "II",
+            "number": "06",
+            "title": "Danh mục tài liệu nguyên thủy",
+            "order": 3777,
+            "child_count": 3,
+            "next_form_number": null,
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "DANH MỤC TÀI LIỆU NGUYÊN THỦY",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 3784,
+                  "line": 1344,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 3777,
+              "line": 1342,
+              "column": 4
+            }
+          },
+          {
+            "annex": "III",
+            "number": "01",
+            "title": "Nhật ký địa chất",
+            "order": 4239,
+            "child_count": 10,
+            "next_form_number": "02",
+            "displayed_titles": [],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 4239,
+              "line": 1515,
+              "column": 4
+            }
+          },
+          {
+            "annex": "III",
+            "number": "02",
+            "title": "Sổ mô tả công trình khai đào (dọn vết lộ, hào, hố, lò, giếng)",
+            "order": 4560,
+            "child_count": 7,
+            "next_form_number": "03",
+            "displayed_titles": [],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 4560,
+              "line": 1618,
+              "column": 4
+            }
+          },
+          {
+            "annex": "III",
+            "number": "03",
+            "title": "Thiết đồ theo dõi, mô tả công trình khoan",
+            "order": 4852,
+            "child_count": 5,
+            "next_form_number": "04",
+            "displayed_titles": [],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 4852,
+              "line": 1734,
+              "column": 4
+            }
+          },
+          {
+            "annex": "III",
+            "number": "04",
+            "title": "Thiết đồ tổng hợp công trình khoan",
+            "order": 5192,
+            "child_count": 5,
+            "next_form_number": null,
+            "displayed_titles": [],
+            "evidence": "explicit_form_number",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 5192,
+              "line": 1874,
+              "column": 4
+            }
+          },
+          {
+            "annex": "IV",
+            "number": null,
+            "title": "PHIẾU YÊU CẦU CUNG CẤP THÔNG TIN, DỮ LIỆU ĐỊA CHẤT, KHOÁNG SẢN",
+            "order": 5717,
+            "child_count": 16,
+            "next_form_number": null,
+            "displayed_titles": [
+              {
+                "type": "form_title",
+                "text": "PHIẾU YÊU CẦU CUNG CẤP THÔNG TIN, DỮ LIỆU ĐỊA CHẤT, KHOÁNG SẢN",
+                "source_ref": {
+                  "tag": "p",
+                  "dom_order": 5717,
+                  "line": 2085,
+                  "column": 4
+                }
+              }
+            ],
+            "evidence": "standalone_form_heading",
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 5717,
+              "line": 2085,
+              "column": 4
+            }
+          }
+        ],
+        "remaining_structured_paragraphs": [
+          {
+            "order": 4133,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 4133,
+              "line": 1480,
+              "column": 4
+            },
+            "text": "- Tài liệu công trình khai đào.",
+            "scope": "annex",
+            "reason": "isolated_marker_without_adjacent_sequence",
+            "justified": true,
+            "neighboring_types": [
+              "paragraph"
+            ]
+          },
+          {
+            "order": 4172,
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 4172,
+              "line": 1493,
+              "column": 4
+            },
+            "text": "- Tài liệu công trình khoan",
+            "scope": "annex",
+            "reason": "isolated_marker_without_adjacent_sequence",
+            "justified": true,
+            "neighboring_types": [
+              "paragraph",
+              "paragraph"
+            ]
+          }
+        ],
+        "footnote_groups": [
+          {
+            "order": 952,
+            "markers": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5"
+            ],
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 952,
+              "line": 317,
+              "column": 4
+            }
+          },
+          {
+            "order": 1346,
+            "markers": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 1346,
+              "line": 471,
+              "column": 4
+            }
+          },
+          {
+            "order": 1654,
+            "markers": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 1654,
+              "line": 590,
+              "column": 4
+            }
+          },
+          {
+            "order": 2601,
+            "markers": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8"
+            ],
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 2601,
+              "line": 949,
+              "column": 4
+            }
+          },
+          {
+            "order": 2972,
+            "markers": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 2972,
+              "line": 1074,
+              "column": 4
+            }
+          },
+          {
+            "order": 3230,
+            "markers": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6"
+            ],
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 3230,
+              "line": 1151,
+              "column": 4
+            }
+          },
+          {
+            "order": 3437,
+            "markers": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7"
+            ],
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 3437,
+              "line": 1212,
+              "column": 4
+            }
+          },
+          {
+            "order": 4530,
+            "markers": [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10"
+            ],
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 4530,
+              "line": 1608,
+              "column": 4
+            }
+          },
+          {
+            "order": 5809,
+            "markers": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "source_ref": {
+              "tag": "p",
+              "dom_order": 5809,
+              "line": 2127,
+              "column": 4
+            }
+          }
+        ]
+      },
+      "remaining_issues": [],
+      "legal_and_annex_relationships_unchanged": true,
+      "source_table_geometry_unchanged": true,
+      "before_after": {
+        "forms": {
+          "before": 16,
+          "after": 16
+        },
+        "fields": {
+          "before": 81,
+          "after": 81
+        },
+        "subfields": {
+          "before": 14,
+          "after": 14
+        },
+        "placeholders": {
+          "before": 3,
+          "after": 3
+        },
+        "footnotes": {
+          "before": 52,
+          "after": 52
+        },
+        "placeholder_references": {
+          "before": 65,
+          "after": 65
+        },
+        "unresolved_numbered_form_items": {
+          "before": 0,
+          "after": 0
+        },
+        "split_form_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "inconsistent_footnote_sequences": {
+          "before": 0,
+          "after": 0
+        },
+        "bibliography_fields_misclassified": {
+          "before": 0,
+          "after": 0
+        },
+        "structured_table_cell_lists": {
+          "before": 1,
+          "after": 1
+        },
+        "generic_structured_paragraphs": {
+          "before": 2,
+          "after": 2
+        },
+        "form_nodes_missing_field_kind": {
+          "before": 1,
+          "after": 0
+        },
+        "form_nodes_missing_field_evidence": {
+          "before": 4,
+          "after": 0
+        },
+        "suspicious_value_text": {
+          "before": 0,
+          "after": 0
+        },
+        "semantic_empty_string_fields": {
+          "before": 0,
+          "after": 0
+        },
+        "physical_empty_cells": {
+          "before": 207,
+          "after": 207
+        },
+        "unexplained_form_label_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "unexplained_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ignored_ui_artifacts": {
+          "before": 1,
+          "after": 1
+        },
+        "orphan_nodes": {
+          "before": 0,
+          "after": 0
+        },
+        "numbered_paragraph_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_decimal_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ambiguous_tables": {
+          "before": 0,
+          "after": 0
+        },
+        "warnings": {
+          "before": 0,
+          "after": 0
+        },
+        "errors": {
+          "before": 0,
+          "after": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:ef51a450-80bf-11f1-b76e-7b4564eab36e",
+      "directory": "ef51a450-80bf-11f1-b76e-7b4564eab36e",
+      "document_number": "34/2026/NQ-CP",
+      "hierarchy_validation": {
+        "document_sections": {
+          "header": 1,
+          "title_block": 1,
+          "preamble": 1,
+          "enacting_formula": 1,
+          "body": 1,
+          "closing": 1,
+          "annexes": 0
+        },
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 3,
+          "clauses": 4,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "tables": {
+          "layout": 2,
+          "data": 0,
+          "matrix": 0,
+          "form": 0,
+          "key_value": 0,
+          "annex_form": 0,
+          "ambiguous": 0
+        },
+        "unresolved": {
+          "numbered_candidates": 0,
+          "orphan_nodes": 0,
+          "ambiguous_tables": 0
+        },
+        "max_depth": 3,
+        "schema_valid": true,
+        "order_valid": true,
+        "parent_child_valid": true,
+        "semantic_complete": true,
+        "status": "valid"
+      },
+      "content_issues": {
+        "info": 2,
+        "warning": 0,
+        "error": 0,
+        "fatal": 0
+      },
+      "all_tab_issues": {
+        "info": 4,
+        "warning": 0,
+        "error": 0,
+        "fatal": 0
+      },
+      "tabs": [
+        {
+          "file": "content.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "dcb4cba2166bf28c4c2185c060457e30145c02b1f37ed934cf2e20b5000588d8",
+          "extracted_text_sha256": "dcb4cba2166bf28c4c2185c060457e30145c02b1f37ed934cf2e20b5000588d8",
+          "issue_summary": {
+            "info": 2,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "history.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "7ab968581da67e1b6e43e4bb140721b08af9a7d1d62874b981adb12474d6b74f",
+          "extracted_text_sha256": "7ab968581da67e1b6e43e4bb140721b08af9a7d1d62874b981adb12474d6b74f",
+          "issue_summary": {
+            "info": 0,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        },
+        {
+          "file": "properties.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "d0f7833b0c2efbd589511b2569ccd8f2ce33c0950030a13db04e85b384f2386f",
+          "extracted_text_sha256": "d0f7833b0c2efbd589511b2569ccd8f2ce33c0950030a13db04e85b384f2386f",
+          "issue_summary": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        },
+        {
+          "file": "relations.json",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "source_text_sha256": "2720df900f71cc63df32839304b06a645f048ee513684bb3bc20ea160b47a0a3",
+          "extracted_text_sha256": "2720df900f71cc63df32839304b06a645f048ee513684bb3bc20ea160b47a0a3",
+          "issue_summary": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          },
+          "source_records_unchanged": true
+        }
+      ],
+      "inspection": {
+        "unresolved_nodes": [],
+        "promoted_clauses": [],
+        "coalesced_titles": [],
+        "generic_decimal_paragraphs_in_annex": [],
+        "table_review": [],
+        "form_validation": {
+          "forms": 0,
+          "fields": 0,
+          "subfields": 0,
+          "placeholders": 0,
+          "footnotes": 0,
+          "placeholder_references": 0,
+          "unresolved_numbered_form_items": 0,
+          "split_form_candidates": 0,
+          "inconsistent_footnote_sequences": 0,
+          "bibliography_fields_misclassified": 0,
+          "structured_table_cell_lists": 0,
+          "generic_structured_paragraphs": 0,
+          "form_nodes_missing_field_kind": 0,
+          "form_nodes_missing_field_evidence": 0,
+          "suspicious_value_text": 0,
+          "semantic_empty_string_fields": 0,
+          "physical_empty_cells": 0,
+          "unexplained_form_label_paragraphs": 0,
+          "unexplained_structured_paragraphs": 0,
+          "semantic_complete": true
+        },
+        "form_boundaries": [],
+        "remaining_structured_paragraphs": [],
+        "footnote_groups": []
+      },
+      "remaining_issues": [],
+      "legal_and_annex_relationships_unchanged": true,
+      "source_table_geometry_unchanged": true,
+      "before_after": {
+        "forms": {
+          "before": 0,
+          "after": 0
+        },
+        "fields": {
+          "before": 0,
+          "after": 0
+        },
+        "subfields": {
+          "before": 0,
+          "after": 0
+        },
+        "placeholders": {
+          "before": 0,
+          "after": 0
+        },
+        "footnotes": {
+          "before": 0,
+          "after": 0
+        },
+        "placeholder_references": {
+          "before": 0,
+          "after": 0
+        },
+        "unresolved_numbered_form_items": {
+          "before": 0,
+          "after": 0
+        },
+        "split_form_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "inconsistent_footnote_sequences": {
+          "before": 0,
+          "after": 0
+        },
+        "bibliography_fields_misclassified": {
+          "before": 0,
+          "after": 0
+        },
+        "structured_table_cell_lists": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "form_nodes_missing_field_kind": {
+          "before": 0,
+          "after": 0
+        },
+        "form_nodes_missing_field_evidence": {
+          "before": 0,
+          "after": 0
+        },
+        "suspicious_value_text": {
+          "before": 0,
+          "after": 0
+        },
+        "semantic_empty_string_fields": {
+          "before": 0,
+          "after": 0
+        },
+        "physical_empty_cells": {
+          "before": 0,
+          "after": 0
+        },
+        "unexplained_form_label_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "unexplained_structured_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ignored_ui_artifacts": {
+          "before": 0,
+          "after": 0
+        },
+        "orphan_nodes": {
+          "before": 0,
+          "after": 0
+        },
+        "numbered_paragraph_candidates": {
+          "before": 0,
+          "after": 0
+        },
+        "generic_decimal_paragraphs": {
+          "before": 0,
+          "after": 0
+        },
+        "ambiguous_tables": {
+          "before": 0,
+          "after": 0
+        },
+        "warnings": {
+          "before": 0,
+          "after": 0
+        },
+        "errors": {
+          "before": 0,
+          "after": 0
+        }
+      }
+    }
+  ],
+  "totals": {
+    "documents": 5,
+    "tabs": 20,
+    "all_hierarchies_usable": true,
+    "all_meaningful_text_preserved": true,
+    "all_deterministic": true,
+    "metadata_regressions": 0,
+    "issues": {
+      "info": 93,
+      "warning": 2,
+      "error": 0,
+      "fatal": 0
+    },
+    "before_after": {
+      "forms": {
+        "before": 27,
+        "after": 27
+      },
+      "fields": {
+        "before": 202,
+        "after": 202
+      },
+      "subfields": {
+        "before": 40,
+        "after": 40
+      },
+      "placeholders": {
+        "before": 6,
+        "after": 6
+      },
+      "footnotes": {
+        "before": 54,
+        "after": 54
+      },
+      "placeholder_references": {
+        "before": 65,
+        "after": 65
+      },
+      "unresolved_numbered_form_items": {
+        "before": 0,
+        "after": 0
+      },
+      "split_form_candidates": {
+        "before": 0,
+        "after": 0
+      },
+      "inconsistent_footnote_sequences": {
+        "before": 0,
+        "after": 0
+      },
+      "bibliography_fields_misclassified": {
+        "before": 0,
+        "after": 0
+      },
+      "structured_table_cell_lists": {
+        "before": 4,
+        "after": 4
+      },
+      "generic_structured_paragraphs": {
+        "before": 2,
+        "after": 2
+      },
+      "form_nodes_missing_field_kind": {
+        "before": 27,
+        "after": 0
+      },
+      "form_nodes_missing_field_evidence": {
+        "before": 30,
+        "after": 0
+      },
+      "suspicious_value_text": {
+        "before": 0,
+        "after": 0
+      },
+      "semantic_empty_string_fields": {
+        "before": 0,
+        "after": 0
+      },
+      "physical_empty_cells": {
+        "before": 420,
+        "after": 420
+      },
+      "unexplained_form_label_paragraphs": {
+        "before": 0,
+        "after": 0
+      },
+      "unexplained_structured_paragraphs": {
+        "before": 0,
+        "after": 0
+      },
+      "ignored_ui_artifacts": {
+        "before": 4,
+        "after": 4
+      },
+      "orphan_nodes": {
+        "before": 0,
+        "after": 0
+      },
+      "numbered_paragraph_candidates": {
+        "before": 0,
+        "after": 0
+      },
+      "generic_decimal_paragraphs": {
+        "before": 0,
+        "after": 0
+      },
+      "ambiguous_tables": {
+        "before": 0,
+        "after": 0
+      },
+      "warnings": {
+        "before": 2,
+        "after": 2
+      },
+      "errors": {
+        "before": 0,
+        "after": 0
+      }
+    }
+  }
+}

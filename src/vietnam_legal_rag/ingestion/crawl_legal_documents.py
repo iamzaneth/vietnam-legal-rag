@@ -13,6 +13,7 @@ import re
 import sys
 import tempfile
 import time
+import unicodedata
 from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
 from urllib.robotparser import RobotFileParser
@@ -21,6 +22,11 @@ import xml.etree.ElementTree as ET
 SITEMAP_URL = "https://vbpl.vn/sitemap.xml"
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36"
 DOCUMENT_PATH = "/van-ban/chi-tiet/"
+
+
+def canonical_document_url(url: str) -> str:
+    """Tab query parameters and fragments do not change document identity."""
+    return urlparse(url)._replace(query="", fragment="").geturl()
 
 
 class CrawlError(RuntimeError):
@@ -105,7 +111,8 @@ def discover_one(requested_url: str | None = None) -> tuple[str, dict]:
             pending.extend(urls)
         else:
             for candidate in urls:
-                if is_document_url(candidate) and (requested_url is None or candidate == requested_url):
+                if is_document_url(candidate) and (requested_url is None or
+                        canonical_document_url(candidate) == canonical_document_url(requested_url)):
                     if not robots.can_fetch("*", candidate):
                         raise CrawlError(f"robots.txt không cho phép crawl {candidate}")
                     return candidate, {"source": SITEMAP_URL, "selected_from": url, "sitemaps": records}
@@ -220,6 +227,13 @@ class ContentHTMLParser(HTMLParser):
             self.parts.append(escape(data, quote=False))
 
 
+def source_content_html(fragment: str, title: str) -> str:
+    """Wrap the rendered source fragment without changing its markup."""
+    return ('<!doctype html>\n<html lang="vi">\n<head><meta charset="utf-8">'
+            f'<title>{escape(title)}</title></head>\n<body>\n'
+            + fragment + "\n</body>\n</html>\n")
+
+
 def clean_content_html(fragment: str, title: str, source_url: str = "https://vbpl.vn/") -> str:
     parser = ContentHTMLParser(source_url)
     parser.feed(fragment)
@@ -249,7 +263,56 @@ def publish_capture(staged: Path, destination: Path) -> None:
 
 
 
-METADATA_TABS = (("properties", "Thuộc tính"), ("relations", "Lược đồ"), ("history", "Lịch sử"))
+TAB_LABELS = {
+    "content": "Nội dung", "properties": "Thuộc tính", "relations": "Lược đồ",
+    "history": "Lịch sử", "consolidated": "Các văn bản hợp nhất",
+}
+EXCLUDED_TAB_LABELS = {"tai ve", "van ban goc"}
+
+
+def normalized_tab_label(label: str) -> str:
+    label = re.sub(r"\s*\(\d+\)\s*$", "", label).strip().casefold().replace("đ", "d")
+    return " ".join("".join(c for c in unicodedata.normalize("NFD", label)
+                            if not unicodedata.combining(c)).split())
+
+
+def is_excluded_tab(label: str) -> bool:
+    return normalized_tab_label(label) in EXCLUDED_TAB_LABELS
+
+
+def tab_file_key(label: str) -> str:
+    normalized = normalized_tab_label(label)
+    for key, known_label in TAB_LABELS.items():
+        if normalized == normalized_tab_label(known_label):
+            return key
+    slug = re.sub(r"[^a-z0-9]+", "_", normalized).strip("_")
+    return "tab_" + (slug or hashlib.sha256(label.encode()).hexdigest()[:12])
+
+
+def discover_document_tabs(page) -> list[dict]:
+    """Discover tabs from the document's own tab bar."""
+    records = page.get_by_role("tab", name="Nội dung", exact=True).evaluate("""tab => {
+        const list = tab.closest('[role="tablist"]');
+        return list ? Array.from(list.querySelectorAll('[role="tab"]')).map(t => ({
+            label: t.innerText.trim(), source_id: t.id || null
+        })) : [];
+    }""")
+    if not records:
+        raise CrawlError("Không tìm thấy danh sách tab của văn bản")
+    tabs = []
+    keys = set()
+    for record in records:
+        label = record["label"]
+        if not label.strip():
+            raise CrawlError("Tab văn bản thiếu tên")
+        key = tab_file_key(label)
+        if key in keys:
+            raise CrawlError(f"Tên tab trùng hoặc không phân biệt được: {label}")
+        keys.add(key)
+        tabs.append({**record, "key": key})
+    if "content" not in keys:
+        raise CrawlError("Danh sách tab thiếu Nội dung")
+    return tabs
 
 # Retain source labels and values instead of inferring dates or legal status.
 TAB_DATA_SCRIPT = r"""panel => {
@@ -293,11 +356,18 @@ def validate_tab_data(key: str, data: dict) -> None:
 
 
 def capture_metadata_tabs(page, run_dir: Path, manifest: dict, pending: set, timeout_ms: int) -> None:
-    """Save each metadata tab, including all history pages, before publishing."""
+    """Save rendered source HTML, preserving DOM attributes for offline extraction."""
     manifest["tabs"] = {"content": {"label": "Nội dung", "status": "complete",
-                                    "files": ["content.html", "content.txt"]}}
-    for key, label in METADATA_TABS:
-        tab = page.get_by_role("tab", name=label, exact=True)
+                                    "files": ["content.html"]}}
+    discovered = discover_document_tabs(page)
+    manifest["tab_policy"] = "all_except_downloads_and_original"
+    manifest["excluded_tabs"] = [record for record in discovered if is_excluded_tab(record["label"])]
+    for record in discovered:
+        key, label = record["key"], record["label"]
+        if key == "content" or is_excluded_tab(label):
+            continue
+        tab = (page.locator(f'[role="tab"][id={json.dumps(record["source_id"])}]')
+               if record.get("source_id") else page.get_by_role("tab", name=label, exact=True))
         tab.wait_for(state="visible")
         tab.click()
         panel = page.locator('[role="tabpanel"]:visible')
@@ -305,14 +375,14 @@ def capture_metadata_tabs(page, run_dir: Path, manifest: dict, pending: set, tim
         pages = []
         seen = set()
         while True:
-            text = clean_content_text(wait_for_panel(page, panel, pending, timeout_ms))
+            text = wait_for_panel(page, panel, pending, timeout_ms)
             data = panel.evaluate(TAB_DATA_SCRIPT)
             validate_tab_data(key, data)
-            signature = json.dumps(data, ensure_ascii=False, sort_keys=True)
+            signature = json.dumps({"data": data, "text": text}, ensure_ascii=False, sort_keys=True)
             if signature in seen:
                 raise CrawlError(f"Phân trang {label} không tiến tới trang tiếp theo")
             seen.add(signature)
-            pages.append({"text": text, "html": panel.inner_html(), "data": data})
+            pages.append({"html": panel.inner_html()})
             next_page = panel.locator('.ant-pagination-next:not(.ant-pagination-disabled)')
             if not next_page.count():
                 break
@@ -324,33 +394,23 @@ def capture_metadata_tabs(page, run_dir: Path, manifest: dict, pending: set, tim
                 if time.monotonic() >= deadline:
                     raise CrawlError(f"Hết thời gian chờ trang tiếp theo của {label}")
                 page.wait_for_timeout(250)
-        paths = []
-        html = "\n".join(f"<section><h2>{escape(label)} — {i}</h2>{item['html']}</section>"
-                         for i, item in enumerate(pages, 1))
-        for suffix, value in (("html", clean_content_html(html.replace("</span>", "</span> "),
-                                                        f"{manifest['title']} — {label}",
-                                                        manifest["source_url"])),
-                              ("txt", "\n\n".join(item["text"] for item in pages))):
-            path = run_dir / f"{key}.{suffix}"
-            path.write_text(value, encoding="utf-8")
-            paths.append(path.name)
-            manifest["files"].append(file_record(path, run_dir))
-        path = run_dir / f"{key}.json"
-        write_json(path, {"source_url": manifest["source_url"], "tab": label,
-                          "retrieved_at": datetime.now(timezone.utc).isoformat(),
-                          "pages": [item["data"] for item in pages]})
-        paths.append(path.name)
+        html = "\n".join(
+            f'<section data-page="{i}">{item["html"]}</section>'
+            for i, item in enumerate(pages, 1)
+        )
+        path = run_dir / f"{key}.html"
+        path.write_text(source_content_html(html, f"{manifest['title']} — {label}"), encoding="utf-8")
         manifest["files"].append(file_record(path, run_dir))
-        manifest["tabs"][key] = {"label": label, "status": "complete", "pages": len(pages), "files": paths}
+        manifest["tabs"][key] = {"label": label, "source_id": record.get("source_id"), "status": "complete",
+                                 "pages": len(pages), "files": [path.name]}
         print(f"  Tab: {label} ({len(pages)} trang)", flush=True)
 
-def capture_document(url: str, run_dir: Path, manifest: dict, channel: str, headed: bool, timeout_ms: int,
-                     download_attachments: bool = False) -> None:
+def capture_document(url: str, run_dir: Path, manifest: dict, channel: str, headed: bool, timeout_ms: int) -> None:
     from playwright.sync_api import sync_playwright
 
     pending = set()
     manifest.update({"attachments": [], "files": [],
-                     "attachment_policy": "download" if download_attachments else "skip",
+                     "stage": "raw", "attachment_policy": "skip",
                      "expected_attachments": None})
 
     def requested(request):
@@ -365,7 +425,7 @@ def capture_document(url: str, run_dir: Path, manifest: dict, channel: str, head
         browser = playwright.chromium.launch(channel=channel or None, headless=not headed)
         try:
             context = browser.new_context(locale="vi-VN", user_agent=USER_AGENT,
-                                          viewport={"width": 1440, "height": 1000}, accept_downloads=download_attachments)
+                                          viewport={"width": 1440, "height": 1000}, accept_downloads=False)
             page = context.new_page()
             page.set_default_timeout(timeout_ms)
             page.on("request", requested)
@@ -376,6 +436,10 @@ def capture_document(url: str, run_dir: Path, manifest: dict, channel: str, head
                 raise CrawlError(f"Trang văn bản trả HTTP {response.status if response else 'unknown'}")
             content_tab = page.get_by_role("tab", name="Nội dung", exact=True)
             content_tab.wait_for(state="visible")
+            reject = page.get_by_role("button", name="Từ chối", exact=True).filter(visible=True)
+            if reject.count():
+                reject.last.click()
+            content_tab.click()
             preview = page.locator(".preview-content").first
             preview.wait_for(state="visible")
             panel = page.locator('[role="tabpanel"]:visible')
@@ -385,9 +449,6 @@ def capture_document(url: str, run_dir: Path, manifest: dict, channel: str, head
             full_text = clean_content_text(preview.inner_text())
             if len(full_text.strip()) < 300:
                 raise CrawlError("Chưa có toàn văn đủ để xác nhận")
-            reject = page.get_by_role("button", name="Từ chối", exact=True).filter(visible=True)
-            if reject.count():
-                reject.last.click()
             breadcrumb_urls = page.locator(".ant-breadcrumb a[href]").evaluate_all(
                 "elements => elements.map(element => element.href)")
             manifest.update({"document_scope": classify_document_scope(breadcrumb_urls),
@@ -396,45 +457,11 @@ def capture_document(url: str, run_dir: Path, manifest: dict, channel: str, head
             manifest.update({"title": page.title(), "source_url": url,
                              "full_text_characters": len(full_text.strip())})
             html_file = run_dir / "content.html"
-            html_file.write_text(clean_content_html(preview.inner_html(), page.title(), url), encoding="utf-8")
-            text_file = run_dir / "content.txt"
-            text_file.write_text(full_text, encoding="utf-8")
-            manifest["files"] = [file_record(html_file, run_dir), file_record(text_file, run_dir)]
+            html_file.write_text(source_content_html(preview.inner_html(), page.title()), encoding="utf-8")
+            manifest["files"] = [file_record(html_file, run_dir)]
 
             capture_metadata_tabs(page, run_dir, manifest, pending, timeout_ms)
 
-            if download_attachments:
-                page.get_by_role("tab", name="Tải về", exact=True).click()
-                panel = page.locator('[role="tabpanel"]:visible')
-                panel.wait_for(state="visible")
-                panel_text = wait_for_panel(page, panel, pending, timeout_ms)
-                buttons = panel.locator("button")
-                count = buttons.count()
-                manifest["expected_attachments"] = count
-                if count == 0 and not re.search(r"Không có|Chưa có|No data", panel_text, re.I):
-                    raise CrawlError("Không xác nhận được danh sách tệp đính kèm")
-                if count:
-                    (run_dir / "attachments").mkdir()
-                for i in range(count):
-                    with page.expect_download(timeout=timeout_ms) as event:
-                        buttons.nth(i).click()
-                    download = event.value
-                    name = safe_filename(download.suggested_filename)
-                    target = run_dir / "attachments" / name
-                    suffix = 2
-                    while target.exists():
-                        target = run_dir / "attachments" / f"{suffix}-{name}"
-                        suffix += 1
-                    download.save_as(target)
-                    if download.failure():
-                        raise CrawlError(f"Không tải được {name}: {download.failure()}")
-                    validate_attachment(target)
-                    manifest["attachments"].append(file_record(
-                        target, run_dir, original_filename=download.suggested_filename))
-                    print(f"  Tệp: {name} ({target.stat().st_size:,} bytes)", flush=True)
-                    page.wait_for_timeout(500)
-                if len(manifest["attachments"]) != count:
-                    raise CrawlError("Chưa tải đủ tệp đính kèm")
             content_tab.click()
             wait_for_panel(page, page.locator('[role="tabpanel"]:visible'), pending, timeout_ms)
             if clean_content_text(preview.inner_text()) != full_text:
@@ -442,19 +469,17 @@ def capture_document(url: str, run_dir: Path, manifest: dict, channel: str, head
             manifest["validation"] = {
                 "content_stable": True,
                 "metadata_tabs_complete": True,
-                "all_listed_attachments_downloaded": True if download_attachments else None,
+                "all_listed_attachments_downloaded": None,
             }
         finally:
             browser.close()
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Crawl một văn bản vbpl.vn: toàn văn, thuộc tính, lược đồ, lịch sử; mặc định không tải tệp đính kèm")
+    parser = argparse.ArgumentParser(description="Crawl mọi tab văn bản vbpl.vn, trừ Tải về và Văn bản gốc")
     parser.add_argument("--output", type=Path, default=Path("data/raw/vbpl"))
     parser.add_argument("--url", help="URL có trong sitemap (mặc định chọn văn bản đầu tiên)")
     parser.add_argument("--channel", default="chrome", help="chrome (đã cài) hoặc chromium (Playwright)")
-    parser.add_argument("--download-attachments", action="store_true",
-                        help="Tải thêm tệp đính kèm (mặc định bỏ qua để tiết kiệm dung lượng)")
     parser.add_argument("--headed", action="store_true", help="Hiển thị cửa sổ trình duyệt")
     parser.add_argument("--timeout", type=int, default=60, help="Thời gian chờ mỗi bước, tính bằng giây")
     args = parser.parse_args(argv)
@@ -465,8 +490,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         print("Đọc sitemap...", flush=True)
         url, discovery = discover_one(args.url)
-        identifier = url.rsplit("--", 1)[-1]
-        if not re.fullmatch(r"[0-9a-fA-F-]{36}", identifier):
+        identifier = urlparse(url).path.rsplit("--", 1)[-1]
+        if not re.fullmatch(r"(?:[0-9a-fA-F-]{36}|\d+)", identifier):
             identifier = hashlib.sha256(url.encode()).hexdigest()[:32]
         manifest = {"source": "vbpl.vn", "document_id": f"vbpl:{identifier}",
                     "retrieved_at": datetime.now(timezone.utc).isoformat(), "discovery": discovery}
@@ -477,8 +502,7 @@ def main(argv: list[str] | None = None) -> int:
         with tempfile.TemporaryDirectory(prefix=".crawl-", dir=args.output) as temporary:
             staged = Path(temporary) / "document"
             staged.mkdir()
-            capture_document(url, staged, manifest, args.channel, args.headed, args.timeout * 1000,
-                             args.download_attachments)
+            capture_document(url, staged, manifest, args.channel, args.headed, args.timeout * 1000)
             scope = manifest.get("document_scope")
             if scope not in DOCUMENT_SCOPES.values():
                 raise CrawlError("Kết quả crawl thiếu nhóm trung ương/địa phương hợp lệ")

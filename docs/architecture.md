@@ -2,18 +2,30 @@
 
 ## Pipeline xây dựng kho tri thức
 
-1. `ingestion`: thu thập tài liệu, ghi URL nguồn, thời điểm lấy dữ liệu và mã kiểm tra nội dung.
-   Với vbpl.vn, mặc định lưu toàn văn HTML/TXT, các tab Thuộc tính/Lược đồ/Lịch sử
-   dạng HTML/TXT/JSON và manifest; tệp đính kèm chỉ tải
-   khi bật `--download-attachments`. Dữ liệu được phân nhóm theo breadcrumb nguồn
-   tại `data/raw/vbpl/trung_uong/<id>/` hoặc `data/raw/vbpl/dia_phuong/<id>/`.
-2. `preprocessing`: đọc HTML/TXT; đọc thêm PDF/DOCX và xử lý OCR khi có tệp đính kèm,
-   chuẩn hóa và nhận diện cấu trúc văn bản.
-3. `preprocessing`: tạo đoạn trích theo điều/khoản/điểm khi có thể; giữ liên kết về tài liệu gốc.
-4. `indexing`: tạo embedding và chỉ mục, ghi phiên bản mô hình cùng cấu hình xử lý.
+1. `ingestion` / crawl: dò tab trên từng văn bản, thu thập HTML của mọi tab
+   ngoại trừ Tải về và Văn bản gốc; ghi URL, thời điểm, phân loại, danh sách tab
+   và SHA-256 vào `manifest.json`.
+   `data/raw/` chỉ lưu HTML và manifest. Với vbpl.vn, văn bản được phân nhóm theo
+   breadcrumb tại `data/raw/vbpl/<trung_uong|dia_phuong>/<id>/`.
+2. `ingestion` / extract: đọc HTML đã lưu, tạo JSON cấu trúc toàn văn và JSON
+   riêng cho từng tab tại `data/extracted/vbpl/<id>/`. Manifest extracted ghi
+   định danh raw, SHA-256 của HTML nguồn và các tệp JSON đầu ra. Parser giữ
+   paragraph/list/table, cây pháp luật theo thứ tự nguồn và issues của dữ liệu
+   chưa rõ. Không merge tab hoặc tạo document canonical ở bước này.
+   Bước này chạy offline, có thể chạy lại mà không crawl lại.
+3. `preprocessing` / normalize: chuẩn hóa và nhận diện cấu trúc văn bản,
+   đầu ra tại `data/normalized/`; sẽ xây dựng sau.
+4. `preprocessing` / chunk: tạo đoạn trích theo điều/khoản/điểm và giữ liên kết
+   về văn bản, đầu ra tại `data/chunks/`; sẽ xây dựng sau.
+5. `indexing`: tạo embedding và chỉ mục, ghi phiên bản mô hình cùng cấu hình xử lý.
 
-Dữ liệu gốc ở `data/raw/` cần được giữ nguyên để có thể xử lý lại.
-Tách văn bản trung gian khỏi dữ liệu chuẩn hóa để dễ tìm lỗi trong từng bước.
+Bốn lớp dữ liệu là `raw → extracted → normalized → chunks`.
+HTML trong raw cần được giữ nguyên sau khi crawl để có thể trích xuất lại.
+Mỗi bước crawl/extract ghi vào thư mục tạm và chỉ thay kết quả của văn bản đó
+khi hoàn tất; lỗi integrity giữ bản thành công trước. Validator ghi status
+`failed` và issues nếu có lỗi cấu trúc/text, vẫn lưu dữ liệu parse được và
+source reference để audit. Issue info đơn thuần không làm document failed. Crawl và extract là hai lệnh
+độc lập: sau khi cập nhật raw, chạy extract để cập nhật dữ liệu tương ứng.
 Chỉ mục cục bộ nằm ở `storage/indexes/`; khi dùng dịch vụ bên ngoài,
 `indexing` và `retrieval` sẽ giao tiếp với dịch vụ đó.
 

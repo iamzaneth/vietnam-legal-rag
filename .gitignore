@@ -21,10 +21,12 @@ htmlcov/
 # Generated data and local storage
 /data/raw/*
 !/data/raw/.gitkeep
-/data/interim/*
-!/data/interim/.gitkeep
-/data/processed/*
-!/data/processed/.gitkeep
+/data/extracted/*
+!/data/extracted/.gitkeep
+/data/normalized/*
+!/data/normalized/.gitkeep
+/data/chunks/*
+!/data/chunks/.gitkeep
 /storage/indexes/*
 !/storage/indexes/.gitkeep
 /storage/cache/*

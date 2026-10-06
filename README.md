@@ -19,9 +19,10 @@ vietnam-legal-rag/
 ├── configs/                   # Cấu hình pipeline, mô hình và tìm kiếm; không chứa bí mật
 ├── prompts/                   # Mẫu prompt có quản lý phiên bản
 ├── data/
-│   ├── raw/                   # Tài liệu gốc; giữ nguyên nội dung tải về
-│   ├── interim/               # Văn bản đã trích xuất, dữ liệu đang chuẩn hóa
-│   ├── processed/             # Văn bản và đoạn trích đã chuẩn hóa, kèm metadata
+│   ├── raw/                   # HTML nguồn và manifest.json
+│   ├── extracted/             # JSON có cấu trúc trích xuất từ HTML trong raw
+│   ├── normalized/            # Dữ liệu chuẩn hóa; sẽ triển khai sau
+│   ├── chunks/                # Đoạn trích phục vụ RAG; sẽ triển khai sau
 │   └── samples/               # Mẫu nhỏ được phép chia sẻ và đưa vào Git
 ├── storage/
 │   ├── indexes/               # Chỉ mục tìm kiếm lưu cục bộ
@@ -46,8 +47,10 @@ vietnam-legal-rag/
 ## Luồng xử lý dự kiến
 
 ```text
-Nguồn tài liệu → ingestion → data/raw
-              → preprocessing → data/interim → data/processed
+Nguồn tài liệu → crawl → data/raw (HTML + manifest)
+              → extract → data/extracted (JSON có cấu trúc)
+              → normalize → data/normalized       # triển khai sau
+              → chunk → data/chunks               # triển khai sau
               → indexing → chỉ mục tìm kiếm
 
 Câu hỏi → API → retrieval → generation → câu trả lời kèm trích dẫn
@@ -69,27 +72,44 @@ cp .env.example .env
 ```
 
 Dự án đã có crawler thử một văn bản từ vbpl.vn; chưa có chatbot hoặc pipeline RAG.
-Lệnh cài đặt trên chỉ cài package Python cục bộ. Việc đọc `.env` sẽ được bổ sung
+Lệnh cài đặt trên cài package cục bộ và jsonschema cho validator. Việc đọc `.env` sẽ được bổ sung
 khi triển khai cấu hình ứng dụng.
 
 ## Nguồn dữ liệu đầu tiên: vbpl.vn
 
 Crawler đọc [sitemap](https://vbpl.vn/sitemap.xml), chọn đúng một văn bản,
-chạy JavaScript bằng Chrome, trích toàn văn thành HTML/TXT sạch, lưu thêm các tab Thuộc tính, Lược đồ và Lịch sử
-dưới dạng HTML/TXT/JSON cùng metadata. Mặc định không tải tệp đính kèm.
+chạy JavaScript bằng Chrome, dò tất cả tab thực tế và lưu HTML nguồn cùng
+`manifest.json` vào lớp `raw`, chỉ bỏ qua Tải về và Văn bản gốc.
+Bước extract đọc lại HTML trên đĩa
+để tạo JSON có cấu trúc tại lớp `extracted`, không cần trình duyệt hoặc mạng.
 
 ```bash
 uv pip install --python .venv/bin/python -e '.[crawl]'
 .venv/bin/vbpl-crawl-one
+.venv/bin/vbpl-extract
 ```
 
 Module crawler: `src/vietnam_legal_rag/ingestion/crawl_legal_documents.py`.
-Crawler tự phân loại theo breadcrumb của nguồn thành `trung_uong` và `dia_phuong`.
-Kết quả nằm trong `data/raw/vbpl/<trung_uong|dia_phuong>/<mã văn bản>/`. Mở `content.html` để đọc
-toàn văn offline hoặc `content.txt` để xem văn bản thuần. HTML đã bỏ CSS và
-JavaScript. `manifest.json` ghi nguồn và danh sách tệp; chạy lại cùng văn bản
-sẽ cập nhật thư mục hiện có sau khi tải thành công.
-Để tải thêm PDF/DOCX, chạy `vbpl-crawl-one --download-attachments`.
+Module extractor: `src/vietnam_legal_rag/ingestion/extract_legal_documents.py`.
+Raw giữ `vbpl/<trung_uong|dia_phuong>/<mã văn bản>/`;
+extracted giữ `vbpl/<mã văn bản>/`.
+Crawler phân loại theo breadcrumb của nguồn; hỗ trợ cả tab Các văn bản hợp nhất. `raw` chỉ chứa HTML và manifest,
+không tải tệp đính kèm. HTML mới giữ markup và thuộc tính DOM để trích xuất lại.
+Đọc cấu trúc toàn văn tại `data/extracted/vbpl/<mã văn bản>/content.json`.
+Schema 2.3.2 giữ duy nhất `document: legal_document` trong content.json,
+với header/title/preamble/body/closing/annexes và hierarchy Phần → Điều → Khoản → Điểm.
+Second pass dùng sequence/points/style để promotion Khoản, tách hierarchy đánh số
+thập phân của phụ lục. Form refinement dùng ranh giới Mẫu số, field/subfield,
+footnote sequences, bibliography và lists trong ô bảng; validator audit những
+paragraph còn marker. `--debug-tree` in cây ra console.
+Layout tables thành section semantic; data tables giữ cell geometry tại đúng
+legal parent. History/relations tách primary number và mentions; validator kiểm
+tra hierarchy, text fidelity, provenance và determinism.
+Xem [schema extracted](docs/extracted-schema.md) và [kết quả hierarchy mẫu](docs/extract-hierarchy.md).
+Contract V2.3.2 và đối chiếu actual JSON: [báo cáo freeze](docs/extract-v2.3.2-form-invariant-audit.md).
+Kết quả kiểm tra V2.3 và delta từ V2.2: [báo cáo form semantics](docs/extract-v2.3-report.md).
+Chạy lại sẽ cập nhật thư mục văn bản sau khi bước tương ứng thành công.
+`normalized` và `chunks` hiện chỉ là thư mục dành sẵn.
 Xem [hướng dẫn crawler](docs/vbpl-crawl.md) để cài Chromium, chọn URL và kiểm thử.
 
 ## Quy ước làm việc

@@ -66,17 +66,17 @@ class DocumentScopeTests(unittest.TestCase):
                 root = Path(tmp)
                 destination = root / (scope or "trung_uong") / identifier
                 destination.mkdir(parents=True)
-                (destination / "content.txt").write_text("old")
+                (destination / "content.html").write_text("old")
                 def capture(url, staged, manifest, *args):
                     manifest["document_scope"] = scope
-                    (staged / "content.txt").write_text("new")
+                    (staged / "content.html").write_text("new")
                 with patch("vietnam_legal_rag.ingestion.crawl_legal_documents.discover_one",
                            return_value=(url, {})), \
                      patch("vietnam_legal_rag.ingestion.crawl_legal_documents.capture_document",
                            side_effect=capture), \
                      contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
                     self.assertEqual(main(["--output", tmp]), 0 if scope else 1)
-                self.assertEqual((destination / "content.txt").read_text(), "new" if scope else "old")
+                self.assertEqual((destination / "content.html").read_text(), "new" if scope else "old")
                 self.assertFalse(list(root.glob(".crawl-*")))
                 self.assertFalse((root / identifier).exists())
                 if scope:
@@ -112,7 +112,7 @@ class AttachmentTests(unittest.TestCase):
 
 
 class CapturePolicyTests(unittest.TestCase):
-    def run_capture(self, download_attachments):
+    def test_capture_saves_only_source_html_without_downloads(self):
         from unittest.mock import MagicMock, patch
         from vietnam_legal_rag.ingestion.crawl_legal_documents import capture_document
         page = MagicMock()
@@ -123,6 +123,10 @@ class CapturePolicyTests(unittest.TestCase):
         panel.evaluate_all.return_value = ["https://vbpl.vn/van-ban/trung-uong"]
         preview.inner_text.return_value = "Nội dung văn bản. " * 30
         preview.inner_html.return_value = "<p>" + preview.inner_text.return_value + "</p>"
+        page.get_by_role.return_value.evaluate.return_value = [
+            {"label": label, "source_id": None}
+            for label in ("Nội dung", "Thuộc tính", "Lược đồ", "Lịch sử", "Tải về", "Văn bản gốc")
+        ]
         page.title.return_value = "Văn bản thử nghiệm"
         page.get_by_role.return_value.filter.return_value.count.return_value = 0
         panel.inner_html.return_value = "<p>Dữ liệu tab</p>"
@@ -133,10 +137,6 @@ class CapturePolicyTests(unittest.TestCase):
         }
         panel.locator.side_effect = lambda selector: MagicMock(
             count=MagicMock(return_value=1 if selector == "button" else 0))
-        download = page.expect_download.return_value.__enter__.return_value.value
-        download.suggested_filename = "document.pdf"
-        download.failure.return_value = None
-        download.save_as.side_effect = lambda target: target.write_bytes(b"%PDF-1.7\n%%EOF")
         browser = MagicMock()
         browser.new_context.return_value.new_page.return_value = page
         manifest = {}
@@ -144,60 +144,79 @@ class CapturePolicyTests(unittest.TestCase):
              patch("playwright.sync_api.sync_playwright") as factory, \
              patch("vietnam_legal_rag.ingestion.crawl_legal_documents.wait_for_panel", return_value="Tệp"):
             factory.return_value.__enter__.return_value.chromium.launch.return_value = browser
-            kwargs = {"download_attachments": True} if download_attachments else {}
             capture_document("https://vbpl.vn/van-ban/chi-tiet/test", Path(tmp), manifest,
-                             "chrome", False, 1000, **kwargs)
+                             "chrome", False, 1000)
             self.assertTrue((Path(tmp) / "content.html").exists())
-            self.assertTrue((Path(tmp) / "content.txt").exists())
+            self.assertFalse((Path(tmp) / "content.txt").exists())
             for key in ("properties", "relations", "history"):
-                for suffix in ("html", "txt", "json"):
-                    self.assertTrue((Path(tmp) / f"{key}.{suffix}").is_file())
+                self.assertTrue((Path(tmp) / f"{key}.html").is_file())
+                for suffix in ("txt", "json"):
+                    self.assertFalse((Path(tmp) / f"{key}.{suffix}").exists())
                 self.assertEqual(manifest["tabs"][key]["status"], "complete")
-            self.assertEqual(len(manifest["files"]), 11)
-            self.assertEqual((Path(tmp) / "attachments").exists(), download_attachments)
-            self.assertEqual(browser.new_context.call_args.kwargs["accept_downloads"],
-                             download_attachments)
+            self.assertEqual(len(manifest["files"]), 4)
+            self.assertFalse((Path(tmp) / "attachments").exists())
+            self.assertFalse(browser.new_context.call_args.kwargs["accept_downloads"])
             download_tabs = [call for call in page.get_by_role.call_args_list
                              if call.kwargs.get("name") == "Tải về"]
-            self.assertEqual(len(download_tabs), int(download_attachments))
-            self.assertEqual(manifest["attachment_policy"],
-                             "download" if download_attachments else "skip")
-            self.assertEqual(len(manifest["attachments"]), int(download_attachments))
-            self.assertEqual(manifest["expected_attachments"],
-                             1 if download_attachments else None)
+            self.assertEqual(len(download_tabs), 0)
+            self.assertEqual(manifest["attachment_policy"], "skip")
+            self.assertEqual(len(manifest["attachments"]), 0)
+            self.assertIsNone(manifest["expected_attachments"])
             self.assertIs(manifest["validation"]["all_listed_attachments_downloaded"],
-                          True if download_attachments else None)
+                          None)
             browser.close.assert_called_once()
-            if not download_attachments:
-                page.expect_download.assert_not_called()
+            page.expect_download.assert_not_called()
 
-    def test_default_saves_content_without_accessing_download_tab(self):
-        self.run_capture(False)
-
-    def test_opt_in_downloads_and_validates_attachments(self):
-        self.run_capture(True)
-
-    def test_cli_passes_attachment_policy(self):
-        import contextlib
-        import io
-        from unittest.mock import patch
-        from vietnam_legal_rag.ingestion.crawl_legal_documents import main
-        url = "https://vbpl.vn/van-ban/chi-tiet/test--0c389a00-78f6-11f1-a726-87c913cf8f30"
-        for enabled in (False, True):
-            with self.subTest(enabled=enabled), tempfile.TemporaryDirectory() as tmp, \
-                 patch("vietnam_legal_rag.ingestion.crawl_legal_documents.discover_one", return_value=(url, {})), \
-                 patch("vietnam_legal_rag.ingestion.crawl_legal_documents.capture_document",
-                       side_effect=lambda url, staged, manifest, *args:
-                           manifest.update(document_scope="trung_uong")) as capture, \
-                 contextlib.redirect_stdout(io.StringIO()):
-                args = ["--output", tmp] + (["--download-attachments"] if enabled else [])
-                self.assertEqual(main(args), 0)
-                self.assertIs(capture.call_args.args[-1], enabled)
-                self.assertTrue((Path(tmp) / "trung_uong" / url.rsplit("--", 1)[-1]
-                                 / "manifest.json").is_file())
 
 
 class MetadataTabTests(unittest.TestCase):
+    def test_discovers_present_tabs_with_safe_stable_keys(self):
+        from unittest.mock import MagicMock
+        from vietnam_legal_rag.ingestion.crawl_legal_documents import discover_document_tabs
+        page = MagicMock()
+        page.get_by_role.return_value.evaluate.return_value = [
+            {"label": label, "source_id": f"tab-{i}"} for i, label in enumerate((
+                "Nội dung", "Các văn bản hợp nhất", "Một tab mới", "Tải về", "Văn bản gốc",
+            ))
+        ]
+        records = discover_document_tabs(page)
+        self.assertEqual([r["key"] for r in records[:3]], ["content", "consolidated", "tab_mot_tab_moi"])
+        self.assertEqual(records[1]["source_id"], "tab-1")
+
+    def test_captures_all_present_tabs_except_downloads_and_original(self):
+        from unittest.mock import MagicMock, patch
+        from vietnam_legal_rag.ingestion.crawl_legal_documents import capture_metadata_tabs
+        page = MagicMock()
+        page.get_by_role.return_value.evaluate.return_value = [
+            {"label": label, "source_id": None} for label in (
+                "Nội dung", "Các văn bản hợp nhất", "Thông tin bổ sung", "  TẢI VỀ  ", "Văn bản gốc (2)",
+            )
+        ]
+        panel = page.locator.return_value
+        panel.evaluate.return_value = {"fields": [], "groups": [], "rows": [], "links": [], "empty": False}
+        panel.inner_html.return_value = '<ul><li><a href="/van-ban/chi-tiet/other">VBHN mẫu</a></li></ul>'
+        panel.locator.return_value.count.return_value = 0
+        manifest = {"files": [], "title": "Test", "source_url": "https://vbpl.vn/test"}
+        with tempfile.TemporaryDirectory() as tmp, patch(
+                "vietnam_legal_rag.ingestion.crawl_legal_documents.wait_for_panel", return_value="VBHN mẫu"):
+            capture_metadata_tabs(page, Path(tmp), manifest, set(), 1000)
+            self.assertEqual({p.name for p in Path(tmp).iterdir()},
+                             {"consolidated.html", "tab_thong_tin_bo_sung.html"})
+            self.assertEqual(set(manifest["tabs"]), {"content", "consolidated", "tab_thong_tin_bo_sung"})
+            self.assertEqual(len(manifest["excluded_tabs"]), 2)
+            opened = [call.kwargs["name"] for call in page.get_by_role.call_args_list[1:]]
+            self.assertEqual(opened, ["Các văn bản hợp nhất", "Thông tin bổ sung"])
+
+    def test_duplicate_tab_keys_fail_instead_of_overwriting_html(self):
+        from unittest.mock import MagicMock
+        from vietnam_legal_rag.ingestion.crawl_legal_documents import discover_document_tabs
+        page = MagicMock()
+        page.get_by_role.return_value.evaluate.return_value = [
+            {"label": label} for label in ("Nội dung", "Một tab", "MỘT TAB")
+        ]
+        with self.assertRaises(CrawlError):
+            discover_document_tabs(page)
+
     def test_rejects_partial_relations(self):
         from vietnam_legal_rag.ingestion.crawl_legal_documents import validate_tab_data
         with self.assertRaises(CrawlError):
@@ -230,14 +249,17 @@ class MetadataTabTests(unittest.TestCase):
         panel.locator.return_value.count.side_effect = [1, 0]
         manifest = {"files": [], "title": "Test", "source_url": "https://vbpl.vn/test"}
         with tempfile.TemporaryDirectory() as tmp, \
-             patch("vietnam_legal_rag.ingestion.crawl_legal_documents.METADATA_TABS", (("history", "Lịch sử"),)), \
+             patch("vietnam_legal_rag.ingestion.crawl_legal_documents.discover_document_tabs", return_value=[
+                 {"key": "history", "label": "Lịch sử", "source_id": None}]), \
              patch("vietnam_legal_rag.ingestion.crawl_legal_documents.wait_for_panel",
                    side_effect=["First event", "Second event"]):
             capture_metadata_tabs(page, Path(tmp), manifest, set(), 1000)
-            data = json.loads((Path(tmp) / "history.json").read_text())
-            self.assertEqual(len(data["pages"]), 2)
-            self.assertIn("First event", (Path(tmp) / "history.txt").read_text())
-            self.assertIn("Second event", (Path(tmp) / "history.txt").read_text())
+            html = (Path(tmp) / "history.html").read_text()
+            self.assertIn('data-page="1"', html)
+            self.assertIn('data-page="2"', html)
+            self.assertIn("First event", html)
+            self.assertIn("Second event", html)
+            self.assertFalse((Path(tmp) / "history.json").exists())
             self.assertEqual(manifest["tabs"]["history"]["pages"], 2)
             panel.locator.return_value.click.assert_called_once()
 
@@ -245,6 +267,29 @@ class MetadataTabTests(unittest.TestCase):
         from vietnam_legal_rag.ingestion.crawl_legal_documents import validate_tab_data
         validate_tab_data("relations", {"groups": [{"label": "Văn bản thay thế (0)", "items": []}],
                                         "empty": False})
+
+
+class TabURLTests(unittest.TestCase):
+    def test_requested_tab_url_matches_canonical_sitemap_entry(self):
+        from unittest.mock import patch
+        from vietnam_legal_rag.ingestion.crawl_legal_documents import discover_one
+        url = "https://vbpl.vn/van-ban/chi-tiet/example--13205"
+        with patch("vietnam_legal_rag.ingestion.crawl_legal_documents.fetch_public", side_effect=[
+                b"User-agent: *\nAllow: /\n", f'<urlset><url><loc>{url}</loc></url></urlset>'.encode()]):
+            self.assertEqual(discover_one(url + "?tabs=hop-nhat")[0], url)
+
+    def test_numeric_source_id_is_used_for_output(self):
+        import contextlib
+        import io
+        from unittest.mock import patch
+        from vietnam_legal_rag.ingestion.crawl_legal_documents import main
+        url = "https://vbpl.vn/van-ban/chi-tiet/example--13205?tabs=hop-nhat"
+        with tempfile.TemporaryDirectory() as tmp, contextlib.redirect_stdout(io.StringIO()), \
+             patch("vietnam_legal_rag.ingestion.crawl_legal_documents.discover_one", return_value=(url, {})), \
+             patch("vietnam_legal_rag.ingestion.crawl_legal_documents.capture_document",
+                   side_effect=lambda url, staged, manifest, *args: manifest.update(document_scope="trung_uong")):
+            self.assertEqual(main(["--url", url, "--output", tmp]), 0)
+            self.assertTrue((Path(tmp) / "trung_uong" / "13205" / "manifest.json").is_file())
 
 
 class CleanContentTests(unittest.TestCase):
@@ -296,13 +341,13 @@ class OutputLifecycleTests(unittest.TestCase):
             root = Path(tmp)
             destination = root / 'document-id'
             destination.mkdir()
-            (destination / 'content.txt').write_text('old')
+            (destination / 'content.html').write_text('old')
             with tempfile.TemporaryDirectory(dir=root, prefix='.crawl-') as work:
                 staged = Path(work) / 'document'
                 staged.mkdir()
-                (staged / 'content.txt').write_text('new')
+                (staged / 'content.html').write_text('new')
                 publish_capture(staged, destination)
-            self.assertEqual((destination / 'content.txt').read_text(), 'new')
+            self.assertEqual((destination / 'content.html').read_text(), 'new')
             self.assertEqual(list(root.iterdir()), [destination])
 
     def test_failed_capture_cleans_staging_and_preserves_previous_result(self):
@@ -316,15 +361,15 @@ class OutputLifecycleTests(unittest.TestCase):
             root = Path(tmp)
             destination = root / 'trung_uong' / identifier
             destination.mkdir(parents=True)
-            (destination / 'content.txt').write_text('existing result')
+            (destination / 'content.html').write_text('existing result')
             def fail_capture(url, staged, *args):
-                (staged / 'content.txt').write_text('incomplete')
+                (staged / 'content.html').write_text('incomplete')
                 raise CrawlError('download failed')
             with patch('vietnam_legal_rag.ingestion.crawl_legal_documents.discover_one', return_value=(url, {})), \
                  patch('vietnam_legal_rag.ingestion.crawl_legal_documents.capture_document', side_effect=fail_capture), \
                  contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
                 self.assertEqual(main(['--output', str(root)]), 1)
-            self.assertEqual((destination / 'content.txt').read_text(), 'existing result')
+            self.assertEqual((destination / 'content.html').read_text(), 'existing result')
             self.assertEqual(list(root.iterdir()), [root / 'trung_uong'])
 
     def test_failed_publish_restores_previous_result(self):
@@ -334,7 +379,7 @@ class OutputLifecycleTests(unittest.TestCase):
             root = Path(tmp)
             destination = root / 'document-id'
             destination.mkdir()
-            (destination / 'content.txt').write_text('old')
+            (destination / 'content.html').write_text('old')
             work = root / '.crawl-test'
             work.mkdir()
             staged = work / 'document'
@@ -346,7 +391,7 @@ class OutputLifecycleTests(unittest.TestCase):
                 return original_rename(path, target)
             with patch.object(Path, 'rename', fail_staged_rename), self.assertRaises(OSError):
                 publish_capture(staged, destination)
-            self.assertEqual((destination / 'content.txt').read_text(), 'old')
+            self.assertEqual((destination / 'content.html').read_text(), 'old')
 
 
 if __name__ == "__main__":

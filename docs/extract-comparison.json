@@ -1,0 +1,551 @@
+{
+  "before_parser_version": "1.0.0",
+  "after_parser_version": "2.0.0",
+  "byte_measure": "UTF-8 JSON bytes including manifest; no filesystem allocation rounding",
+  "text_measure": "Ordered Unicode characters after removing formatting whitespace; UI placeholders/page headings audited separately",
+  "semantic_element_measure": "Legal/paragraph/list/table units + cells + fields + events + relation groups/items + source history column labels",
+  "documents": [
+    {
+      "document_id": "vbpl:0c389a00-78f6-11f1-a726-87c913cf8f30",
+      "before_bytes": 942736,
+      "after_bytes": 56288,
+      "reduction_percent": 94.03,
+      "semantic_elements": 92,
+      "issues": {
+        "info": 4,
+        "warning": 5,
+        "error": 0,
+        "fatal": 0
+      },
+      "status": "success_with_warnings",
+      "tabs": [
+        {
+          "file": "content.json",
+          "before_bytes": 70575,
+          "after_bytes": 19497,
+          "semantic_elements": 36,
+          "meaningful_characters": 1762,
+          "meaningful_text_sha256": "5696cdbe64e2f18c4cde7c46977687675019bf57b781492d5127b3278b29d078",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 2,
+            "warning": 1,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "history.json",
+          "before_bytes": 122327,
+          "after_bytes": 4895,
+          "semantic_elements": 6,
+          "meaningful_characters": 414,
+          "meaningful_text_sha256": "96e12ae61a3377e9aaaca140c2d1a91bb116a3604859640d0d0a09f0d1bf4167",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 0,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "properties.json",
+          "before_bytes": 129559,
+          "after_bytes": 5158,
+          "semantic_elements": 12,
+          "meaningful_characters": 399,
+          "meaningful_text_sha256": "c6608179714edcba85978d0c4c2c5415ab25f6ab651ff25402f6f5c0a335e0c6",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "relations.json",
+          "before_bytes": 614202,
+          "after_bytes": 21652,
+          "semantic_elements": 38,
+          "meaningful_characters": 1389,
+          "meaningful_text_sha256": "64e152d4f06cb7b5f2671652e7acf0462cd4f64768ec2401292bcf5e6ea58a26",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 1,
+            "warning": 4,
+            "error": 0,
+            "fatal": 0
+          }
+        }
+      ],
+      "source_document_number": "16111/QĐ-BCT"
+    },
+    {
+      "document_id": "vbpl:2308a290-bbb1-11f1-9e5f-8da308b3d359",
+      "before_bytes": 4248114,
+      "after_bytes": 881366,
+      "reduction_percent": 79.25,
+      "semantic_elements": 1390,
+      "issues": {
+        "info": 14,
+        "warning": 85,
+        "error": 0,
+        "fatal": 0
+      },
+      "status": "success_with_warnings",
+      "tabs": [
+        {
+          "file": "content.json",
+          "before_bytes": 3296908,
+          "after_bytes": 837897,
+          "semantic_elements": 1329,
+          "meaningful_characters": 55439,
+          "meaningful_text_sha256": "94e1ace01455d9e7a022cff2107195291f1c0d794d59f9da8738f1273e04f6c0",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 12,
+            "warning": 76,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "history.json",
+          "before_bytes": 120032,
+          "after_bytes": 4345,
+          "semantic_elements": 6,
+          "meaningful_characters": 194,
+          "meaningful_text_sha256": "b2fcec10b5bae1c9dee60bf8cd42b9d9f7895186c26626afd7f225da66457fe5",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 0,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "properties.json",
+          "before_bytes": 128838,
+          "after_bytes": 4808,
+          "semantic_elements": 12,
+          "meaningful_characters": 267,
+          "meaningful_text_sha256": "af90d3f0b135c495cf0b337fecc4ab4df4a77176adbb89b0a7daa5ddcf453a8d",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "relations.json",
+          "before_bytes": 657128,
+          "after_bytes": 26303,
+          "semantic_elements": 43,
+          "meaningful_characters": 1316,
+          "meaningful_text_sha256": "6982c69d10aa84855aa01a66873ddbe9d76859b3395c4786af2affbf275929ab",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 1,
+            "warning": 9,
+            "error": 0,
+            "fatal": 0
+          }
+        }
+      ],
+      "source_document_number": "365/2026/NĐ-CP"
+    },
+    {
+      "document_id": "vbpl:3314d690-bbe3-11f1-9662-1d62ccad220d",
+      "before_bytes": 1982379,
+      "after_bytes": 384821,
+      "reduction_percent": 80.59,
+      "semantic_elements": 518,
+      "issues": {
+        "info": 4,
+        "warning": 28,
+        "error": 0,
+        "fatal": 0
+      },
+      "status": "success_with_warnings",
+      "tabs": [
+        {
+          "file": "content.json",
+          "before_bytes": 1081087,
+          "after_bytes": 344737,
+          "semantic_elements": 460,
+          "meaningful_characters": 54923,
+          "meaningful_text_sha256": "fa1e892e2a616f604d87d36c0cea70b35e0618def6c0e0c387847b9542bddf50",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 2,
+            "warning": 22,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "history.json",
+          "before_bytes": 122762,
+          "after_bytes": 4930,
+          "semantic_elements": 6,
+          "meaningful_characters": 448,
+          "meaningful_text_sha256": "cd5667282ba64235360025dfa85092c35e84b0081065308ffa6ce3d083e3e667",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 0,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "properties.json",
+          "before_bytes": 129644,
+          "after_bytes": 5212,
+          "semantic_elements": 12,
+          "meaningful_characters": 414,
+          "meaningful_text_sha256": "289cf10a43641aa25db507778e9951156e76856be71532976157f9b02753aff5",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "relations.json",
+          "before_bytes": 636072,
+          "after_bytes": 24051,
+          "semantic_elements": 40,
+          "meaningful_characters": 1592,
+          "meaningful_text_sha256": "b9c2479c6ea4cb1179aa63e529855a9a9147a91ff6be747e34ee8f3d5b74c62e",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 1,
+            "warning": 6,
+            "error": 0,
+            "fatal": 0
+          }
+        }
+      ],
+      "source_document_number": "59/2026/TT-BCT"
+    },
+    {
+      "document_id": "vbpl:a9bea550-bbe3-11f1-a338-51a5cc429fc7",
+      "before_bytes": 3657241,
+      "after_bytes": 677187,
+      "reduction_percent": 81.48,
+      "semantic_elements": 1107,
+      "issues": {
+        "info": 7,
+        "warning": 75,
+        "error": 0,
+        "fatal": 0
+      },
+      "status": "success_with_warnings",
+      "tabs": [
+        {
+          "file": "content.json",
+          "before_bytes": 2757222,
+          "after_bytes": 637600,
+          "semantic_elements": 1050,
+          "meaningful_characters": 36593,
+          "meaningful_text_sha256": "5ad3dab9e5ba7a18b34f0d25fa05d5630cd74dc14dc2f06415737836669faec8",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 5,
+            "warning": 70,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "history.json",
+          "before_bytes": 121068,
+          "after_bytes": 4566,
+          "semantic_elements": 6,
+          "meaningful_characters": 298,
+          "meaningful_text_sha256": "65a7f2f98216d7c27e59b3f7e13e02451599dca97a585bd0338715fdaae81465",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 0,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "properties.json",
+          "before_bytes": 129280,
+          "after_bytes": 4981,
+          "semantic_elements": 12,
+          "meaningful_characters": 339,
+          "meaningful_text_sha256": "43023a72c999313fb707b00f0cf71d5c7200824bfd6859f063a23f46f97eaf17",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "relations.json",
+          "before_bytes": 623161,
+          "after_bytes": 22546,
+          "semantic_elements": 39,
+          "meaningful_characters": 1370,
+          "meaningful_text_sha256": "9e6d891b53e486d3b9f290ac2abc7a3aab8081acfeaeb4c9064e2ef3cc1593ec",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 1,
+            "warning": 5,
+            "error": 0,
+            "fatal": 0
+          }
+        }
+      ],
+      "source_document_number": "60/2026/TT-BCT"
+    },
+    {
+      "document_id": "vbpl:ef51a450-80bf-11f1-b76e-7b4564eab36e",
+      "before_bytes": 1007721,
+      "after_bytes": 66116,
+      "reduction_percent": 93.44,
+      "semantic_elements": 106,
+      "issues": {
+        "info": 4,
+        "warning": 6,
+        "error": 0,
+        "fatal": 0
+      },
+      "status": "success_with_warnings",
+      "tabs": [
+        {
+          "file": "content.json",
+          "before_bytes": 94671,
+          "after_bytes": 25292,
+          "semantic_elements": 48,
+          "meaningful_characters": 2658,
+          "meaningful_text_sha256": "dcb4cba2166bf28c4c2185c060457e30145c02b1f37ed934cf2e20b5000588d8",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 2,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "history.json",
+          "before_bytes": 122524,
+          "after_bytes": 4874,
+          "semantic_elements": 6,
+          "meaningful_characters": 420,
+          "meaningful_text_sha256": "7ab968581da67e1b6e43e4bb140721b08af9a7d1d62874b981adb12474d6b74f",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 0,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "properties.json",
+          "before_bytes": 129502,
+          "after_bytes": 5164,
+          "semantic_elements": 12,
+          "meaningful_characters": 393,
+          "meaningful_text_sha256": "d0f7833b0c2efbd589511b2569ccd8f2ce33c0950030a13db04e85b384f2386f",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 1,
+            "warning": 0,
+            "error": 0,
+            "fatal": 0
+          }
+        },
+        {
+          "file": "relations.json",
+          "before_bytes": 654322,
+          "after_bytes": 25679,
+          "semantic_elements": 40,
+          "meaningful_characters": 2465,
+          "meaningful_text_sha256": "2720df900f71cc63df32839304b06a645f048ee513684bb3bc20ea160b47a0a3",
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "issues": {
+            "info": 1,
+            "warning": 6,
+            "error": 0,
+            "fatal": 0
+          }
+        }
+      ],
+      "source_document_number": "34/2026/NQ-CP"
+    }
+  ],
+  "totals": {
+    "documents": 5,
+    "json_files": 25,
+    "before_bytes": 11838191,
+    "after_bytes": 2065778,
+    "reduction_percent": 82.55,
+    "semantic_elements": 3213,
+    "issues": {
+      "info": 33,
+      "warning": 199,
+      "error": 0,
+      "fatal": 0
+    },
+    "all_meaningful_text_preserved": true,
+    "all_deterministic": true
+  },
+  "supplemental_consolidated_example": {
+    "before_parser_version": "1.0.0",
+    "after_parser_version": "2.0.0",
+    "byte_measure": "UTF-8 JSON bytes including manifest; no filesystem allocation rounding",
+    "text_measure": "Ordered Unicode characters after removing formatting whitespace; UI placeholders/page headings audited separately",
+    "semantic_element_measure": "Legal/paragraph/list/table units + cells + fields + events + relation groups/items + source history column labels",
+    "documents": [
+      {
+        "document_id": "vbpl:13205",
+        "before_bytes": 3184685,
+        "after_bytes": 176206,
+        "reduction_percent": 94.47,
+        "semantic_elements": 195,
+        "issues": {
+          "info": 1,
+          "warning": 79,
+          "error": 0,
+          "fatal": 0
+        },
+        "status": "success_with_warnings",
+        "tabs": [
+          {
+            "file": "content.json",
+            "before_bytes": 279253,
+            "after_bytes": 59138,
+            "semantic_elements": 77,
+            "meaningful_characters": 7899,
+            "meaningful_text_sha256": "3a82579635d66757002612000f3197fe427bec4b74c420f525ccca273f81e829",
+            "meaningful_text_preserved": true,
+            "deterministic": true,
+            "issues": {
+              "info": 1,
+              "warning": 14,
+              "error": 0,
+              "fatal": 0
+            }
+          },
+          {
+            "file": "properties.json",
+            "before_bytes": 233024,
+            "after_bytes": 4267,
+            "semantic_elements": 12,
+            "meaningful_characters": 291,
+            "meaningful_text_sha256": "4e4b0be43e40189d2f892cc674163b58de118f3d7a09fd189575f16dbbc4fee8",
+            "meaningful_text_preserved": true,
+            "deterministic": true,
+            "issues": {
+              "info": 0,
+              "warning": 0,
+              "error": 0,
+              "fatal": 0
+            }
+          },
+          {
+            "file": "relations.json",
+            "before_bytes": 2223023,
+            "after_bytes": 93746,
+            "semantic_elements": 96,
+            "meaningful_characters": 9626,
+            "meaningful_text_sha256": "b1920eec8edc6c725ae61428a3bf54cce471c34adb850dafd20d881726a1fc6a",
+            "meaningful_text_preserved": true,
+            "deterministic": true,
+            "issues": {
+              "info": 0,
+              "warning": 62,
+              "error": 0,
+              "fatal": 0
+            }
+          },
+          {
+            "file": "consolidated.json",
+            "before_bytes": 48927,
+            "after_bytes": 4361,
+            "semantic_elements": 3,
+            "meaningful_characters": 328,
+            "meaningful_text_sha256": "8b603c927333e72ab6e5ba5c8eef067a0305d9fdbd5949e3e5d4e81e8027eec1",
+            "meaningful_text_preserved": true,
+            "deterministic": true,
+            "issues": {
+              "info": 0,
+              "warning": 3,
+              "error": 0,
+              "fatal": 0
+            }
+          },
+          {
+            "file": "history.json",
+            "before_bytes": 312800,
+            "after_bytes": 6697,
+            "semantic_elements": 7,
+            "meaningful_characters": 382,
+            "meaningful_text_sha256": "d7e7d811d7d8291c7626027945691bb062c7c11275e36208965a070101d80408",
+            "meaningful_text_preserved": true,
+            "deterministic": true,
+            "issues": {
+              "info": 0,
+              "warning": 0,
+              "error": 0,
+              "fatal": 0
+            }
+          }
+        ]
+      }
+    ],
+    "totals": {
+      "documents": 1,
+      "json_files": 6,
+      "before_bytes": 3184685,
+      "after_bytes": 176206,
+      "reduction_percent": 94.47,
+      "semantic_elements": 195,
+      "issues": {
+        "info": 1,
+        "warning": 79,
+        "error": 0,
+        "fatal": 0
+      },
+      "all_meaningful_text_preserved": true,
+      "all_deterministic": true
+    }
+  }
+}
