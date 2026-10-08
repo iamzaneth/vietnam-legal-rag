@@ -13,9 +13,11 @@ import unicodedata
 LEVELS = {"part": 10, "chapter": 20, "section": 30, "subsection": 40,
           "article": 50, "clause": 60, "point": 70}
 LEGAL_LABELS = {"phần": "part", "chương": "chapter", "mục": "section",
-                "tiểu mục": "subsection", "điều": "article", "khoản": "clause", "điểm": "point"}
+                "tiểu mục": "subsection", "điều": "article", "khoản": "clause", "điểm": "point",
+                "part": "part", "chapter": "chapter", "section": "section", "subsection": "subsection",
+                "article": "article", "clause": "clause", "point": "point"}
 TEXT_TYPES = {"paragraph", "heading", "unknown"}
-DOCUMENT_TYPES = r"THÔNG TƯ LIÊN TỊCH|THÔNG TƯ|BỘ LUẬT|LUẬT|NGHỊ ĐỊNH|NGHỊ QUYẾT|QUYẾT ĐỊNH|CHỈ THỊ|PHÁP LỆNH|LỆNH"
+DOCUMENT_TYPES = r"THÔNG TƯ LIÊN TỊCH|THÔNG TƯ|BỘ LUẬT|LUẬT|NGHỊ ĐỊNH|NGHỊ QUYẾT|QUYẾT ĐỊNH|CHỈ THỊ|PHÁP LỆNH|LỆNH|JOINT CIRCULAR|CIRCULAR|LAW|DECREE|RESOLUTION|DECISION|DIRECTIVE|ORDINANCE"
 AUTHORITY = r"(?:BỘ(?: TRƯỞNG)?\b|ỦY BAN\b|UỶ BAN\b|CHÍNH PHỦ\b|QUỐC HỘI\b|HỘI ĐỒNG\b|TỔNG CỤC\b|CỤC\b|SỞ\b|TÒA ÁN\b|TOÀ ÁN\b|VIỆN KIỂM SÁT\b|THỦ TƯỚNG\b|CHỦ TỊCH\b)"
 SIGNER_TITLE = r"(?:THỨ TRƯỞNG|BỘ TRƯỞNG(?: .+)?|CHỦ TỊCH|PHÓ CHỦ TỊCH|GIÁM ĐỐC|PHÓ GIÁM ĐỐC|TỔNG GIÁM ĐỐC|TỔNG CỤC TRƯỞNG|CỤC TRƯỞNG|CHÁNH ÁN|VIỆN TRƯỞNG|THỦ TƯỚNG(?: CHÍNH PHỦ)?|PHÓ THỦ TƯỚNG(?: CHÍNH PHỦ)?)"
 
@@ -48,25 +50,25 @@ def candidate(block):
         return None
     text = block.get("text", "")
     scan, offsets = normalized_scan(text)
-    match = re.match(r"^(Tiểu mục|Phần|Chương|Mục|Điều|Khoản|Điểm)\s+"
+    match = re.match(r"^(Tiểu mục|Phần|Chương|Mục|Điều|Khoản|Điểm|Subsection|Part|Chapter|Section|Article|Clause|Point)\s+"
                      r"((?:thứ[ \t]+(?:nhất|hai|ba|tư|bốn|năm|sáu|bảy|tám|chín|mười|\d+)"
                      r"(?:[ \t]+(?:mươi|mốt|một|hai|ba|tư|bốn|năm|lăm|sáu|bảy|tám|chín))*)"
-                     r"|[IVXLCDM]+|\d+[a-zđ]?|[a-zđ])(?=[\s.:)]|$)", scan, re.I)
+                     r"|[IVXLCDM]+|\d+[a-zđ]?|[a-zđ])(?=[\s.:)]|\[\d+\]|$)", scan, re.I)
     if match:
         end = offsets[match.end()]
         rest = text[end:]
         # A leading citation such as "Điều 5 của Luật ..." is not a heading.
         if rest.strip() and not re.match(r"^[ \t]*[.:)\n]", rest) and not block.get("heading_evidence"):
-            if re.match(r"\s*(?:của|tại|quy định|được|và|có|này)\b", rest, re.I):
+            if re.match(r"\s*(?:của|tại|quy định|được|và|có|này|of|in|under|provides|shall|is|and)\b", rest, re.I):
                 return None
         return {"kind": LEGAL_LABELS[match[1].casefold()],
                 "number": text[offsets[match.start(2)]:offsets[match.end(2)]],
                 "label_end": end, "explicit": True}
-    match = re.match(r"^(\d+[a-zđ]?)([.)])(?:\s+|(?=[^\d\s])|$)", scan, re.I)
+    match = re.match(r"^(\d+[a-zđ]?)([.)]|[-/]\s+(?=[^\d\s]))(?:\s+|(?=[^\d\s])|$)", scan, re.I)
     if match:
         return {"kind": "clause", "number": text[offsets[match.start(1)]:offsets[match.end(1)]],
                 "label_end": offsets[match.end(2)], "explicit": False}
-    match = re.match(r"^([a-zđ])([).])\s*", scan, re.I)
+    match = re.match(r"^([a-zđ])([).]\s*|/\s+)", scan, re.I)
     if match:
         return {"kind": "point", "number": text[offsets[match.start(1)]:offsets[match.end(1)]],
                 "label_end": offsets[match.end(2)], "explicit": False}
@@ -80,7 +82,7 @@ def short_heading(text):
 
 def opening_role(block):
     text = unicodedata.normalize("NFC", block.get("text", ""))
-    if re.match(r"^Căn cứ\s", text, re.I):
+    if re.match(r"^(?:Căn cứ|Pursuant to)\s", text, re.I):
         return "legal_basis"
     if re.match(r"^(?:Xét\s|Theo\s+(?:đề nghị|kiến nghị))", text, re.I):
         return "proposal_basis"
@@ -105,7 +107,7 @@ def closing_role(block):
     text = unicodedata.normalize("NFC", block.get("text", ""))
     if re.match(r"^Nơi nhận\s*:", text, re.I):
         return "recipients"
-    if re.match(r"^(?:TM\.|KT\.|TL\.|TUQ\.|Q\.)\s*", text):
+    if re.match(r"^(?:TM|KT|TL|TUQ|Q)(?:\.\s*|/\s*(?=" + AUTHORITY + r"))", text):
         return "delegation_title"
     if re.fullmatch(SIGNER_TITLE, text):
         return "signer_title"
@@ -119,6 +121,7 @@ def closing_role(block):
 def is_formula(block):
     text = unicodedata.normalize("NFC", block.get("text", ""))
     return bool(re.fullmatch(r"(?:QUYẾT ĐỊNH|NGHỊ ĐỊNH|NGHỊ QUYẾT|QUYẾT NGHỊ|BAN HÀNH)\s*:", text, re.I) or
+                re.fullmatch(r"(?:QUYẾT NGHỊ|BAN HÀNH)", text, re.I) or
                 re.match(r"^(?:Chính\s*phủ|Bộ\s*trưởng\s+Bộ.{0,160}?|[ỦU]y\s*ban.{0,160}?)\s+ban\s+hành\s+(?:" +
                          DOCUMENT_TYPES + r")\b", text, re.I))
 
@@ -146,6 +149,9 @@ def slice_unit(block, start, end=None):
 def logical_blocks(elements):
     """Unwrap presentation tables and split explicit line breaks in their cells."""
     for block in elements:
+        if block.get("evidence") in {"source_signature_block", "source_addressee_block"}:
+            yield block
+            continue
         if block["type"] == "layout_block" and block.get("source_layout"):
             for child in logical_blocks(block["children"]):
                 child["_source_layout"] = block["source_layout"]
@@ -162,6 +168,7 @@ def logical_blocks(elements):
 
 
 def coalesce(elements):
+    from .semantic_refinement import annex_candidate
     """Merge only adjacent bare headings with independently supported titles."""
     result, i = [], 0
     while i < len(elements):
@@ -178,7 +185,7 @@ def coalesce(elements):
                               block.get("_alignment") == following.get("_alignment") == "center")
                 structural = (marker["kind"] != "article" and title.isupper() or
                               marker["kind"] == "article" and after and after["kind"] == "clause")
-                boundary = candidate(following) or opening_role(following) or closing_role(following) or is_formula(following)
+                boundary = candidate(following) or annex_candidate(following) or opening_role(following) or closing_role(following) or is_formula(following)
                 if same_scope and source_key(block) < source_key(following) and short_heading(title) and not boundary and (typography or structural):
                     block["_title_block"] = following
                     i += 1
@@ -192,7 +199,7 @@ def legal_node(block, marker, following=None):
     text = block["text"]
     tail_start = end
     if marker["explicit"]:
-        punctuation = re.match(r"[ \t]*[.:)]?", text[end:])[0]
+        punctuation = re.match(r"[ \t]*[.:)]?(?:[-–—])?", text[end:])[0]
         tail_start += len(punctuation)
     else:
         punctuation = ""
@@ -241,10 +248,40 @@ class BodyParser:
         self.previous = None
         self.seen_numbers = set()
         self.list_context = list_context
+        self.generic_parent = None
+        self.generic_child = None
+        self.generic_numbers = {}
 
     def append(self, block, following=None):
+        if block.get('evidence') in {'closing_before_attached_legal_act', 'attached_legal_act_header'}:
+            self.stack = []
+            self.generic_parent = self.generic_child = None
+            self.generic_numbers = {}
+            if block['evidence'] == 'attached_legal_act_header':
+                self.seen_numbers = set()
+            self.children.append(block)
+            self.previous = block
+            return
         marker = candidate(block)
         active = {kind for kind, node in self.stack if node.get("parent_status") != "unresolved"}
+        decimal = re.match(r"^(\d+(?:\.\d+)+)[.)]\s*(?=[^\d\s])", block.get("text") or "") if block["type"] in TEXT_TYPES and 'article' not in active else None
+        if decimal:
+            block.update(type='numbered_paragraph', number=decimal[1], evidence='explicit_decimal_counter_outside_article_scope')
+            parent = self.generic_numbers.get(decimal[1].rsplit('.', 1)[0])
+            if parent:
+                parent['children'].append(block)
+            else:
+                (self.stack[-1][1]['children'] if self.stack else self.children).append(block)
+                self.quality.add('unresolved_decimal_prefix', 'Explicit decimal counter has no source prefix parent in this body scope', block['source_ref'])
+            self.generic_numbers[decimal[1]] = block
+            self.generic_parent, self.generic_child = parent, block
+            self.previous = block
+            return
+        if marker and marker["kind"] == "point" and not marker["explicit"] and not any(
+                k in {"article", "clause"} for k, _ in self.stack):
+            block.update(type="numbered_paragraph", number=marker["number"],
+                         evidence="source_counter_outside_article_scope")
+            marker = None
         if marker and marker["kind"] == "clause" and not marker["explicit"]:
             # Decimal amounts do not match the candidate pattern. Lists introduced
             # by prose inside a legal unit retain their list meaning when uncertain.
@@ -261,6 +298,8 @@ class BodyParser:
                     self.quality.add("ambiguous_clause_candidate", "Numbered content lacks sufficient clause evidence in this list/prose context", block["source_ref"])
                 marker = None
         if marker:
+            self.generic_parent = self.generic_child = None
+            self.generic_numbers = {}
             kind = marker["kind"]
             while self.stack and LEVELS[self.stack[-1][0]] >= LEVELS[kind]:
                 self.stack.pop()
@@ -283,7 +322,23 @@ class BodyParser:
             self.parse_list(block)
         if re.fullmatch(r"\d+", block.get("text", "")):
             self.quality.add("possible_page_number", "Bare source number retained; no evidence to remove it or infer a clause", block["source_ref"])
-        (self.stack[-1][1]["children"] if self.stack else self.children).append(block)
+        target = self.stack[-1][1]["children"] if self.stack else self.children
+        if "article" not in active and block["type"] == "numbered_paragraph":
+            block.setdefault("evidence", "source_counter_outside_article_scope")
+            if block.get("number", "").isdigit():
+                target.append(block)
+                self.generic_numbers = {block['number']: block}
+                self.generic_parent = block if (block.get("text") or "").rstrip().endswith(":") else None
+                self.generic_child = None
+            elif self.generic_parent:
+                self.generic_parent["children"].append(block)
+                self.generic_child = block
+            else:
+                target.append(block)
+        elif self.generic_child or self.generic_parent:
+            (self.generic_child or self.generic_parent)["children"].append(block)
+        else:
+            target.append(block)
         self.previous = block
 
     def parse_list(self, listing):
@@ -359,11 +414,48 @@ def add_layout(section, block):
             layouts.append(layout)
 
 
+def scope_attached_acts(blocks, quality):
+    """An intermediate signature/header belongs to an attached act's boundary.
+
+    Keep one canonical document body. Local closing and attached letterhead
+    blocks preserve source roles and order without repeating root sections.
+    """
+    index = 0
+    while index < len(blocks):
+        role = opening_role(blocks[index])
+        if role not in {'issuing_authority', 'national_heading'}:
+            index += 1; continue
+        end = next((i for i in range(index + 1, min(index + 16, len(blocks)))
+                    if (m := candidate(blocks[i])) and m['explicit'] and m['kind'] in {'chapter', 'article', 'part'}), None)
+        normative = end and any(re.match(r'^(?:QUY CHẾ|QUY ĐỊNH|ĐIỀU LỆ)(?:\[\d+\])?$', b.get('text') or '')
+                               and b.get('heading_evidence') for b in blocks[index:end])
+        previous_legal = max((i for i in range(index) if (m := candidate(blocks[i])) and m['explicit'] and m['kind'] == 'article'), default=-1)
+        closing_start = next((i for i in range(previous_legal + 1, index) if closing_role(blocks[i]) in {'recipients', 'delegation_title', 'signer_title', 'signature_status'}), None)
+        if not normative or previous_legal < 0 or closing_start is None:
+            index += 1; continue
+        closing = build_document(blocks[closing_start:index], blocks[closing_start]['source_ref'], quality)
+        letterhead = build_document(blocks[index:end], blocks[index]['source_ref'], quality)
+        replacements = []
+        for parsed, evidence, first in ((closing, 'closing_before_attached_legal_act', blocks[closing_start]),
+                                        (letterhead, 'attached_legal_act_header', blocks[index])):
+            wrapper = container('layout_block', first)
+            wrapper['evidence'] = evidence
+            wrapper['children'] = [child for section in parsed['children'] for child in section['children']]
+            replacements.append(wrapper)
+        blocks = blocks[:closing_start] + replacements + blocks[end:]
+        index = closing_start + 2
+    return blocks
+
+
 def build_document(elements, ref, quality):
     from .semantic_refinement import annex_candidate
-    blocks = coalesce(list(logical_blocks(elements)))
+    from .quoted_content import scope_quotations, scope_restarted_counters, scope_article_enumerations, scope_body_outlines, scope_contents
+    blocks = coalesce(scope_contents(scope_body_outlines(scope_article_enumerations(scope_restarted_counters(scope_quotations(list(logical_blocks(elements)), quality))))))
+    blocks = scope_attached_acts(blocks, quality)
     document = container("legal_document", ref=ref)
     section, body, previous, closing_group, current_annex = None, None, None, None, None
+    recipient_scopes = {}
+    embedded_contract = False
     phase = -1
     phases = {"header": 0, "title_block": 1, "preamble": 2, "enacting_formula": 3, "body": 4, "closing": 5, "annexes": 6}
     initial_header = False
@@ -393,8 +485,17 @@ def build_document(elements, ref, quality):
     for i, block in enumerate(blocks):
         following = blocks[i + 1] if i + 1 < len(blocks) else None
         marker, role, closing = candidate(block), opening_role(block), closing_role(block)
+        if phase <= 1 and re.match(r'^(?:QUY CHẾ|QUY ĐỊNH|ĐIỀU LỆ)(?:\[\d+\])?$', block.get('text') or '') and block.get('heading_evidence'):
+            role = 'document_type_heading'
         next_marker = candidate(following) if following else None
         annex_marker = annex_candidate(block)
+        if phase == 6 and re.match(r"^HỢP ĐỒNG\b", block.get("text") or "") and block.get("heading_evidence"):
+            embedded_contract = True
+        if embedded_contract and annex_marker and annex_marker["number"] and re.fullmatch(r"[A-ZĐ]", annex_marker["number"]):
+            block.update(type="annex_heading", evidence="lettered_appendix_in_source_contract")
+            annex_marker = None
+        elif annex_marker:
+            embedded_contract = False
         if annex_marker and (phase < 6 or annex_marker["number"] is not None):
             target = ensure("annexes", block)
             current_annex = container("annex", block)
@@ -411,7 +512,8 @@ def build_document(elements, ref, quality):
         if marker and not marker["explicit"] and marker["kind"] == "clause" and phase < 3 and initial_opening:
             block.update(type="numbered_paragraph", number=marker["number"])
             marker = None
-        if phase == 5 or closing and (closing != "signer_title" or phase >= 4 or block.get("_source_layout")):
+        header_authority = phase < 2 and initial_header and role == "issuing_authority"
+        if phase == 5 or closing and not header_authority and (closing != "signer_title" or phase >= 4 or block.get("_source_layout")):
             target = ensure("closing", block)
             if re.match(r"^(?:PHỤ LỤC|Ghi chú\s*:|Chú thích\s*:)", block.get("text", ""), re.I):
                 closing_group = None
@@ -419,6 +521,19 @@ def build_document(elements, ref, quality):
                 block["type"] = "recipients"
                 target["children"].append(block)
                 closing_group = block
+                if block.get("_source_layout"):
+                    recipient_scopes[block["_source_layout"]["table_id"]] = block
+            elif block.get("_source_layout", {}).get("table_id") in recipient_scopes and re.match(r"^[-–—•]\s*\S", block.get("text") or ""):
+                block["type"] = "recipient"
+                # Source rows interleave signing and recipient columns. Keep
+                # their traversal order with an explicit continuation group.
+                group = target["children"][-1]
+                if group["type"] != "recipients":
+                    group = container("recipients", block)
+                    group["evidence"] = "source_recipient_continuation_in_closing_table"
+                    target["children"].append(group)
+                group["children"].append(block)
+                closing_group = group
             elif closing in {"delegation_title", "signer_title", "signature_status", "signature_marker"}:
                 if closing_group is None or closing_group["type"] != "signature":
                     closing_group = container("signature", block)
@@ -450,7 +565,7 @@ def build_document(elements, ref, quality):
             block["type"] = "enacting_formula"
             document["children"].append(block)
             section, phase = None, 3
-        elif marker or phase >= 3:
+        elif marker or phase >= 3 or block.get('evidence') == 'emphasized_roman_body_outline':
             target = ensure("body", block)
             body.append(block, following)
         elif role in {"legal_basis", "proposal_basis"}:
@@ -462,6 +577,25 @@ def build_document(elements, ref, quality):
             block["type"] = role
             target["children"].append(block)
         elif phase == 1:
+            # An unlabelled motivation paragraph/list can precede an explicit
+            # legal basis or enacting formula. That source boundary prevents
+            # a sparse-body fallback from swallowing the whole preamble.
+            first_legal = next((j for j in range(i + 1, len(blocks))
+                                if (m := candidate(blocks[j])) and m['explicit']), len(blocks))
+            preamble_evidence = any(opening_role(b) in {'legal_basis', 'proposal_basis'} or is_formula(b)
+                                    for b in blocks[i + 1:first_legal])
+            title_present = previous != 'document_type_heading' or i and not re.fullmatch(DOCUMENT_TYPES, blocks[i - 1].get('text') or '', re.I)
+            if title_present and preamble_evidence and not role and not block.get('heading_evidence') and block['type'] in {'paragraph', 'list'}:
+                ensure('preamble', block)['children'].append(block)
+                previous = block['type']
+                continue
+            narrative = not role and not block.get("heading_evidence") and block.get("_alignment") != "center" and (
+                len(block.get("text", "")) > 120 or block["type"] == "numbered_paragraph")
+            if narrative and previous != "document_type_heading":
+                ensure("body", block)
+                body.append(block, following)
+                previous = block["type"]
+                continue
             target = ensure("title_block", block)
             if role == "issuing_authority" or closing == "signer_title":
                 block["type"] = "issuing_authority_title"
@@ -471,6 +605,11 @@ def build_document(elements, ref, quality):
         elif phase == 2:
             ensure("preamble", block)["children"].append(block)
         elif initial_header or role in {"national_heading", "national_motto", "document_number", "place_and_date", "issuing_authority"}:
+            if phase <= 0 and not role and len(block.get("text", "")) > 120 and not block.get("heading_evidence") and not block.get("_source_layout"):
+                ensure("body", block)
+                body.append(block, following)
+                previous = block["type"]
+                continue
             target = ensure("header", block)
             if role:
                 block["type"] = role

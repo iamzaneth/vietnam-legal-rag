@@ -38,11 +38,11 @@ def annex_candidate(block):
     rest = scan[start.end():]
     if re.match(r"\s*(?:này|kèm theo tài liệu|của|được|tại)\b", rest, re.I):
         return None
-    numbered = re.match(r"\s+(?:số\s+)?(\d+|[IVXLCDM]+)", rest, re.I)
+    numbered = re.match(r"\s+(?:số\s+)?(\d+|[IVXLCDM]+|[A-ZĐ])(?=[\s.:)]|$)", rest, re.I)
     if numbered:
         end = start.end() + numbered.end()
         number = numbered[1]
-        if number.isalpha():
+        if number.isalpha() and len(number) > 1:
             while number and not ROMAN.fullmatch(number):
                 number = number[:-1]
                 end -= 1
@@ -149,7 +149,10 @@ def clause_scores(units, article):
             evidence["multiple_sibling_counters"] = 0.15
         end = numbered[index + 1][0] if following else len(units)
         following_units = units[i + 1:end]
-        boundary = next((j for j, n in enumerate(following_units) if n["type"] in {"table", "list", "form", "annex"}), len(following_units))
+        # Explicit sibling points can contain an opaque table or local list.
+        # Their nested cell/list counters never enter these outer units. A
+        # numeric sequence alone still cannot bridge the table/list barrier.
+        boundary = next((j for j, n in enumerate(following_units) if n["type"] in {"form", "annex"}), len(following_units))
         points = [n.get("number", "").casefold() for n in following_units[:boundary] if n["type"] == "point"]
         if "a" in points:
             evidence["following_point_a"] = 0.30
@@ -387,36 +390,24 @@ def refine_annex(annex, quality):
 
 
 def group_dash_lists(node):
-    children = node.get("children", [])
-    grouped, i = [], 0
-    while i < len(children):
-        first = children[i]
-        match = re.match(r"^([-–—•])\s+\S", first.get("text", "")) if first["type"] in TEXT_TYPES else None
-        run = []
-        if match:
-            while i + len(run) < len(children):
-                item = children[i + len(run)]
-                if item["type"] not in TEXT_TYPES or not re.match(r"^" + re.escape(match[1]) + r"\s+\S", item.get("text", "")):
-                    break
-                run.append(item)
-        if len(run) >= 2:
-            listing = container("list", first)
-            listing.update(list_kind="unordered", style="dash", numbering={})
-            for item in run:
-                item.update(type="list_item", marker=match[1])
-            listing["children"] = run
-            grouped.append(listing)
-            i += len(run)
-        else:
-            grouped.append(first)
-            i += 1
-    node["children"] = grouped
-    for child in grouped:
+    from .form_refinement import group_symbol_runs
+    node["children"] = group_symbol_runs(node.get("children", []))
+    for child in node["children"]:
         group_dash_lists(child)
 
 
+def group_annex_lists(node):
+    from .form_refinement import group_runs
+    from .quoted_content import scope_alpha_continuations
+    node["children"] = scope_alpha_continuations(node.get("children", []))
+    node["children"] = group_runs(node.get("children", []))
+    for child in node["children"]:
+        if child["type"] not in {"form", "table", "list"}:
+            group_annex_lists(child)
+
+
 def remove_page_artifacts(document, quality, root):
-    candidates = [(n, parents) for n, parents in walk([document]) if re.fullmatch(r"\d{1,4}", n.get("text", "")) and
+    candidates = [(n, parents) for n, parents in walk([document]) if re.fullmatch(r"\d{1,4}", n.get("text") or "") and
                   n.get("_page_edge") and n.get("_page") and not any(p.get("type") in LEVELS or p.get("type") in {"annex", "form", "table"} for p in parents)]
     plausible = [(n, p) for n, p in candidates if str(int(n["text"])) == str(n["_page"].get("number"))]
     if len({n["_page"]["scope"] for n, _ in plausible}) < 2:
@@ -453,6 +444,13 @@ def final_structural_issues(document, quality):
 
 
 def refine_document(document, quality, root):
+    # Bare labels coalesce speculatively before document phases are known.
+    # If a footer/annex keeps that unit generic, its title still owns source
+    # text and must survive instead of disappearing with the private key.
+    for node, _ in walk([document]):
+        title = node.pop('_title_block', None)
+        if title:
+            node.setdefault('children', []).insert(0, title)
     from .form_refinement import refine_forms
     for section in document["children"]:
         if section["type"] == "title_block":
@@ -483,6 +481,11 @@ def refine_document(document, quality, root):
     for section in document["children"]:
         if section["type"] in {"body", "annexes"}:
             group_dash_lists(section)
+        if section["type"] == "annexes":
+            group_annex_lists(section)
+        if section["type"] in {"header", "title_block", "closing"}:
+            from .form_refinement import group_recipients
+            section["children"] = group_recipients(section["children"])
     remove_page_artifacts(document, quality, root)
     final_structural_issues(document, quality)
     return document

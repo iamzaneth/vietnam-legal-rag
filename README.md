@@ -108,6 +108,9 @@ tra hierarchy, text fidelity, provenance và determinism.
 Xem [schema extracted](docs/extracted-schema.md) và [kết quả hierarchy mẫu](docs/extract-hierarchy.md).
 Contract V2.3.2 và đối chiếu actual JSON: [báo cáo freeze](docs/extract-v2.3.2-form-invariant-audit.md).
 Kết quả kiểm tra V2.3 và delta từ V2.2: [báo cáo form semantics](docs/extract-v2.3-report.md).
+Đợt kiểm tra 50 văn bản (25 Trung ương, 25 Địa phương):
+[báo cáo batch](reports/extract-validation-50.md). Cả 50 giữ đúng schema,
+determinism và text fidelity; 9 văn bản còn cảnh báo nguồn được ghi rõ trong báo cáo.
 Chạy lại sẽ cập nhật thư mục văn bản sau khi bước tương ứng thành công.
 `normalized` và `chunks` hiện chỉ là thư mục dành sẵn.
 Xem [hướng dẫn crawler](docs/vbpl-crawl.md) để cài Chromium, chọn URL và kiểm thử.

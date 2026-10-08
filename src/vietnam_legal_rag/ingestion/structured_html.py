@@ -5,9 +5,9 @@ import re
 from urllib.parse import parse_qs, urljoin, urlparse
 
 from .extract_quality import Quality
-from .html_source import NON_CONTENT, BLOCK_TAGS, Node, whitespace
+from .html_source import NON_CONTENT, BLOCK_TAGS, Node, whitespace, whole_unit_emphasis
 from .html_tables import parse_table
-from .legal_hierarchy import LEVELS, build_document
+from .legal_hierarchy import LEVELS, build_document, closing_role, container, logical_blocks
 from .table_semantics import classify_table, effective_cell_text, finalize_table_issues
 
 SCHEMA_VERSION = "2.3.2"
@@ -86,7 +86,8 @@ def reference(node, source_url):
 
 def document_numbers(text):
     # Candidates are exact source slices, never a selected/resolved target.
-    pattern = r"(?<![\w/])\d+(?:\.\d+)?\s*/\s*(?:\d{4}\s*/\s*)?[A-ZĐ][A-ZĐa-zđ0-9.-]*(?:-[A-ZĐa-zđ0-9.]+)*(?![\w/])"
+    pattern = (r"(?<![\w/])\d+(?:\.\d+)?[a-zđ]?(?:\s*/\s*(?:\d{4}\s*/\s*)?[A-ZĐ][A-ZĐa-zđ0-9.-]*(?:[-/][A-ZĐa-zđ0-9.]+)*"
+               r"|\s*-\s*[A-ZĐ][A-ZĐa-zđ0-9.]*(?:[-/][A-ZĐa-zđ0-9.]+)*)(?![\w/])")
     return list(dict.fromkeys(m.group().rstrip('.;,:') for m in re.finditer(pattern, text)))
 
 
@@ -94,7 +95,7 @@ def document_number_roles(text):
     """Select only the leading citation, including a named Law before 'số'."""
     candidates = document_numbers(text)
     citation = re.match(r"^\s*(?:Quyết định|Nghị định|Thông tư(?: liên tịch)?|Luật|"
-                        r"Bộ luật|Nghị quyết|Pháp lệnh|Văn bản hợp nhất)\s+số\s+", text, re.I)
+                        r"Bộ luật|Nghị quyết|Pháp lệnh|Chỉ thị|Sắc lệnh|Lệnh|Văn bản hợp nhất)\s+số\s+", text, re.I)
     if not citation:
         # A named Law cannot skip across another cited document or sentence to
         # select a later identifier. Match the name before its first 'số'.
@@ -179,7 +180,7 @@ class SemanticBuilder:
         text = node.text(blocks=True)
         if not text:
             return []
-        if re.fullmatch(r"[\s_—–=-]{3,}", text):
+        if re.fullmatch(r"[\s_—–=*-]{3,}", text):
             self.quality.ignore(node, "decorative_separator")
             return []
         block = self.base(node, kind, text)
@@ -200,10 +201,12 @@ class SemanticBuilder:
             block["annotations"] = annotations
         if kind == "heading" or node.tag in {"b", "strong"}:
             block["heading_evidence"] = "heading_markup"
-        elif len(text) <= 160 and any(n.tag in {"b", "strong"} and n.text() == node.text() for n in node.find()):
+        elif len(text) <= 160 and whole_unit_emphasis(node):
             block["heading_evidence"] = "whole_unit_emphasis"
         elif all(not whitespace(c) if isinstance(c, str) else c.tag in {"b", "strong", "br"} for c in node.children):
             block["heading_evidence"] = "whole_unit_emphasis"
+        elif text.isupper() and set(node.attrs.get('class', '').split()) & {'prov-part', 'prov-chapter', 'prov-section', 'prov-subsection', 'prov-article'}:
+            block['heading_evidence'] = 'source_provision_heading_class'
         for child in node.find():
             if child.tag in {"b", "strong"} and child.text().startswith(("Phụ lục", "PHỤ LỤC")):
                 block["_heading_prefix"] = child.text(blocks=True).splitlines()[0]
@@ -240,7 +243,7 @@ class SemanticBuilder:
             if child.dom_order in self.excluded or (self.excluded and self.covered(child)):
                 flush()
                 continue
-            if child.tag in NON_CONTENT or child.tag in {"comment", "meta", "link", "input"}:
+            if child.tag in NON_CONTENT or child.tag in {"comment", "meta", "link", "input", "colgroup", "col"}:
                 flush()
                 continue
             if child.tag in INLINE and not any(n.tag in BLOCK_TAGS | {"table"} | MEDIA for n in child.find()):
@@ -249,6 +252,8 @@ class SemanticBuilder:
             flush()
             if child.tag == "table":
                 result.append(self.table(child))
+            elif child.tag in {"tr", "tbody", "thead", "tfoot"}:
+                result.extend(self.flow(child))
             elif child.tag in {"ol", "ul"}:
                 listing = self.list(child)
                 if listing["children"]:
@@ -353,6 +358,25 @@ class SemanticBuilder:
             result["source_layout"] = {"type": "table", "table_id": f"table_{node.dom_order}",
                                        "table_kind": kind, "classification_evidence": evidence}
             result["children"] = self.flow(node)
+            if evidence in {"source_signature_block", "source_addressee_block"}:
+                # A standalone display block has a local semantic scope. It
+                # must not end the main body before a following attached act.
+                units = list(logical_blocks([result]))
+                group = container("signature" if evidence == "source_signature_block" else "recipients", units[0])
+                for unit in units:
+                    role = closing_role(unit)
+                    text = unit.get("text") or ""
+                    if evidence == "source_signature_block":
+                        name = 2 <= len(text.split()) <= 7 and all(w[0].isupper() and w.isalpha() for w in text.split())
+                        unit["type"] = role or ("signer_name" if name else unit["type"])
+                    elif re.match(r"Kính gửi\s*:", text, re.I):
+                        group.update(text=text, source_ref=unit["source_ref"], order=unit["order"])
+                        continue
+                    else:
+                        unit["type"] = "recipient"
+                    group["children"].append(unit)
+                result["children"] = [group]
+                result["evidence"] = evidence
             for diagnostic in adapter.issues:
                 severity = "info" if diagnostic["code"] in {"ragged_table", "table_grid_gap", "span_crosses_row_group"} else None
                 self.quality.add(diagnostic["code"], diagnostic["message"], diagnostic["source_ref"], severity)

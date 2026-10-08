@@ -1,0 +1,1668 @@
+{
+  "schema_version": "2.3.2",
+  "capture_strategy": "References to immutable local RAW; no copied HTML. Synthetic pattern tests provide portable regressions.",
+  "documents": [
+    {
+      "document_id": "vbpl:152955",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/thong-tu-so-23-2021-tt-byt-sua-doi-bo-sung-mot-so-van-ban-quy-pham-phap-luat-do-bo-truong-bo-y-te-ban-hanh--152955",
+      "raw_directory": "data/raw/vbpl/trung_uong/152955",
+      "patterns": [
+        "amendment UI controls",
+        "quoted replacement counters"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 37274,
+          "sha256": "cb3e995b3245f60075afe50d95d0fee2d92dcff87f27db58b73d765b9d1d1fc2"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4323,
+          "sha256": "b9729bec07c1d3fd9c81842cf43e7a2b6bb219f4e430d005e75a1da51a5b3cee"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 44216,
+          "sha256": "08fbd3605ad0f89f2dcd104d5403735155d8b8f9a8de88965f7a657e3a2488d7"
+        },
+        {
+          "path": "history.html",
+          "bytes": 8627,
+          "sha256": "d6be5387665fee44145a898c66f99d7530d150028592c591a7225b0f8e0b6483"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 4,
+          "clauses": 6,
+          "points": 9
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 14,
+          "list_item": 31,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:116962",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/quyet-dinh-so-26-2016-qd-ubnd-ban-hanh-quy-che-lam-viec-cua-uy-ban-nhan-dan-tinh-lai-chau-nhiem-ky-2016-2021--116962",
+      "raw_directory": "data/raw/vbpl/dia_phuong/116962",
+      "patterns": [
+        "legacy authority markup",
+        "signature tables",
+        "deep legal hierarchy"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 184416,
+          "sha256": "a74a8e1bb207bc639809afc86fe10f91e176779f65faead28986a8169293d8d6"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4367,
+          "sha256": "90237cfeafca174d543e5c3984fa7397652181b637552f6127a1242cff1ebd7d"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 18440,
+          "sha256": "ee57c2ea9c05c244a41b496a59e5ee62fd6e306335ba928a615aba67908f552b"
+        },
+        {
+          "path": "history.html",
+          "bytes": 6574,
+          "sha256": "35ad1c088f7e8c2d13daf11f570a431c0a35475dd3474acf524a995477ddc01c"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 11,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 54,
+          "clauses": 204,
+          "points": 196
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 24,
+          "list_item": 94,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:159581",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/nghi-quyet-so-31-2021-nq-hdnd-ban-hanh-quy-dinh-ve-che-do-chinh-sach-va-cac-dieu-kien-bao-dam-hoat-dong-cua-dai-bieu-hoi-dong-nhan-dan-cac-cap-tai-thanh-pho-ho-chi-minh-nhiem-ky-2021-2026--159581",
+      "raw_directory": "data/raw/vbpl/dia_phuong/159581",
+      "patterns": [
+        "bounded counter restart"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 7478,
+          "sha256": "0f1b93e6bde5bb8c030255a087cc64760d666ba48dedc89687a601cb0de42637"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4512,
+          "sha256": "60f3e57d87aeeeefd712da8c0bcbef1463d44f54f2ac56e4f5e2a5886ad6378e"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 25000,
+          "sha256": "a1bae6f526354245ac8d61bcbc55aef1fd28b10687e7959547c591e301c22346"
+        },
+        {
+          "path": "history.html",
+          "bytes": 6914,
+          "sha256": "ad643ca0a0f35aa24ad31671359a0f2e606010d31bc9bba1fc2592fd6540d563"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 4,
+          "clauses": 7,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 1,
+          "list_item": 2,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:0a37926080b6ffa67a58ba410db7939b",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/408-ubnd-tn--vbpqdinhchinh_105",
+      "raw_directory": "data/raw/vbpl/dia_phuong/0a37926080b6ffa67a58ba410db7939b",
+      "patterns": [
+        "correction letter",
+        "quoted list continuations",
+        "addressee table"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 5956,
+          "sha256": "029f7fe155b33067f0072893487e1a5931627d1e0f783d76a3269949c095f851"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4242,
+          "sha256": "f10f5191b7983f45ae7835674687d39d4dcd6084a3fe4f2a79caf8d6c1e34d16"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 14343,
+          "sha256": "a4f556f77cfeda6e6d57c459ef0afd358663cf662de607c98d264ddaebeac6a6"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5537,
+          "sha256": "5f0adcdd0a2e66212f3db7c3c9337e89ffd4537322b6989ad360e98947d30a8b"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 0,
+          "clauses": 0,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 6,
+          "list_item": 10,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 1,
+          "recipient": 2
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:8760",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/chi-thi-so-39-ttg-ve-viec-bao-dam-an-toan-cho-nguoi-va-phuong-tien-nghe-ca-hoat-dong-tren-bien--8760",
+      "raw_directory": "data/raw/vbpl/trung_uong/8760",
+      "patterns": [
+        "legacy hyphen document numbers",
+        "signature block"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 10777,
+          "sha256": "da07799d5f9f12a5e6882c08c9a07fabe9fd24d67a733e6f4bce3fd69f493e82"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4335,
+          "sha256": "7578764333017ac9c32246344bc1c09ec56689e1c610c91baecb02da567b68c1"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 17782,
+          "sha256": "19ee7fd5be49b0940cb5c6cf4ebc811357c3dcfde625eefbc436f4450255d92a"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5723,
+          "sha256": "8f905102f5e3ed2b025662c45fc4e003cec83d7996424bc7a68685a7675b3159"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 0,
+          "clauses": 0,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 1,
+          "list_item": 5,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:3322",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/thong-tu-so-165-hdbt-huong-dan-cuoc-bau-cu-dai-bieu-hdnd-va-ubnd-tinh-thanh-pho-va-dac-khu-truc-thuoc-trung-uong-nhiem-ky-1985-1989--3322",
+      "raw_directory": "data/raw/vbpl/dia_phuong/3322",
+      "patterns": [
+        "article-free alphabetic hierarchy"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 10772,
+          "sha256": "4faec0888ea56898940b72713dbaceb2eb760809717453e82b5568fba58c9203"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4401,
+          "sha256": "5b9a06a6aa91afa73deac13bd0f879e4aaa9d56c63ffaff9ca8afeb670c199bd"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 14502,
+          "sha256": "c6e5126ea531791ed5bfb08c32af9d616ff861b04300d94b6778f5942f919c74"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5816,
+          "sha256": "ea07b0bd640867df6d364adab9156b9693ce9605c7cef4a3cfb9b6cb97b5c541"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 0,
+          "clauses": 0,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 0,
+          "list_item": 0,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:1005",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-cong-doan-1957-so-108-sl-l10--1005",
+      "raw_directory": "data/raw/vbpl/trung_uong/1005",
+      "patterns": [
+        "article-local alpha list",
+        "unidentified historical relation",
+        "empty-tab SVG"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 17240,
+          "sha256": "0ab83f5d984b6ded9aa0a878183e763a9d4fe56d2d7534f5c8b8ac95ae4ea0bc"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4229,
+          "sha256": "45bc64f9ad354ece74908e5a27b00192d3d7ccd732f0c13ef3e0234b6675de0d"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 21857,
+          "sha256": "206f5d747731722dfb68c693f821b73432ac9b330eb01810d68a67e3d2cb4233"
+        },
+        {
+          "path": "history.html",
+          "bytes": 6171,
+          "sha256": "bec8dc708156eb391b55845b4b3a4f3d54e96d5577c979b773cd1d2e68e40d01"
+        },
+        {
+          "path": "tab_lenh_cong_bo.html",
+          "bytes": 2350,
+          "sha256": "8f46836fb44730dceb00818dc346a4eea237db4962e90f0e2c383660c8d94067"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": false
+        },
+        "warning_codes": {
+          "unresolved_document_reference": 2
+        },
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 4,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 22,
+          "clauses": 0,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 2,
+          "list_item": 9,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:b3abef60-bb0b-11f1-b268-c159cf8a37b0",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-4308-vbhn-qd-ubnd-ve-viec-ban-hanh-he-so-dieu-chinh-gia-dat-nam-2026-tren-dia-ban-tinh-lam-dong--b3abef60-bb0b-11f1-b268-c159cf8a37b0",
+      "raw_directory": "data/raw/vbpl/dia_phuong/b3abef60-bb0b-11f1-b268-c159cf8a37b0",
+      "patterns": [
+        "bold td ordinal headers",
+        "consolidated source"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 37309,
+          "sha256": "c7b28711e14e8c674ed10acdd8780ff18c7f39989c115abf9476a74a1d0b394b"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 3867,
+          "sha256": "c5b7a456414cdcd27dae226578dcdf4818b3b572a10e8936b675950d6bbfe7bf"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 15527,
+          "sha256": "898eac2348a6fb8cca5694db6f386e81296e0105335ded5d1647127c96a9d620"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5218,
+          "sha256": "d3d4246fc7ddb73677afcd29f6723565d5852751086f7b63c58fad5c165dabec"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 5,
+          "clauses": 9,
+          "points": 3
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 1,
+          "list_item": 3,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 1,
+          "recipient": 17
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:107957",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/quyet-dinh-so-1988-qd-btc-quy-dinh-chuc-nang-nhiem-vu-quyen-han-va-co-cau-to-chuc-cua-vu-to-chuc-can-bo--107957",
+      "raw_directory": "data/raw/vbpl/trung_uong/107957",
+      "patterns": [
+        "interleaved signing/recipient columns"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 30104,
+          "sha256": "3ec38bcebc7d62eec35655569f3960dedd15045abaa30864fb49fca7c3f0c971"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4347,
+          "sha256": "3dce4077089a4585638c47342f587a387988cdb7643b513f4e92e63a7eed4997"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 16596,
+          "sha256": "41284b1e06042d7f2fae066bd46a174305042053e0ed596ddbd35a2c48dd1b6a"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5766,
+          "sha256": "bff34ee5bfbb1ef58de60bcb5d69553428e8050dfa29a1bfd910154271ff4935"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 5,
+          "clauses": 26,
+          "points": 31
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 0,
+          "list_item": 0,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 2,
+          "recipient": 5
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:86463",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/nghi-quyet-so-03-1999-nq-hdnd-ve-viec-xac-nhan-ket-qua-bau-cu-thanh-vien-uy-ban-nhan-dan-tinh-son-la-khoa-xi-nhiem-ky-1999-2004--86463",
+      "raw_directory": "data/raw/vbpl/dia_phuong/86463",
+      "patterns": [
+        "headerless records",
+        "unnumbered historical relation"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 12169,
+          "sha256": "02c6b8cefb0198634924e2004db77271064e57a4178cfa1eade7dc6ff36f1751"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4382,
+          "sha256": "4f4ff6914ecb7ee72af9414ad42c638ac469c089d9f104018480f49a2ff3691b"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 15074,
+          "sha256": "16f72eb3c3c6820cb8f86907f5fad808d9d86441b37199797f8a8307b8ba51c7"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5807,
+          "sha256": "333459c63254f7487785ce226024820e1f046f033b2fdd1926c16f7fcfb562c6"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": false
+        },
+        "warning_codes": {
+          "table_semantics_unresolved": 1,
+          "unresolved_document_reference": 1
+        },
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 0,
+          "clauses": 0,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 0,
+          "list_item": 0,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:78081",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/thong-tu-so-07-tc-gttl-huong-dan-them-mot-so-diem-ve-nhuong-ban-tai-san-co-dinh-qui-dinh-trong-thong-tu-260-ttg-ngay-20-6-1977-cua-thu-tuong-chinh-phu--78081",
+      "raw_directory": "data/raw/vbpl/trung_uong/78081",
+      "patterns": [
+        "legacy addressee list"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 17729,
+          "sha256": "e8239a1bfdc93f45e7f7812ecf5928b0ed118432aed96d37af17cc76cdfe8f71"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4387,
+          "sha256": "e25aa8f1b1e317f7f0022d3e7c295c97bedc5291723a7b16c6c13f3630e35ec3"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 14488,
+          "sha256": "476b0dc1c9d406e5663468dcf1eb503b74cd08b73087cfa51af0632dfdcf922f"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5853,
+          "sha256": "a2331f5fff883ef79fc3bdbd03649b8c391263a2d0b2d0736f350c8cefe79a14"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 0,
+          "clauses": 0,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 2,
+          "list_item": 4,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 1,
+          "recipient": 2
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:6e60a930-bb12-11f1-8bac-5301206c636f",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-4096-vbhn-qd-ubnd-ve-boi-thuong-ho-tro-tai-dinh-cu-khi-nha-nuoc-thu-hoi-dat-tren-dia-ban-tinh-lam-dong--6e60a930-bb12-11f1-8bac-5301206c636f",
+      "raw_directory": "data/raw/vbpl/dia_phuong/6e60a930-bb12-11f1-8bac-5301206c636f",
+      "patterns": [
+        "inline article footnote markers",
+        "consolidated source"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 169246,
+          "sha256": "d6a4e2a49e7044a95715455354e7a82d5c3d5be5a458f2f6508ef0515d5e439c"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 3882,
+          "sha256": "2e78eb93cdff3e25c1e4a7dfd8c335adf673684ca9f988fc3a81ff4ee18fc2ed"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 15596,
+          "sha256": "a2f90d15dee1cd5cd96fdad59817a550140ec7b719e244ba6f01438af02f70a2"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5233,
+          "sha256": "630e27f50bbb1286cb15ac81cdf269a9e6efd2478bb32c6d08b58d25ec9db780"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 3,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 29,
+          "clauses": 80,
+          "points": 45
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 1,
+          "list_item": 4,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 1,
+          "recipient": 17
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-31-vbhn-bct-thong-tu-quy-dinh-ve-phuong-phap-xac-dinh-va-nguyen-tac-ap-dung-bieu-gia-chi-phi-tranh-duoc-cho-cac-nha-may-dien-nang-luong-tai-tao-nho-noi-dung-chinh-cua-hop-dong-mua-ban-dien--0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17",
+      "raw_directory": "data/raw/vbpl/trung_uong/0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17",
+      "patterns": [
+        "merged table headers",
+        "symbol definitions",
+        "contract form",
+        "contents",
+        "lettered appendices",
+        "formula media"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 152049,
+          "sha256": "20167ab61fa14503ca68ae8013505194546a3307a11d339332e03afecaa57150"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 3967,
+          "sha256": "e4c8ab3d3b6f0ee093d50f9371be73e3cbdded12914183a60dd4d08c6ce3c899"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 16908,
+          "sha256": "20f14b63f872acf8967f99340de332d923f6089f18c1cc2fde03bf59035a6ae9"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5328,
+          "sha256": "fc5719a9cb11bf8053faee0a21e41663dc8bde93863b04768b57da3e514e31b3"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": false
+        },
+        "warning_codes": {
+          "non_text_content": 2,
+          "possible_page_number": 1
+        },
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 3,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 11,
+          "clauses": 50,
+          "points": 24
+        },
+        "annex_hierarchy": {
+          "annexes": 4,
+          "numbered_sections": 4,
+          "numbered_items": 0,
+          "max_depth": 1
+        },
+        "node_types": {
+          "list": 9,
+          "list_item": 53,
+          "form": 1,
+          "form_field": 33,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 1,
+          "recipient": 8
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:119747",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/quyet-dinh-so-2073-2004-qd-ubnd-ve-viec-quy-dinh-cam-mot-so-phuong-tien-xe-co-goi-di-vao-cac-tuyen-duong-chinh-tren-dia-ban-thanh-pho-thai-nguyen-va-bo-sung-bien-phap-tam-giu-phuong-tien-vi-pham-luat-giao-thong-duong-bo-tren-dia-ban-tinh-thai-nguyen--119747",
+      "raw_directory": "data/raw/vbpl/dia_phuong/119747",
+      "patterns": [
+        "Roman/decimal article-local outline"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 8430,
+          "sha256": "9b2b1693a381a47d3fc3d62b9ce7481a28aea656583b9670f56768880de95084"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4562,
+          "sha256": "5ccd9d8009eb12e99b8d2fc53e4ca498b8d98c1389294638cb45c969f38be27c"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 20026,
+          "sha256": "75bcc9baba1e387ee8f60fec516af0135680229a710f5bf7f2323b72ec7299ff"
+        },
+        {
+          "path": "history.html",
+          "bytes": 6184,
+          "sha256": "ca41d339cbe198fda151ce3c0259d55116979dd2ebe60978add5ab3ab979f31b"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 3,
+          "clauses": 0,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 7,
+          "list_item": 29,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:2067",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-sua-doi-bo-sung-mot-so-dieu-cua-luat-dau-tu-nuoc-ngoai-tai-viet-nam-so-41-lct-hdnn8--2067",
+      "raw_directory": "data/raw/vbpl/trung_uong/2067",
+      "patterns": [
+        "legacy multiple-slash document numbers",
+        "unidentified relation evidence"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 10133,
+          "sha256": "377ec96f4232135e944f4d6cc1533d36f22c3db3beef7b3d54dd8a90fbb1f9ba"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4332,
+          "sha256": "6cbb61d8d0973f72a1910686a1751592f6d5e52f298105c59e617581a5bfcc95"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 36426,
+          "sha256": "876922c00fb47fcd863a1f117a9dff02b723e99caa11b21640134b747ff7f9b2"
+        },
+        {
+          "path": "history.html",
+          "bytes": 7167,
+          "sha256": "a303a93a37d7651ecd6650540855e2ea383e7b2dee015b237e1226c9982e2551"
+        },
+        {
+          "path": "tab_lenh_cong_bo.html",
+          "bytes": 2353,
+          "sha256": "127625553bdf4eaa762886e4068f681c84553a9e5d30e9fe0aa8c8c8b01f5344"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": false
+        },
+        "warning_codes": {
+          "unresolved_document_reference": 8
+        },
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 2,
+          "clauses": 10,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 5,
+          "list_item": 5,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:95214",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/chi-thi-so-01-2007-ct-ubnd-ve-viec-tang-cuong-cong-tac-chi-dao-thu-thue-nam-2007--95214",
+      "raw_directory": "data/raw/vbpl/dia_phuong/95214",
+      "patterns": [
+        "article-free decimal prefix hierarchy",
+        "delegated signature table"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 11069,
+          "sha256": "7ac8948c6b06ee04d6d01084fea7abbae38bd5d80fdafdf6a1821c8ab749e20f"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4340,
+          "sha256": "5557b6a786a188ca96f6005ec338fbe1f340adf0e2b66c0b9e55b43f44c2cbb3"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 14441,
+          "sha256": "c54c6c28c738f79737956ce66df5839583425cacce73b6a1eaba56f6abf04e37"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5685,
+          "sha256": "c9dfdfb0b3e1f61a28a70f8fa98a6fbb596662fe080e8300d3398ca45cb5c893"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 0,
+          "clauses": 0,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 1,
+          "list_item": 2,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:bb8b7c30-9f65-11f1-ab9a-39774c38cd0e",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-88-2026-vbhn-qd-ubnd-ban-hanh-quy-che-phoi-hop-giua-cac-co-quan-quan-ly-nha-nuoc-trong-cong-tac-quan-ly-nha-nuoc-doi-voi-doanh-nghiep-va-ho-kinh-doanh-sau-dang-ky-thanh-lap-tren-dia-ban-tinh-vinh-long--bb8b7c30-9f65-11f1-ab9a-39774c38cd0e",
+      "raw_directory": "data/raw/vbpl/dia_phuong/bb8b7c30-9f65-11f1-ab9a-39774c38cd0e",
+      "patterns": [
+        "attached legal act boundary",
+        "split chapter headings",
+        "footnote provision excerpt"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 121609,
+          "sha256": "cfd87101a37d20fadb27527e1cee63380a867f317ae7a1ca6025748c155f9bab"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 3999,
+          "sha256": "3fab457b2c846e19549f4581d8b682905aa78f3a41853166718a835a62bfe272"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 15933,
+          "sha256": "48e1b76ee40ba8306acf29bb5f528f244425ee134fb13fdade7620e4e828cdcd"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5345,
+          "sha256": "fcb0eb48dc4a51390ac1b7d9656c608558f6418338c2ec4a9c7a2610daf2406a"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 5,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 25,
+          "clauses": 75,
+          "points": 57
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 2,
+          "list_item": 2,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 7,
+          "recipients": 1,
+          "recipient": 15
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:d4ba5790-8010-11f1-93ea-dd502af5ba0e",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-68-2026-vbhn-nd-bct-nghi-dinh-quy-dinh-ve-co-che-thoi-gian-dieu-chinh-gia-ban-le-dien-binh-quan--d4ba5790-8010-11f1-93ea-dd502af5ba0e",
+      "raw_directory": "data/raw/vbpl/trung_uong/d4ba5790-8010-11f1-93ea-dd502af5ba0e",
+      "patterns": [
+        "source formula media",
+        "consolidated hierarchy"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 64171,
+          "sha256": "bd0b5017058acff74d31adb306f1995ff86dacb3e6f2187ad832bd04ac6b0306"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 3863,
+          "sha256": "0ad0d7d8aea191a7ba890065301aab9c83ca86a9526d202edc41ed2174ee9290"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 16650,
+          "sha256": "a9a1e0d03a2f0ed7bc3dd3c5f3086fafc74a8e984fb7eb0a6aeb02253ae42dfb"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5215,
+          "sha256": "07e8a37ba7888adf090995f9769d917594b7f229453fc7d863548b398d2f72d2"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": false
+        },
+        "warning_codes": {
+          "non_text_content": 1,
+          "possible_page_number": 1
+        },
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 3,
+          "sections": 2,
+          "subsections": 0,
+          "articles": 10,
+          "clauses": 29,
+          "points": 34
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 0,
+          "list_item": 0,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 1,
+          "recipient": 9
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:0781f27b881b5bf75a3c3b265534be25",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-13-1999-qh10--vbpqta_929",
+      "raw_directory": "data/raw/vbpl/trung_uong/0781f27b881b5bf75a3c3b265534be25",
+      "patterns": [
+        "English legal hierarchy",
+        "slash point separators"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 154345,
+          "sha256": "bed155992d10c20cde5bfea5a41e5993df9a52edd399fd881340f273d0b96f4b"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4256,
+          "sha256": "bfafa1e74ad8adcf4137076e16af187137a775c7a5833bd6f267a885be56fb08"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 14357,
+          "sha256": "c8a9465d003ab67eb2fcb06011507b098f286b3f0c7c45312e59a32d0366f8ae"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5518,
+          "sha256": "7653f50ef33d87acf0e837cd2cea790f35567bb8db5500a0e9db87fb5bda77a9"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 10,
+          "sections": 2,
+          "subsections": 0,
+          "articles": 124,
+          "clauses": 363,
+          "points": 247
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 0,
+          "list_item": 0,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:e7f747c5f1112006a13c6812c061841d",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-02-1997-qh10--vbpqta_1788",
+      "raw_directory": "data/raw/vbpl/trung_uong/e7f747c5f1112006a13c6812c061841d",
+      "patterns": [
+        "English numeric slash clause",
+        "actual duplicated article/clause numbers"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 86345,
+          "sha256": "14bb50a641500e7a192e8de3888e13929eab5abadb137f8cac4a0be3f39c31a1"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4256,
+          "sha256": "281ed9b1a6dde2d3d6b4a536bfa761f98500c6d1aa123036473345795d8df283"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 14357,
+          "sha256": "5d477ad8cb76d1cb7744e12cb6490d8b028a97b98e5281efa60e269722b587db"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5520,
+          "sha256": "716837414d1265a6d6494e756da5d5eae32c41e1343a167e78d2576c5e78d72c"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": false
+        },
+        "warning_codes": {
+          "duplicate_legal_number": 2
+        },
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 11,
+          "sections": 13,
+          "subsections": 0,
+          "articles": 131,
+          "clauses": 231,
+          "points": 173
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 0,
+          "list_item": 0,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:1507",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/thong-tu-so-3-cb-ub-huong-dan-thi-hanh-quyet-dinh-so-304-cp-ngay-29-8-1979-ve-to-chuc-bo-may-bien-che-cua-nha-tre-thuoc-khu-vuc-nha-nuoc--1507",
+      "raw_directory": "data/raw/vbpl/dia_phuong/1507",
+      "patterns": [
+        "article-free Roman outline",
+        "isolated dash continuation",
+        "leading legal citation"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 42495,
+          "sha256": "75e40ed2ad2c401fddb96a051e7381c4870a64360d989202bb75cbab3bb3639d"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4401,
+          "sha256": "7aaa834a0b4876186cc1c62b926fbbf165b8950866b93ec3660b9df5cb0127c5"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 17461,
+          "sha256": "e74980382108a7ada91fc65667449ed86cc3054fff8adf0a98aa55933d756920"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5835,
+          "sha256": "4a782a6e8219032bcaca72daa429f3e565a5a6e883c7210d3957a6d8c39cc262"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 0,
+          "clauses": 0,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 9,
+          "list_item": 31,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:182596",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/phap-lenh-so-05-2024-ubtvqh15-chi-phi-to-tung--182596",
+      "raw_directory": "data/raw/vbpl/trung_uong/182596",
+      "patterns": [
+        "deep ordinance hierarchy",
+        "additional proclamation tab"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 131520,
+          "sha256": "ea770f5e56cd74562183de8bcbcd8a2d074f4fbdf23fb2895f8251631333ad8d"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4291,
+          "sha256": "bd15e25f742ce0e25be677bd4c0316cc053fa988c3651b3a8c1b833b9c2386aa"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 20655,
+          "sha256": "5d245143c96a068249475b049f9e4fe84ffe957dfbe85e684845b2aea0fa9fdf"
+        },
+        {
+          "path": "history.html",
+          "bytes": 7350,
+          "sha256": "100618869d8cc1d9291c68584396c0638ea59bb9eb30b47ee64ab7111d65447a"
+        },
+        {
+          "path": "tab_lenh_cong_bo.html",
+          "bytes": 2386,
+          "sha256": "54ae16fac438602a342fa896bee35e6073fe2bd7d73806c32fa79d1e04615324"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 12,
+          "sections": 13,
+          "subsections": 0,
+          "articles": 73,
+          "clauses": 158,
+          "points": 52
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 0,
+          "list_item": 0,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:01308b41e5d32d9b48780b7631d358ce",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-20-2012-qh13--vbpqta_11015",
+      "raw_directory": "data/raw/vbpl/trung_uong/01308b41e5d32d9b48780b7631d358ce",
+      "patterns": [
+        "missing closing quote",
+        "bounded amendment scope"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 61546,
+          "sha256": "8c2244192defe95b46e3bf1d1737bba289047a0cea461ceb0854ae9165d9565a"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4222,
+          "sha256": "b2f45e41d1b445e9c1c31cfdf1903225bae234ca5f0756c08d16925339aa78da"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 14323,
+          "sha256": "c39e57d4a1fd785ffb9cec094e4788ac150dbc7d31587a2e39052d4fc5fea42d"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5522,
+          "sha256": "1681544b9122f7e81eb68e4a87750d5ac3e05e2de2fa70cb2c5e31ed54851aa7"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": false
+        },
+        "warning_codes": {
+          "incomplete_source_quotation": 1
+        },
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 2,
+          "clauses": 39,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 85,
+          "list_item": 291,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:118286",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/nghi-quyet-so-21-2016-nq-hdnd-ve-viec-thong-qua-dinh-muc-phan-bo-du-toan-chi-thuong-xuyen-ngan-sach-tinh-hau-giang-giai-doan-2017-2020--118286",
+      "raw_directory": "data/raw/vbpl/dia_phuong/118286",
+      "patterns": [
+        "legal points across child table",
+        "qualified data headers",
+        "spanned assignment formula table"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 47480,
+          "sha256": "064a321d76e7a377285e2b4e1a59d60f221f50f22171843fa5e1852ea529adc6"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4436,
+          "sha256": "b220ffb9a1b9bfd1633593b580cb3cef89e7f18d4175dc7fd57f5bf424bc5d3f"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 17240,
+          "sha256": "a72121e0b45881a521e269b5fafad51a236271e58dfb371101d34dc55da422d8"
+        },
+        {
+          "path": "history.html",
+          "bytes": 6742,
+          "sha256": "aa472d046356de549ddd8a860c33822cf841cc3d4a45b390fb8e505d2233186c"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 3,
+          "clauses": 3,
+          "points": 23
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 17,
+          "list_item": 46,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    },
+    {
+      "document_id": "vbpl:105730",
+      "source_url": "https://vbpl.vn/van-ban/chi-tiet/chi-thi-so-22-ct-ub-ve-viec-tang-cuong-quan-ly-chi-dao-to-chuc-thuc-hien-chuong-trinh-135--105730",
+      "raw_directory": "data/raw/vbpl/dia_phuong/105730",
+      "patterns": [
+        "slash delegation title",
+        "legacy directive hierarchy"
+      ],
+      "source_files": [
+        {
+          "path": "content.html",
+          "bytes": 8302,
+          "sha256": "ba758dc5853ef048e30cf68821ef68f3d8d03896a46a609b205a8191ab6280ff"
+        },
+        {
+          "path": "properties.html",
+          "bytes": 4321,
+          "sha256": "048b7c89002daa7b239554bc03070dcaad915c232bd43b410df71f203bd10306"
+        },
+        {
+          "path": "relations.html",
+          "bytes": 14422,
+          "sha256": "fcf42d2833f8961cc2519457f4b317ddfe999bf5d3c053541fce381ab8d75eac"
+        },
+        {
+          "path": "history.html",
+          "bytes": 5717,
+          "sha256": "d54d2040da8db08bba6ae2d5660e5dc0ac58b9ca6332e055d86da4d1796b4ef9"
+        }
+      ],
+      "expected": {
+        "quality": {
+          "meaningful_text_preserved": true,
+          "deterministic": true,
+          "schema_valid": true,
+          "semantic_complete": true
+        },
+        "warning_codes": {},
+        "legal_hierarchy": {
+          "parts": 0,
+          "chapters": 0,
+          "sections": 0,
+          "subsections": 0,
+          "articles": 0,
+          "clauses": 0,
+          "points": 0
+        },
+        "annex_hierarchy": {
+          "annexes": 0,
+          "numbered_sections": 0,
+          "numbered_items": 0,
+          "max_depth": 0
+        },
+        "node_types": {
+          "list": 0,
+          "list_item": 0,
+          "form": 0,
+          "form_field": 0,
+          "form_subfield": 0,
+          "footnote": 0,
+          "recipients": 0,
+          "recipient": 0
+        }
+      }
+    }
+  ]
+}

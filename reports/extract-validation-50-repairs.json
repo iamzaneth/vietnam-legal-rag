@@ -1,0 +1,594 @@
+{
+  "parser_repairs": [
+    {
+      "id": "ui_artifacts",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:152955",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/thong-tu-so-23-2021-tt-byt-sua-doi-bo-sung-mot-so-van-ban-quy-pham-phap-luat-do-bo-truong-bo-y-te-ban-hanh--152955"
+        },
+        {
+          "document_id": "vbpl:1005",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-cong-doan-1957-so-108-sl-l10--1005"
+        }
+      ],
+      "root_cause": "Browser title metadata, amendment controls and empty-state graphics were parsed as legal text/media.",
+      "fix": "Audit and exclude only source-backed interface artifacts; retain ordinary buttons and source media.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "replacement_quotation_scope",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:152955",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/thong-tu-so-23-2021-tt-byt-sua-doi-bo-sung-mot-so-van-ban-quy-pham-phap-luat-do-bo-truong-bo-y-te-ban-hanh--152955"
+        },
+        {
+          "document_id": "vbpl:0a37926080b6ffa67a58ba410db7939b",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/408-ubnd-tn--vbpqdinhchinh_105"
+        }
+      ],
+      "root_cause": "Replacement counters inside multiline quotations leaked into the enclosing legal hierarchy.",
+      "fix": "Balance explicit source quotation boundaries and represent their independent counters as local lists.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "sparse_body_boundary",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:00027f33df7ab52e31a577d0d52a099c",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/directive-08-2006-ct-ttg--vbpqta_5877"
+        },
+        {
+          "document_id": "vbpl:54406",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/chi-thi-so-20-2007-ct-ubnd-ve-viec-tang-cuong-cong-tac-quan-ly-chat-thai-ran-tren-dia-ban-tinh-binh-duong--54406"
+        },
+        {
+          "document_id": "vbpl:0a37926080b6ffa67a58ba410db7939b",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/408-ubnd-tn--vbpqdinhchinh_105"
+        }
+      ],
+      "root_cause": "Article-free directives and correction letters remained in header/title sections.",
+      "fix": "Use source heading, alignment and substantive narrative boundaries to enter the body.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "header_authority",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:116962",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/quyet-dinh-so-26-2016-qd-ubnd-ban-hanh-quy-che-lam-viec-cua-uy-ban-nhan-dan-tinh-lai-chau-nhiem-ky-2016-2021--116962"
+        },
+        {
+          "document_id": "vbpl:8760",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/chi-thi-so-39-ttg-ve-viec-bao-dam-an-toan-cho-nguoi-va-phuong-tien-nghe-ca-hoat-dong-tren-bien--8760"
+        }
+      ],
+      "root_cause": "An authority displayed in a letterhead table could trigger the closing signature phase.",
+      "fix": "Preserve issuing-authority role in the initial header context.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "article_free_alpha",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:3322",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/thong-tu-so-165-hdbt-huong-dan-cuoc-bau-cu-dai-bieu-hdnd-va-ubnd-tinh-thanh-pho-va-dac-khu-truc-thuoc-trung-uong-nhiem-ky-1985-1989--3322"
+        }
+      ],
+      "root_cause": "Alphabetic counters in an article-free body became orphan legal points.",
+      "fix": "Retain source-backed numbered paragraphs without inventing articles or clauses.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "counter_restart",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:159581",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/nghi-quyet-so-31-2021-nq-hdnd-ban-hanh-quy-dinh-ve-che-do-chinh-sach-va-cac-dieu-kien-bao-dam-hoat-dong-cua-dai-bieu-hoi-dong-nhan-dan-cac-cap-tai-thanh-pho-ho-chi-minh-nhiem-ky-2021-2026--159581"
+        }
+      ],
+      "root_cause": "A bounded counter restart below a colon lead-in duplicated legal clause numbers.",
+      "fix": "Keep the complete restarted sequence in its own evidenced enumeration scope.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "signature_table_scope",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:116962",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/quyet-dinh-so-26-2016-qd-ubnd-ban-hanh-quy-che-lam-viec-cua-uy-ban-nhan-dan-tinh-lai-chau-nhiem-ky-2016-2021--116962"
+        },
+        {
+          "document_id": "vbpl:8760",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/chi-thi-so-39-ttg-ve-viec-bao-dam-an-toan-cho-nguoi-va-phuong-tien-nghe-ca-hoat-dong-tren-bien--8760"
+        },
+        {
+          "document_id": "vbpl:95214",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/chi-thi-so-01-2007-ct-ubnd-ve-viec-tang-cuong-cong-tac-chi-dao-thu-thue-nam-2007--95214"
+        }
+      ],
+      "root_cause": "Small signature tables without axis headers were ambiguous or prematurely ended an attached legal act.",
+      "fix": "Recognize explicit signing markers/delegation and keep local semantic signature blocks.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "addressee_scope",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:0a37926080b6ffa67a58ba410db7939b",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/408-ubnd-tn--vbpqdinhchinh_105"
+        },
+        {
+          "document_id": "vbpl:78081",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/thong-tu-so-07-tc-gttl-huong-dan-them-mot-so-diem-ve-nhuong-ban-tai-san-co-dinh-qui-dinh-trong-thong-tu-260-ttg-ngay-20-6-1977-cua-thu-tuong-chinh-phu--78081"
+        }
+      ],
+      "root_cause": "Legacy Kính gửi blocks and dash recipients were left as generic paragraphs.",
+      "fix": "Recognize the source addressee heading and preserve recipient/list context.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "legacy_reference_numbers",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:8760",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/chi-thi-so-39-ttg-ve-viec-bao-dam-an-toan-cho-nguoi-va-phuong-tien-nghe-ca-hoat-dong-tren-bien--8760"
+        },
+        {
+          "document_id": "vbpl:2067",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-sua-doi-bo-sung-mot-so-dieu-cua-luat-dau-tu-nuoc-ngoai-tai-viet-nam-so-41-lct-hdnn8--2067"
+        }
+      ],
+      "root_cause": "Hyphenated, suffix-letter and multiple-slash document numbers were omitted from relations/history.",
+      "fix": "Expand source-slice recognition while keeping primary citations and mentions separate.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "article_local_alpha",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:1005",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-cong-doan-1957-so-108-sl-l10--1005"
+        }
+      ],
+      "root_cause": "Alphabetic sequences directly below an article colon lead-in became orphan points.",
+      "fix": "Represent consecutive local lists without synthesizing an absent legal clause.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "roman_decimal_outline",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:119747",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/quyet-dinh-so-2073-2004-qd-ubnd-ve-viec-quy-dinh-cam-mot-so-phuong-tien-xe-co-goi-di-vao-cac-tuyen-duong-chinh-tren-dia-ban-thanh-pho-thai-nguyen-va-bo-sung-bien-phap-tam-giu-phuong-tien-vi-pham-luat-giao-thong-duong-bo-tren-dia-ban-tinh-thai-nguyen--119747"
+        }
+      ],
+      "root_cause": "Roman subdivisions and decimal items within an article were confused with clauses and orphan points.",
+      "fix": "Scope explicitly emphasized Roman outlines and their nested counters as local ordered lists.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "article_footnote_marker",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:6e60a930-bb12-11f1-8bac-5301206c636f",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-4096-vbhn-qd-ubnd-ve-boi-thuong-ho-tro-tai-dinh-cu-khi-nha-nuoc-thu-hoi-dat-tren-dia-ban-tinh-lam-dong--6e60a930-bb12-11f1-8bac-5301206c636f"
+        }
+      ],
+      "root_cause": "A footnote immediately after an article number prevented article recognition.",
+      "fix": "Allow source footnote notation at the label boundary and preserve its text/annotation.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "td_header_markup",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:b3abef60-bb0b-11f1-b268-c159cf8a37b0",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-4308-vbhn-qd-ubnd-ve-viec-ban-hanh-he-so-dieu-chinh-gia-dat-nam-2026-tren-dia-ban-tinh-lam-dong--b3abef60-bb0b-11f1-b268-c159cf8a37b0"
+        },
+        {
+          "document_id": "vbpl:0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-31-vbhn-bct-thong-tu-quy-dinh-ve-phuong-phap-xac-dinh-va-nguyen-tac-ap-dung-bieu-gia-chi-phi-tranh-duoc-cho-cac-nha-may-dien-nang-luong-tai-tao-nho-noi-dung-chinh-cua-hop-dong-mua-ban-dien--0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17"
+        }
+      ],
+      "root_cause": "Bold or shaded td header bands lacked column associations.",
+      "fix": "Recognize explicit typography and reusable column labels; preserve physical cells, spans and conservative ambiguous axes.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "layout_colgroup",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:107957",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/quyet-dinh-so-1988-qd-btc-quy-dinh-chuc-nang-nhiem-vu-quyen-han-va-co-cau-to-chuc-cua-vu-to-chuc-can-bo--107957"
+        },
+        {
+          "document_id": "vbpl:86463",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/nghi-quyet-so-03-1999-nq-hdnd-ve-viec-xac-nhan-ket-qua-bau-cu-thanh-vien-uy-ban-nhan-dan-tinh-son-la-khoa-xi-nhiem-ky-1999-2004--86463"
+        },
+        {
+          "document_id": "vbpl:78081",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/thong-tu-so-07-tc-gttl-huong-dan-them-mot-so-diem-ve-nhuong-ban-tai-san-co-dinh-qui-dinh-trong-thong-tu-260-ttg-ngay-20-6-1977-cua-thu-tuong-chinh-phu--78081"
+        }
+      ],
+      "root_cause": "Non-text colgroup/col layout declarations emitted unknown-element warnings.",
+      "fix": "Keep these declarations as table geometry metadata instead of legal-content units.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "symbol_definition_table",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-31-vbhn-bct-thong-tu-quy-dinh-ve-phuong-phap-xac-dinh-va-nguyen-tac-ap-dung-bieu-gia-chi-phi-tranh-duoc-cho-cac-nha-may-dien-nang-luong-tai-tao-nho-noi-dung-chinh-cua-hop-dong-mua-ban-dien--0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17"
+        }
+      ],
+      "root_cause": "Repeated symbol/separator/definition rows were treated as ambiguous axis tables.",
+      "fix": "Keep their full physical geometry as key/value definition tables with no irrelevant role/confidence metadata.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "blank_letterhead_rows",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-31-vbhn-bct-thong-tu-quy-dinh-ve-phuong-phap-xac-dinh-va-nguyen-tac-ap-dung-bieu-gia-chi-phi-tranh-duoc-cho-cac-nha-may-dien-nang-luong-tai-tao-nho-noi-dung-chinh-cua-hop-dong-mua-ban-dien--0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17"
+        }
+      ],
+      "root_cause": "A national heading/motto table with blank rows was mistaken for a data table.",
+      "fix": "Use meaningful rows and exact letterhead roles, retaining layout provenance.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "interleaved_closing_columns",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:107957",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/quyet-dinh-so-1988-qd-btc-quy-dinh-chuc-nang-nhiem-vu-quyen-han-va-co-cau-to-chuc-cua-vu-to-chuc-can-bo--107957"
+        }
+      ],
+      "root_cause": "Signing columns interrupted recipient groups; regrouping across rows could cross source order.",
+      "fix": "Keep explicit recipient continuation groups in source order and preserve individual layout-cell boundaries.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "annex_alpha_continuations",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-31-vbhn-bct-thong-tu-quy-dinh-ve-phuong-phap-xac-dinh-va-nguyen-tac-ap-dung-bieu-gia-chi-phi-tranh-duoc-cho-cac-nha-may-dien-nang-luong-tai-tao-nho-noi-dung-chinh-cua-hop-dong-mua-ban-dien--0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17"
+        }
+      ],
+      "root_cause": "Alphabetic annex lists separated by formulas or explanatory paragraphs remained generic.",
+      "fix": "Build bounded consecutive annex lists with source-backed continuation blocks.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "css_heading_emphasis",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-31-vbhn-bct-thong-tu-quy-dinh-ve-phuong-phap-xac-dinh-va-nguyen-tac-ap-dung-bieu-gia-chi-phi-tranh-duoc-cho-cac-nha-may-dien-nang-luong-tai-tao-nho-noi-dung-chinh-cua-hop-dong-mua-ban-dien--0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17"
+        }
+      ],
+      "root_cause": "Whole-unit CSS font-weight evidence was ignored.",
+      "fix": "Recognize bold CSS as the same source heading evidence as bold/strong tags.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "contract_template_scope",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-31-vbhn-bct-thong-tu-quy-dinh-ve-phuong-phap-xac-dinh-va-nguyen-tac-ap-dung-bieu-gia-chi-phi-tranh-duoc-cho-cac-nha-may-dien-nang-luong-tai-tao-nho-noi-dung-chinh-cua-hop-dong-mua-ban-dien--0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17"
+        }
+      ],
+      "root_cause": "Contents entries became annex boundaries, and contract article/lettered appendix headings remained generic.",
+      "fix": "Scope explicit contents as source lists; recognize the contract form and retain local article/appendix headings and counters.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "directive_decimal_prefix",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:95214",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/chi-thi-so-01-2007-ct-ubnd-ve-viec-tang-cuong-cong-tac-chi-dao-thu-thue-nam-2007--95214"
+        }
+      ],
+      "root_cause": "Decimal subdivisions in an article-free directive remained generic and lost their source prefix parent.",
+      "fix": "Attach explicitly punctuated decimal counters to their actual existing prefix; diagnose missing prefixes rather than inventing parents.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "attached_legal_act_boundary",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:bb8b7c30-9f65-11f1-ab9a-39774c38cd0e",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-88-2026-vbhn-qd-ubnd-ban-hanh-quy-che-phoi-hop-giua-cac-co-quan-quan-ly-nha-nuoc-trong-cong-tac-quan-ly-nha-nuoc-doi-voi-doanh-nghiep-va-ho-kinh-doanh-sau-dang-ky-thanh-lap-tren-dia-ban-tinh-vinh-long--bb8b7c30-9f65-11f1-ab9a-39774c38cd0e"
+        }
+      ],
+      "root_cause": "A signature and second letterhead locked an attached act into the closing phase.",
+      "fix": "Preserve intermediate closing/header roles as local layout blocks and restart legal counters in the canonical body.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "unconsumed_split_heading",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:bb8b7c30-9f65-11f1-ab9a-39774c38cd0e",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-88-2026-vbhn-qd-ubnd-ban-hanh-quy-che-phoi-hop-giua-cac-co-quan-quan-ly-nha-nuoc-trong-cong-tac-quan-ly-nha-nuoc-doi-voi-doanh-nghiep-va-ho-kinh-doanh-sau-dang-ky-thanh-lap-tren-dia-ban-tinh-vinh-long--bb8b7c30-9f65-11f1-ab9a-39774c38cd0e"
+        }
+      ],
+      "root_cause": "Speculative heading coalescence could discard the title of a generic footer unit.",
+      "fix": "Restore the source title child whenever no legal node consumed the coalesced title.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "footnote_provision_excerpt",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:bb8b7c30-9f65-11f1-ab9a-39774c38cd0e",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-88-2026-vbhn-qd-ubnd-ban-hanh-quy-che-phoi-hop-giua-cac-co-quan-quan-ly-nha-nuoc-trong-cong-tac-quan-ly-nha-nuoc-doi-voi-doanh-nghiep-va-ho-kinh-doanh-sau-dang-ky-thanh-lap-tren-dia-ban-tinh-vinh-long--bb8b7c30-9f65-11f1-ab9a-39774c38cd0e"
+        }
+      ],
+      "root_cause": "An amended provision inside a source footer retained a clause marker as a generic paragraph.",
+      "fix": "Represent explicit article/clause excerpts as local counter lists inside their actual footnote.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "english_legal_labels",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:0781f27b881b5bf75a3c3b265534be25",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-13-1999-qh10--vbpqta_929"
+        }
+      ],
+      "root_cause": "English Article/Chapter/Section headings remained generic despite valid JSON.",
+      "fix": "Recognize source English legal labels and document headings, preserve separator punctuation, reject leading prose citations.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "legacy_counter_separators",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:2067",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-sua-doi-bo-sung-mot-so-dieu-cua-luat-dau-tu-nuoc-ngoai-tai-viet-nam-so-41-lct-hdnn8--2067"
+        },
+        {
+          "document_id": "vbpl:0781f27b881b5bf75a3c3b265534be25",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-13-1999-qh10--vbpqta_929"
+        },
+        {
+          "document_id": "vbpl:e7f747c5f1112006a13c6812c061841d",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-02-1997-qh10--vbpqta_1788"
+        }
+      ],
+      "root_cause": "Hyphen clause counters and slash point counters were left as generic paragraphs.",
+      "fix": "Recognize spaced hyphen/slash numeric counters and slash alphabetic counters in legal and local list scopes; retain numeric ranges, fractions and inline ratios as ordinary text.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "preamble_boundary_before_sparse_body",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:2067",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-sua-doi-bo-sung-mot-so-dieu-cua-luat-dau-tu-nuoc-ngoai-tai-viet-nam-so-41-lct-hdnn8--2067"
+        },
+        {
+          "document_id": "vbpl:68094",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/nghi-quyet-so-24-11-1979-a-ve-viec-ban-hanh-dieu-le-tam-thoi-ve-hoat-dong-cua-hdnd-va-dai-bieu-hdnd-cac-cap-trong-thanh-pho--68094"
+        },
+        {
+          "document_id": "vbpl:0781f27b881b5bf75a3c3b265534be25",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-13-1999-qh10--vbpqta_929"
+        }
+      ],
+      "root_cause": "Unlabelled motivation paragraphs entered the body before an explicit source basis; a bare enacting formula could become a title.",
+      "fix": "Use the explicit following basis/formula before the first legal heading to preserve preamble scope; recognize unambiguous bare enacting formula labels.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "roman_article_free_outline",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:1507",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/thong-tu-so-3-cb-ub-huong-dan-thi-hanh-quyet-dinh-so-304-cp-ngay-29-8-1979-ve-to-chuc-bo-may-bien-che-cua-nha-tre-thuoc-khu-vuc-nha-nuoc--1507"
+        }
+      ],
+      "root_cause": "Only the first Roman heading in an article-free circular was recognized; later emphasized siblings stayed generic.",
+      "fix": "Represent repeated emphasized Roman headings and their subordinate numeric/alpha counters as a local body outline, bounded by source legal/annex/closing labels.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "incomplete_amendment_quotation",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:01308b41e5d32d9b48780b7631d358ce",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/luat-20-2012-qh13--vbpqta_11015"
+        }
+      ],
+      "root_cause": "A source quotation missing its closing mark let replacement clauses leak into the outer act.",
+      "fix": "Bound its local counters at the next explicit sequential amendment lead-in; preserve every character and emit a source-incomplete-quotation warning.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "point_evidence_across_child_tables",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:118286",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/nghi-quyet-so-21-2016-nq-hdnd-ve-viec-thong-qua-dinh-muc-phan-bo-du-toan-chi-thuong-xuyen-ngan-sach-tinh-hau-giang-giai-doan-2017-2020--118286"
+        }
+      ],
+      "root_cause": "Clause inference stopped at a child table, missing explicit later sibling point b and leaving four orphan points.",
+      "fix": "Collect outer sibling point evidence across opaque child tables/lists; keep numeric-only sequence barriers and procedural-list contradictions unchanged.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "qualified_column_labels",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:118286",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/nghi-quyet-so-21-2016-nq-hdnd-ve-viec-thong-qua-dinh-muc-phan-bo-du-toan-chi-thuong-xuyen-ngan-sach-tinh-hau-giang-giai-doan-2017-2020--118286"
+        }
+      ],
+      "root_cause": "A source td header with a parenthetical measurement unit was not recognized as a single named column label.",
+      "fix": "Match reusable source column-label vocabulary plus its explicit unit qualifier and preserve the complete original header text.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "spanned_formula_table",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:118286",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/nghi-quyet-so-21-2016-nq-hdnd-ve-viec-thong-qua-dinh-muc-phan-bo-du-toan-chi-thuong-xuyen-ngan-sach-tinh-hau-giang-giai-doan-2017-2020--118286"
+        }
+      ],
+      "root_cause": "An assignment formula rendered with rowspan and a two-row expression was treated as an unresolved data table.",
+      "fix": "Use existing key/value table representation for an explicit single assignment spanning all source rows; retain all eight physical cells and grid geometry without invented axes.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "annex_nested_list_continuation",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/van-ban-hop-nhat-so-31-vbhn-bct-thong-tu-quy-dinh-ve-phuong-phap-xac-dinh-va-nguyen-tac-ap-dung-bieu-gia-chi-phi-tranh-duoc-cho-cac-nha-may-dien-nang-luong-tai-tao-nho-noi-dung-chinh-cua-hop-dong-mua-ban-dien--0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17"
+        }
+      ],
+      "root_cause": "An annex alphabetic sequence stopped at a nested dash list, leaving its final consecutive item generic.",
+      "fix": "Retain nested lists as opaque continuation children until the next source-backed alphabetic sibling or stronger boundary.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "source_alpha_outline_heading",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:1507",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/thong-tu-so-3-cb-ub-huong-dan-thi-hanh-quyet-dinh-so-304-cp-ngay-29-8-1979-ve-to-chuc-bo-may-bien-che-cua-nha-tre-thuoc-khu-vuc-nha-nuoc--1507"
+        }
+      ],
+      "root_cause": "Plain A/B subdivisions carried explicit VBPL provision-heading classes but no bold markup, leaving them generic.",
+      "fix": "Use the source provision-heading class on uppercase headings and represent alphabetic subdivisions between Roman and numeric local-outline levels.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    },
+    {
+      "id": "slash_signature_delegation",
+      "classification": "parser_bug",
+      "documents": [
+        {
+          "document_id": "vbpl:105730",
+          "source_url": "https://vbpl.vn/van-ban/chi-tiet/chi-thi-so-22-ct-ub-ve-viec-tang-cuong-quan-ly-chi-dao-to-chuc-thuc-hien-chuong-trinh-135--105730"
+        }
+      ],
+      "root_cause": "A source KT/ delegation title stayed generic inside an otherwise recognized signing block.",
+      "fix": "Recognize slash-delimited delegation abbreviations only when followed by an explicit authority; preserve the exact source spelling.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    }
+  ],
+  "schema_gaps": [],
+  "raw_capture_defects": [],
+  "sampling_repairs": [
+    "Issuing-body hint excludes Central citations later in Local titles.",
+    "Numeric identity is excluded from year hints.",
+    "Failed source cohorts contribute to diversity scoring."
+  ],
+  "note": "No generated JSON or immutable RAW was manually repaired.",
+  "expectation_corrections": [
+    {
+      "document_id": "vbpl:2067",
+      "evidence": "RAW Article 1 explicitly contains ten hyphen-delimited clauses (1- through 10-). The previous zero-clause expectation represented the parser omission.",
+      "change": "Update pinned hierarchy to ten clauses; retain all warnings about source relations."
+    },
+    {
+      "document_id": "vbpl:0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17",
+      "evidence": "RAW Annex II section 1 contains consecutive a through i items with nested dash lists inside f and h.",
+      "change": "Pin one continuous alphabetic sequence including i and its actual nested list children."
+    },
+    {
+      "document_id": "vbpl:1507",
+      "evidence": "RAW III contains source-marked A/B headings with separate numeric subdivisions.",
+      "change": "Pin those two local outline levels rather than generic paragraphs."
+    }
+  ],
+  "regression_discovered_repairs": [
+    {
+      "id": "bare_annex_coalescence_boundary",
+      "classification": "parser_bug",
+      "root_cause": "A bare annex label after a bare article label could be consumed as the article title during speculative coalescence.",
+      "fix": "Treat an actual annex candidate as a boundary in heading coalescence.",
+      "evidence": "Portable nested-annex-list regression exposed the boundary omission; no sampled capture required RAW changes.",
+      "schema_version": "2.3.2",
+      "regression_test_file": "tests/unit/test_batch_source_patterns.py"
+    }
+  ]
+}

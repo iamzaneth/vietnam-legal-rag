@@ -70,13 +70,33 @@ def classify_table(source, rows, cells):
     if source.attrs.get("role") == "presentation":
         return "layout", "explicit_presentation_role"
     heading = re.search(r"CỘNG\s+H[ÒO][ÀA].*VIỆT\s+NAM|Độc lập\s*[-–—]\s*Tự do", text, re.I)
-    authority = re.search(r"Số\s*:|\bBỘ\b|ỦY BAN|CHÍNH PHỦ|QUỐC HỘI", text, re.I)
+    authority = re.search(r"Số\s*:|\bBỘ\b|[ỦU][YỶ] BAN|CHÍNH PHỦ|QUỐC HỘI", text, re.I)
     closing = re.search(r"Nơi nhận\s*:", text, re.I) and re.search(r"KT\.|TM\.|TL\.|THỨ TRƯỞNG|BỘ TRƯỞNG|CHỦ TỊCH|Đã ký", text, re.I)
-    if len(rows) <= 2 and len(cells) <= 4 and not headers and (heading and authority or closing):
+    meaningful_rows = [r for r in rows if any(c["effective_text"] for c in r["cells"])]
+    letterhead_only = heading and all(not c["effective_text"] or re.fullmatch(
+        r"CỘNG\s+H[ÒO][ÀA].*VIỆT\s+NAM|Độc lập\s*[-–—]\s*Tự do\s*[-–—]\s*Hạnh phúc",
+        c["effective_text"], re.I) for c in cells)
+    if len(meaningful_rows) <= 2 and len(cells) <= 12 and not headers and (heading and authority or closing or letterhead_only):
         return "layout", "paired_document_heading_or_closing"
+    if len(rows) <= 3 and len(cells) <= 6 and not headers and len(text) <= 300:
+        signature = re.search(r"\bĐã ký\b|\[\s*daky\s*\]", text, re.I) or (re.search(r"\b(?:TM|KT|TL|TUQ)[./]\s*", text) and
+                    re.search(r"\b(?:CHỦ TỊCH|BỘ TRƯỞNG|GIÁM ĐỐC)\b", text))
+        if signature and not any(
+                re.fullmatch(r"[\d.,%]+", c["effective_text"]) for c in cells):
+            return "layout", "source_signature_block"
+        if re.match(r"Kính gửi\s*:", text, re.I) and re.search(r"[-–—]\s*\S", text):
+            return "layout", "source_addressee_block"
     # A source directory of forms is a label/value mapping, not an empty form.
     if len(rows) >= 2 and all(len(r["cells"]) == 2 and re.match(r"^(?:Mẫu|Biểu)\s+số\s*\d+", r["cells"][0]["effective_text"], re.I) for r in rows):
         return "key_value", "repeated_source_label_value_pairs"
+    definition_rows = [[c for c in r["cells"] if c["effective_text"]] for r in rows]
+    if len(rows) >= 2 and all(len(r) == 3 and r[1]["effective_text"] in {"=", ":"} and
+                             len(r[0]["effective_text"]) <= 60 and r[2]["effective_text"] for r in definition_rows):
+        return "key_value", "repeated_symbol_definition_separator"
+    if rows and len(definition_rows[0]) >= 3 and definition_rows[0][1]['effective_text'] == '=' and not headers:
+        left, equals = definition_rows[0][:2]
+        if left['rowspan'] == equals['rowspan'] == len(rows) and sum(c['effective_text'] == '=' for c in cells) == 1:
+            return 'key_value', 'source_assignment_with_spanned_expression'
     explicit = source.attrs.get("data-table-kind")
     if explicit in TABLE_KINDS:
         return explicit, "explicit_table_kind"

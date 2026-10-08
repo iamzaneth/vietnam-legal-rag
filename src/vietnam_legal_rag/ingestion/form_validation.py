@@ -3,9 +3,9 @@ from __future__ import annotations
 
 import re
 
-from .form_refinement import ALPHA, BIBLIOGRAPHY, DASH, DIGIT, NOTE_HEADING, consecutive, scan
+from .form_refinement import ALPHA, BIBLIOGRAPHY, DIGIT, SYMBOL, NOTE_HEADING, consecutive, scan
 
-STRUCTURED = re.compile(r"^(?:\d+[.)]\s+|\d+\.\d+|[a-zđ][.)]\s+|[-–—•]\s+|↩$)", re.I)
+STRUCTURED = re.compile(r"^(?:\d+[.)]\s+|\d+[-/]\s+(?=[^\d\s])|\d+\.\d+|[a-zđ][.)/]\s+|[-–—•+]\s+|↩$)", re.I)
 NOTE_NUMBER = re.compile(r"^(\d+)(?:[.)]\s+|\s+)\S")
 FORM_NODE_PROPERTIES = ("field_name", "field_kind", "field_evidence", "value_text")
 
@@ -74,6 +74,47 @@ def bibliography_misclassified(document):
     return problems
 
 
+def symbol_sequence(siblings, index):
+    """Audit serialized source markers independently of the list builder.
+
+    Both sides may be generic paragraphs or prematurely classified fields.
+    A nested marker is not isolated just because prose separates it from its
+    parent. Semantic boundaries and unrelated prose still end flat runs.
+    """
+    text = source_text(siblings[index])
+    match = SYMBOL.match(text)
+    if not match or not any(c.isalpha() for c in text[match.end():]):
+        return False
+    for step in (-1, 1):
+        position, gap = index + step, 0
+        while 0 <= position < len(siblings):
+            node = siblings[position]
+            other_text = source_text(node)
+            other = SYMBOL.match(other_text)
+            if node["type"] not in {"paragraph", "heading", "unknown", "numbered_paragraph", "form_field"}:
+                break
+            if other:
+                if not any(c.isalpha() for c in other_text[other.end():]):
+                    break
+                # A plus can follow its dash parent. A preceding standalone
+                # plus followed by a dash is a boundary, not nested evidence.
+                mixed = (match[1] == "+" and step == -1 and other[1] != "+" or
+                         match[1] != "+" and step == 1 and other[1] == "+")
+                same = match[1] == other[1]
+                lead_in = any(t.rstrip().endswith(":") for t in (text, other_text))
+                # Plus-only topic lists may also have unmarked explanatory
+                # paragraphs. Do not blanket-justify those sequences either.
+                plus_topic = same and match[1] == "+" and any(len(t.split()) <= 25 for t in (text, other_text))
+                if (same or mixed) and (not gap or mixed or lead_in or plus_topic):
+                    return True
+                break
+            if (node["type"] != "paragraph" or node.get("heading_evidence") or
+                    STRUCTURED.match(other_text) or NOTE_HEADING.fullmatch(scan(other_text))):
+                break
+            gap += 1; position += step
+    return False
+
+
 def structured_paragraphs(document):
     """Every retained marker gets evidence or remains an actionable candidate.
 
@@ -83,14 +124,29 @@ def structured_paragraphs(document):
     """
     audit = []
     for node, ancestors in walk([document]):
-        if node["type"] != "paragraph" or not STRUCTURED.match(node.get("text") or ""):
+        if node["type"] != "paragraph":
             continue
         siblings = ancestors[-1].get("children", ancestors[-1].get("content", [])) if ancestors else []
         index = next((i for i, n in enumerate(siblings) if n is node), -1)
+        tight_recipient = (index > 0 and siblings[index - 1]["type"] == "recipients" and
+                           not siblings[index - 1].get("children") and
+                           re.match(r"^[-–—•](?=[^\d\s])", node.get("text") or ""))
+        if not STRUCTURED.match(node.get("text") or "") and not tight_recipient:
+            continue
         neighboring = siblings[max(0, index - 1):index] + siblings[index + 1:index + 2] if index >= 0 else []
         scope = "table_cell" if any("cell_id" in a for a in ancestors) else "form" if any(a.get("type") == "form" for a in ancestors) else "annex" if any(a.get("type") == "annex" for a in ancestors) else "legal_body"
         reason, resolved = "insufficient_structural_evidence", False
-        for pattern, style in ((DASH, "dash"), (ALPHA, "alpha"), (DIGIT, "digit")):
+        if tight_recipient:
+            reason = "unresolved_recipient_marker"
+        symbol = SYMBOL.match(node["text"])
+        if symbol:
+            if not any(c.isalpha() for c in node["text"][symbol.end():]):
+                reason, resolved = "numeric_expression_without_list_body", True
+            elif symbol_sequence(siblings, index):
+                reason = "unresolved_symbol_sequence"
+            else:
+                reason, resolved = "isolated_marker_without_sequence_evidence", True
+        for pattern, style in (() if symbol else ((ALPHA, "alpha"), (DIGIT, "digit"))):
             match = pattern.match(node["text"])
             if not match:
                 continue

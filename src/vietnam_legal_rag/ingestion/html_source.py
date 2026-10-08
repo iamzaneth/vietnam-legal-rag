@@ -17,6 +17,27 @@ def whitespace(text: str) -> str:
     return re.sub(r"\s+", " ", text.replace("\xa0", " ")).strip()
 
 
+def whole_unit_emphasis(node):
+    """All meaningful display text is bold; inline note markers may differ."""
+    seen = False
+    def visit(current, inherited=False):
+        nonlocal seen
+        if current.tag in NON_CONTENT or current.tag in {'sup', 'sub'}:
+            return True
+        bold = inherited or current.tag in {'b', 'strong'} or bool(re.search(
+            r'font-weight\s*:\s*(?:bold|[7-9]00)', current.attrs.get('style', ''), re.I))
+        for child in current.children:
+            if isinstance(child, str):
+                if whitespace(child):
+                    if not bold:
+                        return False
+                    seen = True
+            elif not visit(child, bold):
+                return False
+        return True
+    return visit(node) and seen
+
+
 @dataclass
 class Node:
     tag: str

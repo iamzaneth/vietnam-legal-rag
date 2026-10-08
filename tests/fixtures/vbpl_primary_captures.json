@@ -1,0 +1,10 @@
+{
+  "description": "The original five representative RAW captures; IDs select captures, not parser behavior.",
+  "document_ids": [
+    "vbpl:0c389a00-78f6-11f1-a726-87c913cf8f30",
+    "vbpl:2308a290-bbb1-11f1-9e5f-8da308b3d359",
+    "vbpl:3314d690-bbe3-11f1-9662-1d62ccad220d",
+    "vbpl:a9bea550-bbe3-11f1-a338-51a5cc429fc7",
+    "vbpl:ef51a450-80bf-11f1-b76e-7b4564eab36e"
+  ]
+}

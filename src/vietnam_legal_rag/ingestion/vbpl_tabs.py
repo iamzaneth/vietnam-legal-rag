@@ -214,7 +214,8 @@ def history_events(root, quality, source_url):
 
 
 def extract_tab_data(root, key, source_url, quality):
-    claimed, result = set(), {}
+    from .form_refinement import navigation_artifacts
+    claimed, result = navigation_artifacts(root, quality), {}
     # Capture-generated page headings are UI metadata, not legal content.
     for node in root.find("h2"):
         if re.fullmatch(r"(?:Thuộc tính|Lịch sử|Lược đồ|Các văn bản hợp nhất)\s*—\s*\d+", node.text()):

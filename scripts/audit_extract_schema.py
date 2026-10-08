@@ -1,4 +1,4 @@
-"""Audit the freeze contract against generated JSON and a V2.3.1 snapshot.
+"""Audit the freeze contract against generated JSON and a baseline snapshot.
 
 Run audit_vbpl_hierarchy.py first for independent HTML/byte/checksum, hierarchy
 and table-geometry regression checks. This adds vocabulary, ownership, form
@@ -13,6 +13,7 @@ from pathlib import Path
 
 from audit_vbpl_hierarchy import audit, counts
 from vietnam_legal_rag.ingestion.extract_legal_documents import encoded
+from vietnam_legal_rag.ingestion.extract_quality import compact_text, text_units
 from vietnam_legal_rag.ingestion.extract_validation import semantic_roots, walk_content
 from vietnam_legal_rag.ingestion.form_validation import walk, structured_paragraphs, value_text_audit, FORM_NODE_PROPERTIES
 from vietnam_legal_rag.ingestion.hierarchy_validation import TABLE_KINDS
@@ -77,6 +78,43 @@ def size_contributors(result):
             'physical_text_effective_segments_bytes': sum(size({k:c[k] for k in ('text','effective_text','text_segments')}) for c in cells)}
 
 
+def preserve_list_items(previous, current):
+    """Existing source-backed items survive added wrappers and repaired roles.
+
+    Counting lists cannot verify preservation when new nested lists are the
+    fix. Compare each existing item's source display and marker instead. A
+    source recipient can move into recipients, never into an unrelated role.
+    """
+    def anchor(n):
+        return n['order'], json.dumps(n['source_ref'], sort_keys=True)
+    def own_display(n):
+        return compact_text(''.join(t for key,t in sorted(text_units({'document':n}), key=lambda p:p[0]) if key[0]==n['order']))
+    current_items = {anchor(n):(n,parents) for n,parents in walk([current['document']]) if n['type'] in {'list_item','recipient'}}
+    for item in semantic_nodes(previous):
+        if item['type']!='list_item':continue
+        assert anchor(item) in current_items, ('Lost structured item',item['source_ref'])
+        actual, parents = current_items[anchor(item)]
+        assert own_display(item)==own_display(actual), ('Changed structured item',item['source_ref'])
+        for prop in ('marker','number','ordinal'):
+            if prop in item:assert actual.get(prop)==item[prop], (prop,item['source_ref'])
+        if actual['type']=='recipient':
+            assert parents[-1]['type']=='recipients' and parents[-1].get('text'), actual
+
+
+def verify_tab_contract(result):
+    """Source record consistency, separately from the JSON shape validator."""
+    for group in result.get('groups', []):
+        items = group['items']
+        if group['declared_count'] is not None:
+            assert group['declared_count']==len(items), group['source_ref']
+        assert all(i['text']!='--' for i in items)
+        assert [i['order'] for i in items]==sorted(i['order'] for i in items)
+    for key in ('fields','events'):
+        values=result.get(key, [])
+        assert [v['order'] for v in values]==sorted(v['order'] for v in values)
+        assert len({json.dumps(v['source_ref'],sort_keys=True) for v in values})==len(values)
+
+
 def build_report(raw, extracted, before):
     hierarchy = audit(raw, extracted, '0c389a00-78f6-11f1-a726-87c913cf8f30', before)
     property_counts = defaultdict(Counter)
@@ -94,6 +132,7 @@ def build_report(raw, extracted, before):
         # Compare all source anchors, including identifiers and source positions.
         for record in manifest['files']:
             p=extracted/folder/record['path']; output=json.loads(p.read_text()); old=json.loads((before/folder/record['path']).read_text())
+            verify_tab_contract(output)
             assert source_anchors(old) == source_anchors(output), p
             assert not any('document_number_candidates' in v for v in dictionaries(output)), p
             assert not any('title_ref' in v for v in dictionaries(output)), p
@@ -120,7 +159,7 @@ def build_report(raw, extracted, before):
         assert covered==post['fields']+post['subfields']
         assert not any(post[k] for k in ('generic_form_label_paragraphs','generic_form_fields_including_values','duplicated_references','semantic_empty_string_fields','singleton_source_refs','unexplained_structured_paragraphs','unexplained_form_label_paragraphs','orphan_nodes','split_form_candidates','inconsistent_footnote_sequences','bibliography_fields_misclassified','ambiguous_tables','errors','suspicious_value_text','title_ref_occurrences','meaningless_axis_cell_metadata','form_nodes_missing_field_kind','form_nodes_missing_field_evidence'))
         assert prior_types['form']==types['form'] and prior_types['footnote']==types['footnote'] and prior_types['bibliography_entry']==types['bibliography_entry']
-        assert prior_types['list']==types['list']
+        preserve_list_items(previous,current)
         assert pre['placeholder_references']==post['placeholder_references']
         h=current['hierarchy_validation']
         quality={**manifest['quality'],'order_valid':h['order_valid'],'parent_child_valid':h['parent_child_valid']}
@@ -153,7 +192,7 @@ def build_report(raw, extracted, before):
     report={'schema_version':SCHEMA_VERSION,'parser_version':PARSER_VERSION,'freeze_status':'ready',
             'verified_json_files':sum(len(d['tabs'])+1 for d in hierarchy['documents']),
             'baseline_version':next(iter(baseline_versions)) if len(baseline_versions)==1 else sorted(baseline_versions),'schema_validation':True,'source_text_and_table_geometry_unchanged':True,
-            'source_anchors_and_identifiers_unchanged':True,'metadata_regressions':0,
+            'source_anchors_and_identifiers_unchanged':True,'existing_structured_items_preserved':True,'metadata_regressions':0,
             'node_types':dict(sorted(node_types.items())),
             'node_type_changes':{k:{'before':old_types[k],'after':node_types[k]} for k in sorted(old_types.keys()|node_types.keys()) if old_types[k]!=node_types[k]},
             'table_kinds':{'allowed':list(TABLE_KINDS),'produced':dict(sorted(table_kinds.items())), 'semanticized_layout_tables':sum(d['hierarchy_validation']['tables']['layout'] for d in hierarchy['documents'])},
@@ -174,6 +213,8 @@ def build_report(raw, extracted, before):
 
 
 def markdown(report):
+    if any(d['node_type_changes'].get('list') for d in report['documents']):
+        return finalization_markdown(report)
     lines = ['# Extract V2.3.2 freeze audit', '',
         f"Schema version **{report['schema_version']}**; parser version **{report['parser_version']}**; baseline **{report['baseline_version']}**. This is an incremental consistency cleanup; a baseline with the same version precedes the final form-node invariant hotfix.", '',
         '**Extract schema V2.3.2 is ready to freeze.** All acceptance checks use actual generated JSON. The current Circular 60 fixture has no warnings/errors/fatals. Two existing source ambiguities remain explicit in separate fixtures; their semantic_complete stays false.', '',
@@ -234,6 +275,66 @@ def markdown(report):
         'PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.ingestion.extract_legal_documents --debug-tree',
         'PYTHONPATH=src .venv/bin/python scripts/audit_extract_schema.py --raw data/raw/vbpl --extracted data/extracted/vbpl --before /path/to/v2.3.1/extracted --report docs/extract-v2.3.2-schema-audit.json', '```', '',
         'Freeze decision: no additional semantic rules until a new real-world VBPL source exposes a structure that cannot be faithfully represented.', '']
+    return '\n'.join(lines)
+
+
+def finalization_markdown(report):
+    lines = ['# Extract V2.3.2 finalization audit', '',
+        f"Schema **{report['schema_version']}**; parser **{report['parser_version']}**. Compared with the captured pre-finalization {report['baseline_version']} output. All {report['verified_json_files']} artifacts were regenerated from RAW and validated against the existing JSON Schema. No Extract artifact was manually repaired.", '',
+        '## Root causes and repairs', '',
+        '- Separate dash-only, adjacent-only list rules missed plus markers, nested lists and continuation paragraphs. One shared source-flow rule now uses list/list_item for dash parents and plus children; heading/lead-in evidence and a compatible following marker are required for continuations.',
+        '- Form fields were classified before lists. Lists now take precedence, with actual input prompts preserved as nested source-backed form_field nodes. Inline completion commentary remains list-item text.',
+        '- The output audit omitted plus markers and justified dash parents solely from immediate neighbors. The serialized audit now examines both directions across bounded prose, including prematurely classified field neighbors; unresolved sequences fail semantic completeness.',
+        '- Note lookahead could mutate an unconsumed candidate through a shared children array. Marker/body conversion now copies that array, preventing duplicated source content when a later nested list is rebuilt.',
+        '- Recipient paragraphs with inline-emphasized dashes could become tight -Body text. Explicit recipient context now keeps the whole sequence under recipients, avoiding false fields for recipient blanks. Tight source displays remain intact so effective_text does not change.', '',
+        '## Actual output metrics', '',
+        '| Fixture | Chapters / articles / clauses / points | Annexes / sections / items | Forms / fields / subfields | Footnotes | Orphans / ambiguous / candidates | W / E / F | Complete |',
+        '| --- | --- | --- | --- | ---: | --- | --- | --- |']
+    for d in report['documents']:
+        legal=d['legal_hierarchy']; annex=d['annex_hierarchy']; values=d['before_after']; issues=d['issues']
+        row=[d['document_number'],' / '.join(str(legal[k]) for k in ('chapters','articles','clauses','points')),
+             ' / '.join(str(annex[k]) for k in ('annexes','numbered_sections','numbered_items')),
+             ' / '.join(str(values[k]['after']) for k in ('forms','fields','subfields')),values['footnotes']['after'],
+             ' / '.join(str(values[k]['after']) for k in ('orphan_nodes','ambiguous_tables','numbered_paragraph_candidates')),
+             ' / '.join(str(issues[k]) for k in ('warning','error','fatal')),str(d['quality']['semantic_complete']).lower()]
+        lines.append('| '+' | '.join(map(str,row))+' |')
+    lines += ['', 'All fixtures: meaningful_text_preserved, deterministic, schema_valid, order_valid and parent_child_valid are true. The primary fixture has semantic_complete=true, hierarchy status=valid and zero warning/error/fatal issues. Two pre-existing ambiguities remain explicit elsewhere: a bare page-number candidate in the Decision and unresolved matrix-axis orientation in the technical Circular. Their semantic_complete remains false.', '',
+        'The primary fixture retains 16 forms, 14 subfields, 52 footnotes and 65 placeholder references. Fields change 81 → 80: the first plus-prefixed attachment instruction is now a list_item alongside its sibling. Annex III item 1.6 has two dash parents with five/four plus children and eight source-backed continuation paragraphs. Its unmarked concluding prose stays at the numbered-item level because no unique last-child attachment is evidenced.', '',
+        'Three table-cell lists in the Decree were recipient lists broken by tight inline dashes. They are now recipients/recipient, with all cell text and geometry preserved; this is a corrected role, not loss of a structured list. Input fields elsewhere in the Decree survive added list wrappers.', '',
+        '## Before → after audits', '',
+        'Baseline metrics below are recomputed with the strengthened audit. The previous stored audit did not count plus markers or tight recipient markers.', '',
+        '| Metric | Before | After |', '| --- | ---: | ---: |']
+    for key, value in report['totals'].items():
+        lines.append(f"| {key} | {value['before']} | {value['after']} |")
+    lines += ['', '## Semantic type changes', '', '| Type | Before | After |', '| --- | ---: | ---: |']
+    for key, value in report['node_type_changes'].items():
+        lines.append(f"| {key} | {value['before']} | {value['after']} |")
+    lines += ['', '## Schema and provenance', '',
+        'No schema-version change or new semantic type was needed. Every prior list item retains its source display/marker, either as list_item or a source-backed recipient under its explicit heading. Legal and annex ancestry, source order, links/identifiers, table geometry and data/matrix associations match baseline. All 15 properties/history/relations files are byte-identical to baseline.', '',
+        '**Node types:** '+', '.join(report['node_types'])+'.', '',
+        '**Table kinds:** '+str(report['table_kinds'])+'.', '',
+        '**Field kinds:** '+str(report['field_kinds'])+'.', '',
+        'All form fields/subfields explicitly carry field_name, field_kind, field_evidence and value_text. Required coverage is fields + subfields, including cells. Missing metadata, suspicious values, semantic empty strings, deprecated title_ref/relation candidate fields, duplicated references, inapplicable cell-axis metadata, unexplained structured/form-label paragraphs, orphans and numbered candidates are all zero.', '',
+        '## Property vocabulary', '', '| Property | Node types (count) | Total |', '| --- | --- | ---: |']
+    for p in report['property_vocabulary']:
+        lines.append(f"| {p['property']} | "+', '.join(f'{k} ({v})' for k,v in p['node_types'].items())+f" | {p['count']} |")
+    lines += ['', 'Properties occurring once, manually reviewed:', '']
+    for p in report['one_off_properties']:
+        lines.append(f"- {p['property']}: {p['justification']}")
+    lines += ['', '## Retained form-label candidates', '']
+    for d in report['documents']:
+        for p in d['remaining_form_paragraphs']+d['remaining_structured_paragraphs']:
+            lines.append(f"- {d['document_number']}, source order {p['order']}: {p['text']} — {p['reason']}.")
+    lines += ['', '## Form boundaries', '']
+    for d in report['documents']:
+        for f in d['form_boundaries']:
+            lines.append(f"- {d['document_number']}, annex {f['annex']}: form {f['number']} → {f['title']} → {f['child_count']} children → next {f['next_form_number']}.")
+    lines += ['',
+        f"Combined content.json size: {report['size_bytes']['before']:,} → {report['size_bytes']['after']:,} bytes. Physical geometry, effective text, actual empty cells and provenance remain intact. The JSON report contains cell/property counts and contributor estimates.", '',
+        'Tests cover flat dash/plus lists, nested parent/child markers, source-backed continuations, unrelated trailing prose, isolated signs, inline arithmetic, table/heading/form/annex boundaries, form-input ownership, links/annotations, nested cell lists, complete note consumption, non-mutating note lookahead, tight recipient dashes, corrupted serialized output and all five full captured fixtures. The audit independently reparses all 20 RAW tabs twice, compares artifact bytes, validates all 25 JSON files, checks manifest/source/output hashes and compares all acceptance invariants.', '',
+        'Remaining limits: isolated markers and uncertain continuation ownership are kept conservatively. Two previously recorded source ambiguities in other fixtures remain warnings. Broader multi-document validation is still required.', '',
+        'Extract V2.3.2 finalization passed for the current regression fixture.',
+        'Ready for broader multi-document validation.', '']
     return '\n'.join(lines)
 
 

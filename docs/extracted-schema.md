@@ -2,7 +2,7 @@
 
 Extract is source-faithful semantic parsing. RAW HTML and its manifest remain the source of truth. EXTRACTED identifies source-backed structure without rewriting legal meaning, correcting spelling, inventing data, resolving cross-document references, summarizing, chunking or generating embeddings. Normalized will perform canonical field mapping and cross-tab merge; Chunks will create retrieval units and any deterministic structural IDs.
 
-Formal contract: [Draft 2020-12 JSON Schema](../schemas/extracted.schema.json). The packaged schema references this same file. Actual-output verification and vocabulary/count audits: [final V2.3.2 form invariant audit](extract-v2.3.2-form-invariant-audit.md), [machine-readable audit](extract-v2.3.2-form-invariant-audit.json). The [earlier V2.3.2 cleanup report](extract-v2.3.2-schema-audit.md) retains its V2.3.1 comparison. Historical behavior: [V2.2](extract-v2.2-report.md), [V2.3](extract-v2.3-report.md).
+Formal contract: [Draft 2020-12 JSON Schema](../schemas/extracted.schema.json). The packaged schema references this same file. Acceptance specification: [Extract finalization](EXTRACTION_FINALIZATION_SPEC.md). Latest actual-output verification: [finalization audit](extract-v2.3.2-finalization-audit.md), [machine-readable audit](extract-v2.3.2-finalization-audit.json). Earlier audits: [form invariant hotfix](extract-v2.3.2-form-invariant-audit.md), [V2.3.2 cleanup](extract-v2.3.2-schema-audit.md), [V2.2](extract-v2.2-report.md), [V2.3](extract-v2.3-report.md).
 
 ## Artifacts and envelope
 
@@ -85,9 +85,11 @@ Every form_field and form_subfield explicitly carries field_name, field_kind, fi
 
 ## Lists, notes and safe fallbacks
 
-Local ordered/dash sequences of at least two adjacent compatible markers become list/list_item, including inside table cells. Explicit references headings use bibliography/bibliography_entry rather than form_field. After Ghi chú/Chú thích/Notes, sequence-aware footnote_group/footnote classification covers consecutive markers consistently, regardless of typography. note can contain alphabetic/dash explanations. HTML-generated ordinal markers are metadata rather than invented visible source text.
+Local ordered/dash/plus sequences of at least two source-compatible markers become list/list_item, including inside table cells. Dash parents own following plus sublists. Lists are recognized before form inputs; genuine input prompts may remain source-backed form_field children of their list_item. Unmarked continuations require a heading-like item or colon lead-in, continuous source flow, no stronger semantic boundary and a compatible following marker. Trailing prose and isolated markers remain conservative paragraphs. A single dash parent plus a single explicit plus child can form a source-backed nested list; no parent is invented.
 
-Genuine prose remains paragraph. heading, unknown, numbered_paragraph and layout_block are safe representations when more specific evidence is absent. Structured-paragraph and form-label audits must explain any retained marker/label candidate. Navigation artifacts are ignored only with source link/navigation or terminal footnote-backlink context; ignored_elements retains reason, text, order and provenance. Plain symbols and form blanks are not globally blacklisted.
+Explicit references headings use bibliography/bibliography_entry rather than form_field. After Ghi chú/Chú thích/Notes, sequence-aware footnote_group/footnote classification covers consecutive markers consistently, regardless of typography. note can contain alphabetic/dash/plus explanations. HTML-generated ordinal markers are metadata rather than invented visible source text. An explicit recipient heading scopes recipient markers, including tight dashes introduced by inline markup; tight source display stays intact to preserve cell effective_text.
+
+Genuine prose remains paragraph. heading, unknown, numbered_paragraph and layout_block are safe representations when more specific evidence is absent. Structured-paragraph and form-label audits must explain any retained marker/label candidate. The serialized structured audit includes plus markers and bounded continuation/nested-marker context; an unresolved sequence makes semantic_complete false and emits a warning. Navigation artifacts are ignored only with source link/navigation or terminal footnote-backlink context; ignored_elements retains reason, text, order and provenance. Plain symbols and form blanks are not globally blacklisted.
 
 ## Tables
 
@@ -137,3 +139,24 @@ PYTHONPATH=src .venv/bin/python scripts/audit_extract_schema.py --raw data/raw/v
 ```
 
 The freeze audit includes every available representative capture: simple Decision, Decree with annexes, technical Circular with a matrix, Circular with forms/decimal annex numbering, and Resolution. Passing tests alone is insufficient; generated JSON, fallback paragraphs, form boundaries, node/property vocabularies and metadata/table regressions are inspected independently.
+
+## Broader source validation within V2.3.2
+
+The [50-document batch report](../reports/extract-validation-50.md) records five interleaved Central/Local waves, generic parser repairs, source evidence, regression membership and final diagnostics. The schema and parser version remain 2.3.2: all observed structures fit the existing contract.
+
+Explicit English legal labels and legacy spaced hyphen/slash counters use the same legal hierarchy as their Vietnamese counterparts. Quoted replacement provisions, contract articles and Roman/alphabetic local outlines keep their own counter scope. An attached legal act can retain intermediate signing and letterhead blocks in the canonical body without duplicating root document sections. Annex counters and nested lists stay within their source annex/form scope.
+
+Source CSS emphasis, provision-heading classes and bold/shaded table header bands can support classification. Formula and symbol-definition tables retain their physical cells and spans using the existing key_value representation when the source supports that purpose; factual axes are never invented. Missing relation identifiers, headerless table axes, formula media, isolated possible page numbers, duplicated source legal numbers and incomplete quotations keep their diagnostics. For an incomplete quotation, an explicit next sequential amendment can bound local counters without inserting a closing mark.
+
+The final batch has schema_valid, deterministic and meaningful_text_preserved at 50/50. semantic_complete remains 41/50 because nine reviewed documents retain source warnings; the report does not override that flag. The original golden fixture retains all expected invariants and zero warnings/errors/fatals.
+
+Reproduce validation from the retained local RAW captures:
+
+```bash
+.venv/bin/python scripts/run_extract_validation_50.py --help
+.venv/bin/python scripts/run_extract_validation_50.py audit --regenerate
+.venv/bin/python -m unittest discover -s tests/unit -q
+.venv/bin/python scripts/write_extract_validation_50_report.py
+```
+
+The batch audit exits nonzero when source warnings remain; review the diagnostics rather than treating command success as semantic acceptance. Capture regressions reference immutable local RAW by identity and hash, while portable pattern tests run without those captures. The crawler's existing HTML-only policy excludes Tải về and Văn bản gốc; attachment validation is outside this recorded batch.

@@ -161,6 +161,7 @@ def parse_table(source: Node, builder, table_kind="data") -> dict:
     # content exist. Adapters may provide a context-free first classification.
     if hasattr(builder, "prepare_cells"):
         builder.prepare_cells(source, cells)
+    infer_td_headers(source, rows, cells)
     if table_kind is None:
         table_kind, evidence = builder.classify_table(source, rows, cells)
         table["classification_evidence"] = evidence
@@ -198,7 +199,7 @@ def parse_table(source: Node, builder, table_kind="data") -> dict:
                 cell.update(role="unknown", confidence=0.0)
                 warn("invalid_header_scope", f"Unknown header scope: {scope}", source_for(cell))
             elif cell["cell_type"] == "header" and all_headers and not carried_data and (row["section"] == "thead" or leading_band):
-                cell.update(role="column_header", confidence=0.9, evidence="all_header_row")
+                cell.update(role="column_header", confidence=0.9, evidence=cell.get("evidence", "all_header_row"))
             elif cell["cell_type"] == "header" and not any(
                     c["cell_type"] == "data" and c["column"] < cell["column"] + cell["colspan"]
                     and cell["column"] < c["column"] + c["colspan"] for c in cells):
@@ -212,6 +213,10 @@ def parse_table(source: Node, builder, table_kind="data") -> dict:
                 compound_labels(cell.get("text_segments", [c["text"] for c in cell["candidate_labels"]]),
                                 cell.get("effective_text", cell["text"])))]
             cell["candidate_labels"] = labels
+            if cell.get("evidence") in {"emphasized_ordinal_header_row", "explicit_column_label_vocabulary"} and len(labels) == 2 and re.match(
+                    r"^(?:\(.+\)$|theo\s)", labels[1]["text"], re.I):
+                labels = [{"text": cell.get("effective_text", cell["text"]), "role": "unknown", "order": 0}]
+                cell["candidate_labels"] = labels
             corner = cell["row"] == 0 and cell["column"] == 0
             diagonal = bool(re.search(r"linear-gradient|diagonal|border.*(?:rotate|skew)", str(attrs), re.I))
             axis_nodes = [n for n in find_cell_node(source, cell).find() if n.attrs.get("data-axis") in {"row", "column"}]
@@ -308,6 +313,40 @@ def parse_table(source: Node, builder, table_kind="data") -> dict:
                                 "column_headers": [h["id"] for h in column_headers],
                                 "header_hierarchy": header_hierarchy}, "issues": issues})
     return table
+
+
+def infer_td_headers(source, rows, cells):
+    """Use explicit typography or reusable column labels, preserving td refs.
+
+    Never promote a numeric row, a diagonal corner or an unmarked prose row.
+    A shaded band must precede unshaded body rows, rather than shading alone.
+    """
+    if len(rows) < 2 or any(c["cell_type"] == "header" for c in cells):
+        return
+    by_order = {n.dom_order: n for n in source.find()}
+    def emphasized(node, inherited=False):
+        bold = inherited or node.tag in {"b", "strong"} or bool(re.search(r"font-weight\s*:\s*(?:bold|[7-9]00)", node.attrs.get("style", ""), re.I))
+        return all(bold or not whitespace(child) if isinstance(child, str) else emphasized(child, bold) for child in node.children)
+    first = rows[0]["cells"]
+    nonempty = [c for c in first if c.get("effective_text")]
+    ordinal = first and re.fullmatch(r"STT|TT|Số TT", first[0].get("effective_text", ""), re.I)
+    labels = {"đơn vị", "đơn vị tính", "giá trị", "ghi chú", "số lượng", "nội dung", "thành tiền", "tên hàng", "đơn giá", "định mức"}
+    named = sum(re.sub(r'\s*\([^)]*\)\s*$', '', c.get("effective_text", "")).casefold() in labels for c in nonempty)
+    evidence = "emphasized_ordinal_header_row" if ordinal and len(nonempty) >= 2 and all(emphasized(by_order[c["order"]]) for c in nonempty) else (
+        "explicit_column_label_vocabulary" if named >= 2 and len(nonempty) == named else None)
+    if evidence:
+        for c in first:
+            c.update(cell_type="header", evidence=evidence)
+        return
+    band = []
+    for row in rows:
+        if not row["cells"] or not all(re.search(r"background(?:-color)?\s*:\s*(?!transparent|none)[^;]+", c["attributes"].get("style", ""), re.I)
+                                       and c.get("effective_text") and not re.fullmatch(r"[\d.,%]+|X", c["effective_text"]) for c in row["cells"]):
+            break
+        band.extend(row["cells"])
+    if band and len(band) < len(cells) and any(re.fullmatch(r"[\d.,%]+|X", c.get("effective_text", "")) for c in cells[len(band):]):
+        for c in band:
+            c.update(cell_type="header", evidence="leading_shaded_header_band")
 
 
 def find_cell_node(table: Node, cell: dict) -> Node:

@@ -1,0 +1,10 @@
+  Tab: Thuộc tính (1 trang)
+  Tab: Lược đồ (1 trang)
+  Tab: Lịch sử (1 trang)
+  Tab: Các văn bản hợp nhất (1 trang)
+  Tab: Thông tin bổ sung (1 trang)
+  Tab: Lịch sử (2 trang)
+----------------------------------------------------------------------
+Ran 248 tests in 19.070s
+
+OK

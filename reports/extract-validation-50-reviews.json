@@ -1,0 +1,305 @@
+{
+  "review_method": "Automatic source conservation, JSON schema, deterministic reparse, hierarchy/form validation, all manifest/hash/provenance checks, plus generated-output marker and boundary audits against immutable RAW.",
+  "documents": [
+    {
+      "document_id": "vbpl:152955",
+      "sequence": 1,
+      "reviewed": true,
+      "notes": "Inspected amendment controls and replacement quotations; enclosing article/clause/point scope is preserved."
+    },
+    {
+      "document_id": "vbpl:116962",
+      "sequence": 2,
+      "reviewed": true,
+      "notes": "Inspected legacy authority/signature markup and the attached regulation with deep chapter/article/clause/point hierarchy."
+    },
+    {
+      "document_id": "vbpl:00027f33df7ab52e31a577d0d52a099c",
+      "sequence": 3,
+      "reviewed": true,
+      "notes": "English summary has sparse prose; no legal heading is fabricated."
+    },
+    {
+      "document_id": "vbpl:159581",
+      "sequence": 4,
+      "reviewed": true,
+      "notes": "Reviewed restarted local counters beneath a clause lead-in."
+    },
+    {
+      "document_id": "vbpl:32026",
+      "sequence": 5,
+      "reviewed": true,
+      "notes": "Reviewed simple decision sections, source references and metadata."
+    },
+    {
+      "document_id": "vbpl:54406",
+      "sequence": 6,
+      "reviewed": true,
+      "notes": "Reviewed article-free directive body and source list sequences."
+    },
+    {
+      "document_id": "vbpl:0019dd16cfe06add842b1031300f9fe3",
+      "sequence": 7,
+      "reviewed": true,
+      "notes": "English summary is preserved at its actual source granularity."
+    },
+    {
+      "document_id": "vbpl:0a37926080b6ffa67a58ba410db7939b",
+      "sequence": 8,
+      "reviewed": true,
+      "notes": "Reviewed correction letter addressee/signature boundaries and quoted replacement text."
+    },
+    {
+      "document_id": "vbpl:8760",
+      "sequence": 9,
+      "reviewed": true,
+      "notes": "Reviewed signature layout and legacy multi-component reference numbers."
+    },
+    {
+      "document_id": "vbpl:3322",
+      "sequence": 10,
+      "reviewed": true,
+      "notes": "Reviewed alphabetic subdivisions outside article scope; no absent article/clause is invented."
+    },
+    {
+      "document_id": "vbpl:1005",
+      "sequence": 11,
+      "reviewed": true,
+      "notes": "Reviewed direct article-local alphabetic lists and source relations with no numbered identifier/link."
+    },
+    {
+      "document_id": "vbpl:b3abef60-bb0b-11f1-b268-c159cf8a37b0",
+      "sequence": 12,
+      "reviewed": true,
+      "notes": "Reviewed bold td ordinal/coefficient headers, logical grid and physical cell provenance."
+    },
+    {
+      "document_id": "vbpl:107957",
+      "sequence": 13,
+      "reviewed": true,
+      "notes": "Reviewed colgroup layout, interleaved signing/recipient columns and source order."
+    },
+    {
+      "document_id": "vbpl:86463",
+      "sequence": 14,
+      "reviewed": true,
+      "notes": "Reviewed headerless person/position table; neither header axis nor missing law identifier can be safely inferred."
+    },
+    {
+      "document_id": "vbpl:78081",
+      "sequence": 15,
+      "reviewed": true,
+      "notes": "Reviewed legacy circulation/addressee layout and independent cell boundaries."
+    },
+    {
+      "document_id": "vbpl:53597",
+      "sequence": 16,
+      "reviewed": true,
+      "notes": "Reviewed sparse directive body and numbered instructions."
+    },
+    {
+      "document_id": "vbpl:16151b5ba377472bb544046dad620ea1",
+      "sequence": 17,
+      "reviewed": true,
+      "notes": "English summary preserves the source prose and metadata."
+    },
+    {
+      "document_id": "vbpl:6e60a930-bb12-11f1-8bac-5301206c636f",
+      "sequence": 18,
+      "reviewed": true,
+      "notes": "Reviewed inline footnote markers attached to article numbers and consolidated text."
+    },
+    {
+      "document_id": "vbpl:0b2087e0-83fa-11f1-8c48-c5a5aa8ebc17",
+      "sequence": 19,
+      "reviewed": true,
+      "notes": "Reviewed contract form, contents, lettered appendices and merged header bands. Annex II a through i now form one continuous sequence with dash lists nested under f and h. Formula media and bare 11 remain warned."
+    },
+    {
+      "document_id": "vbpl:119747",
+      "sequence": 20,
+      "reviewed": true,
+      "notes": "Reviewed Roman/decimal outline inside an article; local outline counters do not become legal clauses."
+    },
+    {
+      "document_id": "vbpl:2067",
+      "sequence": 21,
+      "reviewed": true,
+      "notes": "Reviewed ten actual hyphen clauses, preamble and unresolved source relations; corrected the previous zero-clause pinned expectation from RAW evidence."
+    },
+    {
+      "document_id": "vbpl:68094",
+      "sequence": 22,
+      "reviewed": true,
+      "notes": "Reviewed preamble lists and bare QUYẾT NGHỊ enacting formula."
+    },
+    {
+      "document_id": "vbpl:3e34bb0aa4d294fc82c53d03d4d543d3",
+      "sequence": 23,
+      "reviewed": true,
+      "notes": "English archival-work summary has no source article hierarchy to invent."
+    },
+    {
+      "document_id": "vbpl:95214",
+      "sequence": 24,
+      "reviewed": true,
+      "notes": "Reviewed explicit 2.1/2.2/2.3 prefix hierarchy and delegated signature block."
+    },
+    {
+      "document_id": "vbpl:26741",
+      "sequence": 25,
+      "reviewed": true,
+      "notes": "Reviewed 58 articles, chapter/section hierarchy and Constitution references lacking identifiers/links."
+    },
+    {
+      "document_id": "vbpl:8685",
+      "sequence": 26,
+      "reviewed": true,
+      "notes": "Reviewed article-free numbered instructions and original source labels."
+    },
+    {
+      "document_id": "vbpl:10423",
+      "sequence": 27,
+      "reviewed": true,
+      "notes": "Leading Điều ... được sửa đổi phrases are prose amendment lead-ins; quoted content stays local. Missing relation identifiers remain unresolved."
+    },
+    {
+      "document_id": "vbpl:bb8b7c30-9f65-11f1-ab9a-39774c38cd0e",
+      "sequence": 28,
+      "reviewed": true,
+      "notes": "Reviewed intermediate closing and second letterhead, 22-article attached regulation, split chapter headings and seven source footnotes."
+    },
+    {
+      "document_id": "vbpl:d4ba5790-8010-11f1-93ea-dd502af5ba0e",
+      "sequence": 29,
+      "reviewed": true,
+      "notes": "Reviewed consolidated hierarchy; encoded formula media and isolated bare 11 remain source-faithful warnings."
+    },
+    {
+      "document_id": "vbpl:49202",
+      "sequence": 30,
+      "reviewed": true,
+      "notes": "Reviewed sparse three-article decision and embedded source lists."
+    },
+    {
+      "document_id": "vbpl:0781f27b881b5bf75a3c3b265534be25",
+      "sequence": 31,
+      "reviewed": true,
+      "notes": "Inspected English source headings and slash points; 10 chapters, 124 articles, 363 clauses and 247 points now correspond to source structure."
+    },
+    {
+      "document_id": "vbpl:1507",
+      "sequence": 32,
+      "reviewed": true,
+      "notes": "Reviewed three Roman subdivisions and source-marked A/B headings with independent numeric children. The isolated dash has unmarked continuation; Điều 4 của ... is a prose citation."
+    },
+    {
+      "document_id": "vbpl:54805",
+      "sequence": 33,
+      "reviewed": true,
+      "notes": "Reviewed article-free directive instructions, signing layout and metadata."
+    },
+    {
+      "document_id": "vbpl:29189",
+      "sequence": 34,
+      "reviewed": true,
+      "notes": "Reviewed actual three-article decision despite sparse URL metadata."
+    },
+    {
+      "document_id": "vbpl:182596",
+      "sequence": 35,
+      "reviewed": true,
+      "notes": "Reviewed deep ordinance hierarchy (12 chapters, 13 sections, 73 articles) and additional Lệnh công bố tab."
+    },
+    {
+      "document_id": "vbpl:103901",
+      "sequence": 36,
+      "reviewed": true,
+      "notes": "Reviewed legacy directive lists and signing layout."
+    },
+    {
+      "document_id": "vbpl:832",
+      "sequence": 37,
+      "reviewed": true,
+      "notes": "Leading dashes are punctuation inside explicit article text, not sibling list markers."
+    },
+    {
+      "document_id": "vbpl:112825",
+      "sequence": 38,
+      "reviewed": true,
+      "notes": "Reviewed contribution/exemption hierarchy, source lists and paired metadata."
+    },
+    {
+      "document_id": "vbpl:e7f747c5f1112006a13c6812c061841d",
+      "sequence": 39,
+      "reviewed": true,
+      "notes": "Inspected translation with 131 articles and numeric/slash counters. RAW repeats Article 38 at orders 615/633 and clause 2 at 1938/1941; no renumbering is permitted."
+    },
+    {
+      "document_id": "vbpl:599bc3d0-9f70-11f1-804c-871db2d0ec68",
+      "sequence": 40,
+      "reviewed": true,
+      "notes": "Reviewed consolidated attached teaching regulation with independent source chapter/article scope."
+    },
+    {
+      "document_id": "vbpl:8050",
+      "sequence": 41,
+      "reviewed": true,
+      "notes": "Reviewed national resolution with six articles, 19 clauses and five points; source adoption statement remains prose."
+    },
+    {
+      "document_id": "vbpl:50591",
+      "sequence": 42,
+      "reviewed": true,
+      "notes": "Reviewed two-article decision and the actual source’s sparse hierarchy."
+    },
+    {
+      "document_id": "vbpl:24647",
+      "sequence": 43,
+      "reviewed": true,
+      "notes": "Reviewed seven article-free numbered instructions, alphabetic subdivisions and signing layout."
+    },
+    {
+      "document_id": "vbpl:10129",
+      "sequence": 44,
+      "reviewed": true,
+      "notes": "Reviewed four explicit chapters without source articles; their numeric instructions remain source-backed numbered paragraphs."
+    },
+    {
+      "document_id": "vbpl:01308b41e5d32d9b48780b7631d358ce",
+      "sequence": 45,
+      "reviewed": true,
+      "notes": "Reviewed 37 outer amendments plus two implementation clauses. RAW omits the closing quote before amendment 32; quoted counters are local and an incomplete_source_quotation diagnostic remains."
+    },
+    {
+      "document_id": "vbpl:28964",
+      "sequence": 46,
+      "reviewed": true,
+      "notes": "Reviewed short decision with paired letterhead, legal basis, two articles and closing signature."
+    },
+    {
+      "document_id": "vbpl:3919",
+      "sequence": 47,
+      "reviewed": true,
+      "notes": "Reviewed legacy salary directive. Its visibly truncated (Đã ký source marker is preserved exactly in a signing block."
+    },
+    {
+      "document_id": "vbpl:118286",
+      "sequence": 48,
+      "reviewed": true,
+      "notes": "Reviewed point a through d around child data table, explicit measurement-qualified headers, two-row assignment formula geometry, physical empty cells and nested dash/plus lists. Isolated dash lead-ins/continuations remain source-faithful paragraphs."
+    },
+    {
+      "document_id": "vbpl:7130",
+      "sequence": 49,
+      "reviewed": true,
+      "notes": "Reviewed article-free government resolution with five numbered instructions and signing block."
+    },
+    {
+      "document_id": "vbpl:105730",
+      "sequence": 50,
+      "reviewed": true,
+      "notes": "Reviewed six directive instructions and source KT/ authority delegation in its signing block."
+    }
+  ]
+}

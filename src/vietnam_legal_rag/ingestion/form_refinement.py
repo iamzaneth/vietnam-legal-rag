@@ -14,10 +14,11 @@ from .html_source import Node
 FORM_NUMBER = re.compile(r"^(?:Mẫu|Biểu|Phiếu)\s+(?:số\s*)?(\d+)(?=[\s.:)]|$)", re.I)
 NOTE_HEADING = re.compile(r"^(?:\*\s*)?(?:Ghi chú|Chú thích|Notes|Hướng dẫn|Lưu ý)\s*:?$", re.I)
 BIBLIOGRAPHY = re.compile(r"(?:DANH MỤC\s+)?TÀI LIỆU THAM KHẢO|^REFERENCES$", re.I)
-DIGIT = re.compile(r"^(\d+)[.)]\s+")
+DIGIT = re.compile(r"^(\d+)(?:[.)]\s+|[-/]\s+(?=[^\d\s]))")
 DECIMAL = re.compile(r"^\d+(?:\.\d+)+\.?\s+")
-ALPHA = re.compile(r"^([a-zđ])[.)]\s+", re.I)
+ALPHA = re.compile(r"^([a-zđ])[.)/]\s+", re.I)
 DASH = re.compile(r"^([-–—•])\s+")
+SYMBOL = re.compile(r"^([-–—•+])\s+(?=\S)")
 FOOTNOTE = re.compile(r"^(\d+)(?:\s+|[.)]\s+)\S")
 BLANK = re.compile(r"\.{3,}|…|_{3,}|\[\s*(?:\.\.\.|…|[^]]+)\]|\(\d+\)")
 INPUT = re.compile(r"^(?:Tên(?:\s+[^:]{1,65})?|Địa chỉ(?:\s+[^:]{1,65})?|Ngày|Người nộp|Đơn vị|Số(?: hiệu)?|Ký tên|Họ(?: và)? tên|Điện thoại|Fax|Email|Cơ quan|Tác giả|Nơi[^:]{0,40})\s*:", re.I)
@@ -38,7 +39,7 @@ def form_boundary(block, active=False):
         return {"number": block["text"][offsets[match.start(1)]:offsets[match.end(1)]], "end": offsets[match.end()], "evidence": "explicit_form_number"}
     # A displayed heading can start a standalone form only before any active
     # form. Within a numbered form it is a title, not a new boundary.
-    if not active and block.get("heading_evidence") and text.isupper() and re.match(r"^(?:PHIẾU|ĐƠN|BÁO CÁO|BIÊN BẢN)\b", text):
+    if not active and block.get("heading_evidence") and text.isupper() and re.match(r"^(?:PHIẾU|ĐƠN|BÁO CÁO|BIÊN BẢN|HỢP ĐỒNG)\b", text):
         return {"number": None, "end": 0, "evidence": "standalone_form_heading"}
     return None
 
@@ -47,8 +48,11 @@ def semantic_body(node, match, kind, *, number=False):
     """Split structural label/body without changing characters or source order."""
     original = node.get("text", "")
     tail = slice_unit(node, match.end())
-    result = {k: v for k, v in node.items() if k not in {"text", "annotations", "candidate_role", "confidence"}}
-    result.update(type=kind, label=original[:match.end()].rstrip(), text=tail["text"])
+    result = {k: v for k, v in node.items() if k not in {"text", "annotations", "children", "candidate_role", "confidence"}}
+    # Note lookahead may build lists it does not consume. Refinement must not
+    # mutate the source candidate's child array during that speculative scan.
+    result.update(type=kind, label=original[:match.end()].rstrip(), text=tail["text"],
+                  children=list(node.get("children", [])))
     result["number" if number else "marker"] = match[1]
     if tail.get("annotations"):
         result["annotations"] = tail["annotations"]
@@ -89,13 +93,133 @@ def marker(node, pattern):
     return pattern.match(node.get("text") or "") if node["type"] in TEXTUAL else None
 
 
-def group_runs(children, bibliography=False):
+def symbol_marker(node):
+    match = marker(node, SYMBOL)
+    # A sign followed only by numbers/operators is not a textual list item.
+    return match if match and any(c.isalpha() for c in node["text"][match.end():]) else None
+
+
+def same_flow(left, right):
+    from .legal_hierarchy import source_key
+    if source_key(left) >= source_key(right):
+        return False
+    return (left.get("_scope") == right.get("_scope") and
+            left.get("_source_layout") == right.get("_source_layout"))
+
+
+def topic_label(node, match):
+    """Bounded heading-like text, including topic labels ending in a period."""
+    body = scan(node["text"][match.end():]).strip()
+    return (len(body) <= 160 and len(body.split()) <= 24 and
+            not re.search(r"\b(?:phải|được|là|gồm|thực hiện|ghi|điền|must|shall|is|are)\b", body, re.I))
+
+
+def symbol_run(children, start):
+    """Find a source-contiguous run before assigning any form-field roles.
+
+    A dash starts a parent item; following plus markers are its sublist.
+    Unmarked paragraphs need a heading/lead-in AND a following compatible
+    marker. Adjacency alone cannot absorb the prose following a list.
+    """
+    first = symbol_marker(children[start])
+    if not first:
+        return start, []
+    root_marker, current, current_match = first[1], children[start], first
+    entries, marked, i = [], 0, start
+    while i < len(children):
+        node = children[i]
+        if i > start and not same_flow(children[i - 1], node):
+            break
+        match = symbol_marker(node)
+        if match:
+            if match[1] != root_marker and not (root_marker != "+" and match[1] == "+"):
+                break
+            entries.append((node, match)); marked += 1
+            current, current_match = node, match
+            i += 1; continue
+        if node.get("evidence") == "explicit_source_quotation" and current["text"].rstrip().endswith(":"):
+            entries.append((node, None)); i += 1; continue
+        # No semantic boundary, emphasis or another numbering scheme may be
+        # crossed while searching for a continuation's closing marker.
+        end = i
+        while end < len(children):
+            following = children[end]
+            if symbol_marker(following):
+                break
+            if (following["type"] != "paragraph" or following.get("heading_evidence") or
+                    re.match(r"^(?:\d+[.)]\s|\d+\.\d+|[a-zđ][.)]\s)", following.get("text") or "", re.I) or
+                    NOTE_HEADING.fullmatch(scan(following.get("text"))) or
+                    not same_flow(children[end - 1], following)):
+                break
+            end += 1
+        next_match = symbol_marker(children[end]) if end < len(children) else None
+        compatible = (next_match and same_flow(children[end - 1], children[end]) and
+                      (next_match[1] == root_marker or root_marker != "+" and next_match[1] == "+"))
+        nested = root_marker != "+" and (current_match[1] == "+" or next_match and next_match[1] == "+")
+        plus_topics = current_match[1] == "+" and next_match and next_match[1] == "+"
+        lead_in = current["text"].rstrip().endswith(":")
+        if end == i or not compatible or not (lead_in or (nested or plus_topics) and topic_label(current, current_match)):
+            break
+        entries.extend((n, None) for n in children[i:end])
+        i = end
+    return (i, entries) if marked >= 2 else (start, [])
+
+
+def symbol_list(entries, in_form=False):
+    first, first_match = entries[0]
+    listing = container("list", first)
+    listing.update(list_kind="unordered", style="plus" if first_match[1] == "+" else "dash", numbering={})
+    active, parent, sublist = None, None, None
+    for node, match in entries:
+        if not match:
+            active["children"].append(node)
+            continue
+        item = semantic_body(node, match, "list_item")
+        # Source-backed input prompts remain fields within a form's list item.
+        # Inline completion commentary remains display text, not a fake input.
+        classification = field_evidence(item["text"]) if in_form else None
+        if classification and classification[0] == "input":
+            field = slice_unit(node, match.end())
+            field.update(type="form_field", field_name=None, value_text=None,
+                         field_kind=classification[0], field_evidence=classification[1])
+            placeholders(field)
+            item.update(text=None, children=[field])
+            item.pop("references", None)
+            item.pop("annotations", None)
+        for key in ("field_name", "field_kind", "field_evidence", "value_text", "placeholder_refs"):
+            item.pop(key, None)
+        if first_match[1] != "+" and match[1] == "+":
+            if sublist is None:
+                sublist = container("list", node)
+                sublist.update(list_kind="unordered", style="plus", numbering={})
+                parent["children"].append(sublist)
+            sublist["children"].append(item)
+        else:
+            listing["children"].append(item)
+            parent, sublist = item, None
+        active = item
+    return listing
+
+
+def group_symbol_runs(children, in_form=False):
+    output, i = [], 0
+    while i < len(children):
+        end, entries = symbol_run(children, i)
+        if entries:
+            output.append(symbol_list(entries, in_form)); i = end
+        else:
+            output.append(children[i]); i += 1
+    return output
+
+
+def group_runs(children, bibliography=False, in_form=False):
+    children = group_symbol_runs(children, in_form)
     output, i = [], 0
     while i < len(children):
         node = children[i]
         if node["type"] not in {"paragraph", "heading", "unknown", "numbered_paragraph"}:
             output.append(node); i += 1; continue
-        for pattern, style in ((DIGIT, "digit"), (ALPHA, "alpha"), (DASH, "dash")):
+        for pattern, style in ((DIGIT, "digit"), (ALPHA, "alpha")):
             first = marker(node, pattern)
             if first:
                 break
@@ -156,7 +280,13 @@ def group_notes(children):
             grouped = group_runs(following)
             if grouped and grouped[0]["type"] == "list":
                 listing = grouped[0]
-                count = len(listing["children"])
+                # Nested lists/continuations consume more source siblings than
+                # the number of top-level list items.
+                from .legal_hierarchy import source_key
+                def end_key(item):
+                    return max([source_key(item)] + [end_key(c) for c in item.get("children", [])])
+                last = end_key(listing)
+                count = sum(source_key(n) <= last for n in following)
                 node["children"].append(listing); output.append(node); i = j + count; continue
         output.append(node); i += 1
     return output
@@ -185,11 +315,19 @@ def group_recipients(children):
     output, recipients, recipient = [], None, None
     for node in children:
         text = scan(node.get("text"))
-        if re.fullmatch(r"(?:Sao kính gửi|Đồng kính gửi|Nơi nhận)\s*:?", text, re.I):
+        if re.fullmatch(r"(?:Kính gửi|Sao kính gửi|Đồng kính gửi|Nơi nhận)\s*:?", text, re.I):
             recipients = {**node, "type": "recipients"}
             output.append(recipients); recipient = None
-        elif recipients and DASH.match(text) and node["type"] in TEXTUAL:
-            recipient = semantic_body(node, DASH.match(node["text"]), "recipient")
+        elif recipients and (prefix := re.match(r"^([-–—•])\s*(?=\S)", node.get("text") or "")) and node["type"] in TEXTUAL:
+            # Inline emphasis may join a dash and its body in effective text.
+            # Only an explicit recipient heading permits the tight marker;
+            # ordinary signed values/prose retain the whitespace requirement.
+            if prefix.end() == 1:
+                # Keep the tight source display intact: joining a separated
+                # label/body would insert a space into physical effective_text.
+                recipient = {**node, "type": "recipient", "marker": prefix[1]}
+            else:
+                recipient = semantic_body(node, prefix, "recipient")
             recipients["children"].append(recipient)
         elif recipients and recipient and node["type"] in TEXTUAL and text.startswith("("):
             recipient["children"].append(node)
@@ -249,9 +387,15 @@ def refine_subfields(children):
     return output
 
 
+def candidate_template_article(node):
+    from .legal_hierarchy import candidate
+    marker = candidate(node) if node["type"] in TEXTUAL else None
+    return marker and marker["explicit"] and marker["kind"] == "article" and node.get("heading_evidence")
+
+
 def refine_form(form):
     bibliography = bool(BIBLIOGRAPHY.search(scan(form.get("title"))))
-    children = group_recipients(group_notes(form["children"]))
+    children = group_symbol_runs(group_recipients(group_notes(form["children"])), in_form=True)
     output, header, signature = [], None, None
     title_phase, displayed = True, False
     for index, node in enumerate(children):
@@ -303,6 +447,9 @@ def refine_form(form):
                 node["semantic"] = "signed"
             signature["children"].append(node); continue
         signature = None
+        if form.get("boundary_evidence") == "standalone_form_heading" and candidate_template_article(node):
+            node.update(type="heading", evidence="explicit_article_heading_in_source_template")
+            output.append(node); continue
         if node["type"] in TEXTUAL and text and not NOTE_HEADING.fullmatch(normalized):
             if bibliography and DIGIT.match(text):
                 node["type"] = "paragraph"; node.pop("field_kind", None)
@@ -326,6 +473,9 @@ def refine_form(form):
                 elif node["type"] == "form_field":
                     node["type"] = "paragraph"; node.pop("field_kind", None)
         output.append(node)
+    if any(n.get("evidence") == "explicit_article_heading_in_source_template" for n in output):
+        from .quoted_content import scope_template_counters
+        output = scope_template_counters(output)
     form["children"] = group_runs(refine_subfields(output), bibliography=bibliography)
     if not form.get("title"):
         display = next((n for n in form["children"] if n["type"] == "form_title"), None)
@@ -340,7 +490,7 @@ def refine_cells(node, in_form=False):
         before = cell["effective_text"]
         content = cell.get("content", [])
         if content:
-            cell["content"] = group_runs(group_recipients(group_notes(content)))
+            cell["content"] = group_runs(group_recipients(group_notes(content)), in_form=in_form)
             for child in cell["content"]:
                 if in_form and child["type"] in TEXTUAL:
                     placeholders(child)
@@ -373,6 +523,17 @@ def refine_forms(document):
             refine_form(node)
         elif node["type"] not in {"note", "footnote_group"}:
             node["children"] = group_notes(node.get("children", []))
+        if node["type"] == "footnote":
+            # A source footnote may quote an amended provision without quote
+            # punctuation. Its counters stay local to the actual note scope.
+            from .legal_hierarchy import candidate
+            from .quoted_content import quotation
+            children = node.get("children", [])
+            start = next((i for i, child in enumerate(children)
+                          if (m := candidate(child)) and m["explicit"] and m["kind"] == "article"), None)
+            if start is not None and any((m := candidate(child)) and not m["explicit"]
+                                         and m["kind"] == "clause" for child in children[start + 1:]):
+                node["children"] = children[:start] + [quotation(children[start:], "source_footnote_provision_excerpt")]
         for child in node.get("children", []):
             visit(child)
     visit(document)
@@ -390,6 +551,24 @@ def navigation_artifacts(root, quality):
     index(root)
     excluded = set()
     for node in root.find():
+        if node.tag == "svg" and any("ant-empty-image" in p.attrs.get("class", "").split() for p in (parents.get(id(node)),) if p):
+            quality.ignore(node, "empty_state_interface_graphic")
+            excluded.add(node.dom_order)
+        if node.tag == "title" and not any(node in svg.find() for svg in root.find("svg")):
+            # Legacy fragments embed document metadata inside the preview body.
+            # A title element is browser metadata, not displayed legal text.
+            quality.ignore(node, "embedded_document_metadata")
+            excluded.add(node.dom_order)
+        # These controls annotate the rendered provision. Their buttons and
+        # icons are interface content, while the sibling legal text remains.
+        if node.tag == "button" and "ant-btn" in (node.attrs.get("class") or "").split():
+            parent = parents.get(id(node))
+            while parent:
+                if parent.attrs.get("data-provision-highlighted") == "true":
+                    quality.ignore(node, "navigation_artifact")
+                    excluded.add(node.dom_order)
+                    break
+                parent = parents.get(id(parent))
         text = node.text().strip()
         if text not in {"↩", "↑", "↓", "«", "»", "Trở về", "Quay lại"}:
             continue
