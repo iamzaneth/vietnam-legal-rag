@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import argparse
 from datetime import datetime, timezone
 import hashlib
 from html import escape
@@ -10,7 +9,6 @@ from html.parser import HTMLParser
 import json
 from pathlib import Path
 import re
-import sys
 import tempfile
 import time
 import unicodedata
@@ -48,7 +46,6 @@ def parse_sitemap(data: bytes) -> tuple[str, list[str]]:
 def is_document_url(url: str) -> bool:
     parsed = urlparse(url)
     return parsed.scheme == "https" and parsed.hostname == "vbpl.vn" and parsed.path.startswith(DOCUMENT_PATH)
-
 
 
 # Use the document breadcrumb, never navigation menus or mentions in its text.
@@ -260,7 +257,6 @@ def publish_capture(staged: Path, destination: Path) -> None:
         if had_previous:
             backup.rename(destination)
         raise
-
 
 
 TAB_LABELS = {
@@ -475,47 +471,39 @@ def capture_document(url: str, run_dir: Path, manifest: dict, channel: str, head
             browser.close()
 
 
+def crawl_one(output: Path, url: str | None = None, channel: str = 'chrome',
+              headed: bool = False, timeout: int = 60) -> Path:
+    """Capture one document using the existing discovery and publication contract."""
+    print("Đọc sitemap...", flush=True)
+    url, discovery = discover_one(url)
+    identifier = urlparse(url).path.rsplit("--", 1)[-1]
+    if not re.fullmatch(r"(?:[0-9a-fA-F-]{36}|\d+)", identifier):
+        identifier = hashlib.sha256(url.encode()).hexdigest()[:32]
+    manifest = {"source": "vbpl.vn", "document_id": f"vbpl:{identifier}",
+                "retrieved_at": datetime.now(timezone.utc).isoformat(), "discovery": discovery}
+    output.mkdir(parents=True, exist_ok=True)
+    print(f"Văn bản duy nhất: {url}", flush=True)
+    # Failed attempts leave no partial document folder. A previous successful
+    # result remains intact until the replacement is fully downloaded.
+    with tempfile.TemporaryDirectory(prefix=".crawl-", dir=output) as temporary:
+        staged = Path(temporary) / "document"
+        staged.mkdir()
+        capture_document(url, staged, manifest, channel, headed, timeout * 1000)
+        scope = manifest.get("document_scope")
+        if scope not in DOCUMENT_SCOPES.values():
+            raise CrawlError("Kết quả crawl thiếu nhóm trung ương/địa phương hợp lệ")
+        destination = output / scope / identifier
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        manifest.update({"status": "complete", "completed_at": datetime.now(timezone.utc).isoformat()})
+        write_json(staged / "manifest.json", manifest)
+        publish_capture(staged, destination)
+    return destination
+
+
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Crawl mọi tab văn bản vbpl.vn, trừ Tải về và Văn bản gốc")
-    parser.add_argument("--output", type=Path, default=Path("data/raw/vbpl"))
-    parser.add_argument("--url", help="URL có trong sitemap (mặc định chọn văn bản đầu tiên)")
-    parser.add_argument("--channel", default="chrome", help="chrome (đã cài) hoặc chromium (Playwright)")
-    parser.add_argument("--headed", action="store_true", help="Hiển thị cửa sổ trình duyệt")
-    parser.add_argument("--timeout", type=int, default=60, help="Thời gian chờ mỗi bước, tính bằng giây")
-    args = parser.parse_args(argv)
-    if args.url and not is_document_url(args.url):
-        parser.error("--url phải là URL https://vbpl.vn/van-ban/chi-tiet/...")
-    if args.timeout <= 0:
-        parser.error("--timeout phải lớn hơn 0")
-    try:
-        print("Đọc sitemap...", flush=True)
-        url, discovery = discover_one(args.url)
-        identifier = urlparse(url).path.rsplit("--", 1)[-1]
-        if not re.fullmatch(r"(?:[0-9a-fA-F-]{36}|\d+)", identifier):
-            identifier = hashlib.sha256(url.encode()).hexdigest()[:32]
-        manifest = {"source": "vbpl.vn", "document_id": f"vbpl:{identifier}",
-                    "retrieved_at": datetime.now(timezone.utc).isoformat(), "discovery": discovery}
-        args.output.mkdir(parents=True, exist_ok=True)
-        print(f"Văn bản duy nhất: {url}", flush=True)
-        # Failed attempts leave no partial document folder. A previous successful
-        # result remains intact until the replacement is fully downloaded.
-        with tempfile.TemporaryDirectory(prefix=".crawl-", dir=args.output) as temporary:
-            staged = Path(temporary) / "document"
-            staged.mkdir()
-            capture_document(url, staged, manifest, args.channel, args.headed, args.timeout * 1000)
-            scope = manifest.get("document_scope")
-            if scope not in DOCUMENT_SCOPES.values():
-                raise CrawlError("Kết quả crawl thiếu nhóm trung ương/địa phương hợp lệ")
-            destination = args.output / scope / identifier
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            manifest.update({"status": "complete", "completed_at": datetime.now(timezone.utc).isoformat()})
-            write_json(staged / "manifest.json", manifest)
-            publish_capture(staged, destination)
-        print(f"Kết quả: {destination}", flush=True)
-        return 0
-    except Exception as exc:
-        print(f"{type(exc).__name__}: {exc}", file=sys.stderr)
-        return 1
+    """Compatibility adapter; CLI ownership is in vietnam_legal_rag.cli.crawl."""
+    from vietnam_legal_rag.cli.crawl import main as cli_main
+    return cli_main(argv)
 
 
 if __name__ == "__main__":

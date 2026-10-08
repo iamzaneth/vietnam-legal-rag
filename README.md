@@ -10,7 +10,9 @@ vietnam-legal-rag/
 ├── src/vietnam_legal_rag/       # Mã nguồn Python
 │   ├── api/                    # API hội thoại, tra cứu và kiểm tra trạng thái
 │   ├── core/                   # Cấu hình ứng dụng, logging và kiểu dữ liệu dùng chung
-│   ├── ingestion/              # Thu thập, đọc tài liệu và lưu thông tin nguồn
+│   ├── cli/                    # CLI argparse thống nhất: vlr / python -m
+│   ├── evaluation/             # Sampling, validation runs, audit và báo cáo
+│   ├── ingestion/              # Crawl/extract; html, semantics, refinement, validation
 │   ├── preprocessing/          # Chuẩn hóa, tách điều/khoản/điểm và chia đoạn
 │   ├── indexing/               # Tạo embedding và cập nhật chỉ mục tìm kiếm
 │   ├── retrieval/              # Tìm kiếm, lọc metadata và xếp hạng lại kết quả
@@ -31,10 +33,11 @@ vietnam-legal-rag/
 │   ├── datasets/              # Bộ câu hỏi, đáp án tham chiếu và trích dẫn kỳ vọng
 │   └── results/               # Kết quả đánh giá từng lần chạy
 ├── tests/
-│   ├── unit/                  # Kiểm thử từng thành phần
+│   ├── unit/                  # Ingestion, evaluation và CLI theo trách nhiệm
+│   ├── regression/            # Batch-50, mẫu nguồn và golden RAW
 │   ├── integration/           # Kiểm thử phối hợp các thành phần và dịch vụ
 │   └── fixtures/              # Dữ liệu giả lập, nhỏ và cố định cho kiểm thử
-├── scripts/                   # Điểm chạy các tác vụ thu thập, lập chỉ mục, đánh giá
+├── scripts/                   # Thin compatibility wrappers cho lệnh cũ
 ├── notebooks/                 # Thử nghiệm và khám phá dữ liệu
 ├── docs/
 │   ├── architecture.md        # Luồng xử lý và trách nhiệm các thành phần
@@ -85,12 +88,16 @@ Bước extract đọc lại HTML trên đĩa
 
 ```bash
 uv pip install --python .venv/bin/python -e '.[crawl]'
-.venv/bin/vbpl-crawl-one
-.venv/bin/vbpl-extract
+.venv/bin/vlr crawl
+.venv/bin/vlr extract
 ```
 
 Module crawler: `src/vietnam_legal_rag/ingestion/crawl_legal_documents.py`.
 Module extractor: `src/vietnam_legal_rag/ingestion/extract_legal_documents.py`.
+CLI thống nhất: `vlr crawl`, `vlr extract`, `vlr validate`,
+`vlr audit schema`, `vlr audit hierarchy`, `vlr compare`.
+Có thể dùng `.venv/bin/python -m vietnam_legal_rag.cli` thay cho `vlr`.
+Hai lệnh cũ `vbpl-crawl-one`, `vbpl-extract` vẫn tương thích.
 Raw giữ `vbpl/<trung_uong|dia_phuong>/<mã văn bản>/`;
 extracted giữ `vbpl/<mã văn bản>/`.
 Crawler phân loại theo breadcrumb của nguồn; hỗ trợ cả tab Các văn bản hợp nhất. `raw` chỉ chứa HTML và manifest,
@@ -109,8 +116,9 @@ Xem [schema extracted](docs/extracted-schema.md) và [kết quả hierarchy mẫ
 Contract V2.3.2 và đối chiếu actual JSON: [báo cáo freeze](docs/extract-v2.3.2-form-invariant-audit.md).
 Kết quả kiểm tra V2.3 và delta từ V2.2: [báo cáo form semantics](docs/extract-v2.3-report.md).
 Đợt kiểm tra 50 văn bản (25 Trung ương, 25 Địa phương):
-[báo cáo batch](reports/extract-validation-50.md). Cả 50 giữ đúng schema,
+[báo cáo batch](reports/extract-validation-50/report.md). Cả 50 giữ đúng schema,
 determinism và text fidelity; 9 văn bản còn cảnh báo nguồn được ghi rõ trong báo cáo.
+Lệnh kiểm tra offline và cách giữ baseline: [validation workflow](docs/extract-validation-workflow.md).
 Chạy lại sẽ cập nhật thư mục văn bản sau khi bước tương ứng thành công.
 `normalized` và `chunks` hiện chỉ là thư mục dành sẵn.
 Xem [hướng dẫn crawler](docs/vbpl-crawl.md) để cài Chromium, chọn URL và kiểm thử.
@@ -124,3 +132,9 @@ Xem [hướng dẫn crawler](docs/vbpl-crawl.md) để cài Chromium, chọn URL
 - Giữ thông tin nguồn và phiên bản xuyên suốt quá trình xử lý để truy ngược mỗi trích dẫn.
 - Xem [kiến trúc](docs/architecture.md) và [quy ước dữ liệu](docs/data-conventions.md)
   trước khi triển khai pipeline.
+
+Bố cục module và kiểm thử: [Python layout](docs/python-layout.md). Chạy toàn bộ:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests -t . -v
+```

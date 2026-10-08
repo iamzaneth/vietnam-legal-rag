@@ -42,17 +42,24 @@ nêu giới hạn đó. Không mặc định văn bản mới thu thập là vă
 ## Ranh giới mã nguồn
 
 - `core`: cấu hình, logging và kiểu dữ liệu dùng chung; tránh gom logic nghiệp vụ vào đây.
-- `scripts`: điểm chạy tác vụ; không sao chép logic của package.
+- `src/vietnam_legal_rag/ingestion`: crawl/extract orchestration; subpackages `html`, `semantics`, `refinement`, `validation` giữ các trách nhiệm độc lập.
+- `src/vietnam_legal_rag/cli`: argparse và điều phối lệnh `vlr`; không giữ quy tắc parser/audit.
+- `src/vietnam_legal_rag/evaluation`: cấu hình run, sampling, audit độc lập và báo cáo; không phụ thuộc script.
+- `scripts`: thin compatibility wrappers; logic chính nằm trong package. `pyproject.toml` khai báo console entrypoints.
 - `frontend`: giao tiếp với backend qua API; không giữ khóa API của nhà cung cấp LLM.
 - `prompts`: mẫu prompt được đánh phiên bản cùng mã nguồn.
 - `configs`: tham số xử lý và truy xuất có thể kiểm tra lại khi đánh giá.
 
 ## Kiểm tra chất lượng
 
-- `tests/unit`: kiểm tra chuẩn hóa, tách đoạn, lọc metadata và định dạng trích dẫn.
+- `tests/unit`: kiểm tra ingestion, evaluation và CLI theo bố cục package.
+- `tests/regression`: kiểm tra mẫu nguồn, corpus batch-50 và golden RAW.
+- `tests/support.py`: fixture giả lập và đường dẫn gốc dùng chung.
 - `tests/integration`: kiểm tra lập chỉ mục, truy xuất và luồng API với dịch vụ phụ thuộc.
 - `evaluation/datasets`: bộ câu hỏi và nguồn tham chiếu đã rà soát.
 - `evaluation/results`: lưu kết quả kèm phiên bản dữ liệu, mã nguồn, prompt và mô hình.
 
-Các thư mục hiện là vị trí dành sẵn. Chỉ bổ sung thư viện và dịch vụ khi triển khai
+Các thư mục của những giai đoạn chưa triển khai vẫn là vị trí dành sẵn. Chỉ bổ sung thư viện và dịch vụ khi triển khai
 thành phần tương ứng.
+
+Chi tiết module và các đường dẫn đã chuyển: [Python layout](python-layout.md).

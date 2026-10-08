@@ -133,16 +133,16 @@ meaningful_text_preserved compares source_text_sha256 and extracted_text_sha256 
 The formal JSON Schema validates content, properties, history, relations and manifests, with node-type conditionals, required legal numbers, source provenance, scalar absence, field_kind/table_kind enums and explicit rejection of obsolete fields. Safe source-faithful fallback types remain representable.
 
 ```bash
-PYTHONPATH=src .venv/bin/python -m unittest discover -s tests/unit
+PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t .
 PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.ingestion.extract_legal_documents --debug-tree
-PYTHONPATH=src .venv/bin/python scripts/audit_extract_schema.py --raw data/raw/vbpl --extracted data/extracted/vbpl --before /path/to/pre-hotfix/v2.3.2/extracted --report docs/extract-v2.3.2-form-invariant-audit.json
+PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.cli audit schema --raw data/raw/vbpl --extracted data/extracted/vbpl --before /path/to/pre-hotfix/v2.3.2/extracted --report docs/extract-v2.3.2-form-invariant-audit.json
 ```
 
 The freeze audit includes every available representative capture: simple Decision, Decree with annexes, technical Circular with a matrix, Circular with forms/decimal annex numbering, and Resolution. Passing tests alone is insufficient; generated JSON, fallback paragraphs, form boundaries, node/property vocabularies and metadata/table regressions are inspected independently.
 
 ## Broader source validation within V2.3.2
 
-The [50-document batch report](../reports/extract-validation-50.md) records five interleaved Central/Local waves, generic parser repairs, source evidence, regression membership and final diagnostics. The schema and parser version remain 2.3.2: all observed structures fit the existing contract.
+The [50-document batch report](../reports/extract-validation-50/report.md) records five interleaved Central/Local waves, generic parser repairs, source evidence, regression membership and final diagnostics. The schema and parser version remain 2.3.2: all observed structures fit the existing contract.
 
 Explicit English legal labels and legacy spaced hyphen/slash counters use the same legal hierarchy as their Vietnamese counterparts. Quoted replacement provisions, contract articles and Roman/alphabetic local outlines keep their own counter scope. An attached legal act can retain intermediate signing and letterhead blocks in the canonical body without duplicating root document sections. Annex counters and nested lists stay within their source annex/form scope.
 
@@ -153,10 +153,10 @@ The final batch has schema_valid, deterministic and meaningful_text_preserved at
 Reproduce validation from the retained local RAW captures:
 
 ```bash
-.venv/bin/python scripts/run_extract_validation_50.py --help
-.venv/bin/python scripts/run_extract_validation_50.py audit --regenerate
-.venv/bin/python -m unittest discover -s tests/unit -q
-.venv/bin/python scripts/write_extract_validation_50_report.py
+.venv/bin/python -m vietnam_legal_rag.cli validate --help
+.venv/bin/python -m vietnam_legal_rag.cli validate audit --regenerate
+.venv/bin/python -m unittest discover -s tests -t . -q
+.venv/bin/python -m vietnam_legal_rag.cli validate report --output-dir reports/extract-validation-50/runtime/rebuilt
 ```
 
 The batch audit exits nonzero when source warnings remain; review the diagnostics rather than treating command success as semantic acceptance. Capture regressions reference immutable local RAW by identity and hash, while portable pattern tests run without those captures. The crawler's existing HTML-only policy excludes Tải về and Văn bản gốc; attachment validation is outside this recorded batch.

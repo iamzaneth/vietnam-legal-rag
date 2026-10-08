@@ -14,11 +14,13 @@ dependencies = ["jsonschema>=4.18,<5"]
 crawl = ["playwright>=1.51,<2"]
 
 [project.scripts]
-vbpl-crawl-one = "vietnam_legal_rag.ingestion.crawl_legal_documents:main"
-vbpl-extract = "vietnam_legal_rag.ingestion.extract_legal_documents:main"
+vlr = "vietnam_legal_rag.cli.__main__:main"
+vbpl-crawl-one = "vietnam_legal_rag.cli.crawl:main"
+vbpl-extract = "vietnam_legal_rag.cli.extract:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 "vietnam_legal_rag.ingestion" = ["schemas/*.json"]
+"vietnam_legal_rag.evaluation" = ["golden_invariants.json"]

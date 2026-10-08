@@ -97,7 +97,7 @@ Bảng matrix giữ compound labels và orientation unknown vì nguồn không k
 20 tab bảo toàn text và deterministic. Properties/history/relations giữ source records, URL, identifier, ngày, số hiệu và provenance so với baseline. Table kind/grid/raw cell text/text_segments/effective_text và legal/annex counts giữ nguyên.
 
 ```bash
-PYTHONPATH=src .venv/bin/python -m unittest discover -s tests/unit
+PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t .
 PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.ingestion.extract_legal_documents --debug-tree
 PYTHONPATH=src .venv/bin/python scripts/audit_vbpl_hierarchy.py --raw data/raw/vbpl --extracted data/extracted/vbpl --sample 0c389a00-78f6-11f1-a726-87c913cf8f30 --report docs/extract-hierarchy.json
 ```

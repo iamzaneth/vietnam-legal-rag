@@ -149,7 +149,7 @@ Crawler hỗ trợ trang `/van-ban/chi-tiet/` có tab Nội dung và toàn văn 
 Website có thể trả 403 hoặc timeout; crawler báo lỗi và trả exit code 1.
 
 ```bash
-PYTHONPATH=src .venv/bin/python -m unittest discover -s tests/unit -v
+PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t . -v
 ```
 
 Kiểm thử bao gồm phân loại, chọn tab động và hai tab bị loại, crawl chỉ lưu HTML,

@@ -1,7 +1,6 @@
 """Deterministic HTML → semantic JSON; raw is the only HTML source of truth."""
 from __future__ import annotations
 
-import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -10,12 +9,12 @@ import sys
 import tempfile
 
 from .crawl_legal_documents import CrawlError, TAB_LABELS, file_record, is_excluded_tab, publish_capture, write_json
-from .extract_quality import Quality, issue_summary, status
-from .extract_validation import schema_validator, semantic_count, validate_result
-from .html_source import parse_html
-from .legal_hierarchy import strip_private
-from .structured_html import PARSER_VERSION, SCHEMA_VERSION, parse_content
-from .vbpl_tabs import extract_tab_data
+from vietnam_legal_rag.ingestion.validation.quality import Quality, issue_summary, status
+from vietnam_legal_rag.ingestion.validation.extract import schema_validator, semantic_count, validate_result
+from vietnam_legal_rag.ingestion.html.source import parse_html
+from vietnam_legal_rag.ingestion.semantics.hierarchy import strip_private
+from vietnam_legal_rag.ingestion.html.structure import PARSER_VERSION, SCHEMA_VERSION, parse_content
+from vietnam_legal_rag.ingestion.semantics.vbpl import extract_tab_data
 
 
 class ExtractionError(CrawlError):
@@ -51,7 +50,7 @@ def parse_source(html, key, label, source_url, document_id, source_ref):
         root = parse_html(html)
         result.update(parse_content(root, source_url, quality) if key == "content" else
                       extract_tab_data(root, key, source_url, quality))
-        from .schema_cleanup import clean_contract
+        from vietnam_legal_rag.ingestion.refinement.schema import clean_contract
         clean_contract(result, root)
         strip_private(result)
         result["validation"] = quality.conservation(root, result)
@@ -169,32 +168,28 @@ def extract_document(raw_dir: Path, destination: Path) -> dict:
         return extracted_manifest
 
 
-def main(argv=None):
-    parser = argparse.ArgumentParser(description="Extract semantic JSON từ HTML raw; không truy cập mạng")
-    parser.add_argument("--input", type=Path, default=Path("data/raw/vbpl"))
-    parser.add_argument("--output", type=Path, default=Path("data/extracted/vbpl"))
-    parser.add_argument("--debug-tree", action="store_true", help="In cây semantic ra console để audit; không lưu TXT")
-    args = parser.parse_args(argv)
-    raw_root, output_root = args.input.resolve(), args.output.resolve()
-    if raw_root == output_root or raw_root in output_root.parents or output_root in raw_root.parents:
-        parser.error("--input và --output phải là hai cây thư mục riêng biệt")
-    manifests = ([args.input / "manifest.json"] if (args.input / "manifest.json").is_file()
-                 else sorted(args.input.rglob("manifest.json")))
+def extract_corpus(input_root: Path, output_root: Path, debug_tree: bool = False) -> int:
+    """Extract selected RAW directories offline with the existing CLI workflow."""
+    raw_root, resolved_output = input_root.resolve(), output_root.resolve()
+    if raw_root == resolved_output or raw_root in resolved_output.parents or resolved_output in raw_root.parents:
+        raise ValueError("--input và --output phải là hai cây thư mục riêng biệt")
+    manifests = ([input_root / "manifest.json"] if (input_root / "manifest.json").is_file()
+                 else sorted(input_root.rglob("manifest.json")))
     if not manifests:
-        parser.error("Không tìm thấy raw manifest.json")
+        raise ValueError("Không tìm thấy raw manifest.json")
     failed = False
-    destinations = [args.output / manifest.parent.name for manifest in manifests]
+    destinations = [output_root / manifest.parent.name for manifest in manifests]
     if len(set(destinations)) != len(destinations):
-        parser.error("Trùng document directory giữa các manifest raw")
+        raise ValueError("Trùng document directory giữa các manifest raw")
     for manifest in manifests:
         raw_dir = manifest.parent
-        target = args.output / raw_dir.name
+        target = output_root / raw_dir.name
         try:
             result = extract_document(raw_dir, target)
             failed |= result["status"] == "failed"
             print(f"{raw_dir.name}: {result['status']}; {result['issue_summary']}")
-            if args.debug_tree:
-                from .hierarchy_validation import format_hierarchy
+            if debug_tree:
+                from vietnam_legal_rag.ingestion.validation.hierarchy import format_hierarchy
                 content = json.loads((target / "content.json").read_text())
                 if content.get("document"):
                     print(format_hierarchy(content["document"]))
@@ -206,6 +201,12 @@ def main(argv=None):
             failed = True
             print(f"{raw_dir.name}: {exc}", file=sys.stderr)
     return int(failed)
+
+
+def main(argv=None):
+    """Compatibility adapter for the former ingestion-module CLI."""
+    from vietnam_legal_rag.cli.extract import main as cli_main
+    return cli_main(argv)
 
 
 if __name__ == "__main__":

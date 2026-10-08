@@ -74,7 +74,7 @@ nested tables/lists, superscript/subscript offsets và byte determinism.
 
 ```bash
 .venv/bin/vbpl-extract
-PYTHONPATH=src .venv/bin/python -m unittest discover -s tests/unit
+PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t .
 .venv/bin/python scripts/compare_vbpl_extract.py \
   --before /tmp/vbpl-extract-before-v2/extracted/vbpl \
   --after data/extracted/vbpl \
