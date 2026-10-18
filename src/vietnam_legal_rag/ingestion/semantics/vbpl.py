@@ -245,6 +245,12 @@ def extract_tab_data(root, key, source_url, quality):
             text = item.text(blocks=True)
             if not text:
                 continue
+            hidden = re.fullmatch(r'\+\s*(\d+)\s+văn bản bị ẩn', text, re.I)
+            if hidden:
+                quality.add('source_hidden_document_references',
+                            'Source shows a collapsed document counter; only visible records are available in this capture',
+                            item.ref, details={'source_hidden_count': int(hidden.group(1))})
+                continue  # Retain the counter in context, without inventing document records.
             if item.find("table") or item.find("ol") or item.find("ul"):
                 quality.add("ambiguous_consolidated_card", "Complex card retained as semantic content; no flattened document record", item.ref)
                 continue

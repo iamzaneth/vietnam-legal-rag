@@ -1,7 +1,7 @@
 """Validate document structure and provenance without repairing extracted facts."""
 from __future__ import annotations
 
-from vietnam_legal_rag.ingestion.semantics.hierarchy import LEVELS, source_key
+from vietnam_legal_rag.ingestion.semantics.hierarchy import LEVELS, SOURCE_SCOPE_BOUNDARIES, source_key
 
 COUNTERS = {"part": "parts", "chapter": "chapters", "section": "sections", "subsection": "subsections",
             "article": "articles", "clause": "clauses", "point": "points"}
@@ -55,6 +55,8 @@ def validate_hierarchy(document, quality, text_preserved=True):
         if title_spans and any(node["title"][a["end"]:b["start"]].strip() for a, b in zip(title_spans, title_spans[1:])):
             error("invalid_provenance", "Merged title has meaningful text without a source span", node)
         legal_parents = [a for a in ancestors if a["type"] in LEVELS]
+        if node.get('evidence') in SOURCE_SCOPE_BOUNDARIES:
+            body_events.append((key, node, legal_parents, list_scope))
         if kind in LEVELS:
             counts["legal_hierarchy"][COUNTERS[kind]] += 1
             legal_positions.append(key)
@@ -146,6 +148,9 @@ def validate_hierarchy(document, quality, text_preserved=True):
         error("invalid_order", "Legal hierarchy traversal differs from source order", document)
     stack = []
     for _, node, legal_parents, scope in sorted(body_events, key=lambda e: e[0]):
+        if node.get('evidence') in SOURCE_SCOPE_BOUNDARIES:
+            stack = []
+            continue
         # A legal list item stops being active when traversal leaves its list.
         stack = [(n, s) for n, s in stack if scope[:len(s)] == s]
         if node["type"] in LEVELS:

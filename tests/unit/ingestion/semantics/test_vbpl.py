@@ -4,6 +4,40 @@ from tests.support import metadata_tab as tab
 
 
 class MetadataTests(unittest.TestCase):
+    def test_uppercase_suffix_document_number_is_exact_unlinked_candidate(self):
+        result = tab('<div class="ant-card-body"><span>Sửa đổi (1)</span><ul><li>'
+                     'Quyết định số 02A/2016/QĐ-UBND ban hành quy chế; căn cứ 03B/2015/QĐ-UBND'
+                     '</li></ul></div>', 'relations')
+        item = result['groups'][0]['items'][0]
+        self.assertEqual(item['primary_document_number_candidate'], '02A/2016/QĐ-UBND')
+        self.assertEqual(item['mentioned_document_numbers'], ['03B/2015/QĐ-UBND'])
+        self.assertEqual(item['resolution_status'], 'candidate_only')
+        self.assertIsNone(item['url'])
+        self.assertTrue(result['validation']['meaningful_text_preserved'])
+
+    def test_malformed_year_and_unqualified_alpha_amount_are_not_identifiers(self):
+        from vietnam_legal_rag.ingestion.html.structure import document_numbers
+        self.assertEqual(document_numbers('47/20118/QĐ-UBND; 02A đơn vị; 03B/2015'), [])
+
+    def test_consolidated_hidden_counter_is_context_without_invented_documents(self):
+        result = tab('<button>Văn bản hợp nhất số 01/VBHN-BTC</button>'
+                     '<button><div>+ 7 văn bản bị ẩn</div></button>'
+                     '<button>Luật sửa đổi một số điều</button>', 'consolidated')
+        self.assertEqual(len(result['items']), 2)
+        self.assertEqual(result['items'][1]['resolution_status'], 'unidentified')
+        self.assertTrue(any(n.get('text') == '+ 7 văn bản bị ẩn' for n in result['context']))
+        self.assertTrue(result['validation']['meaningful_text_preserved'])
+        warnings = [i for i in result['issues'] if i['code'] == 'source_hidden_document_references']
+        self.assertEqual(len(warnings), 1)
+        self.assertEqual(warnings[0]['details']['source_hidden_count'], 7)
+        self.assertEqual(len([i for i in result['issues'] if i['code'] == 'unresolved_document_reference']), 1)
+
+    def test_consolidated_document_title_mentioning_hidden_text_is_not_ui(self):
+        result = tab('<button>Quyết định 01/QĐ-BTC về văn bản bị ẩn trong lưu trữ</button>', 'consolidated')
+        self.assertEqual(len(result['items']), 1)
+        self.assertFalse(any(i['code'] == 'source_hidden_document_references' for i in result['issues']))
+        self.assertTrue(result['validation']['meaningful_text_preserved'])
+
     def test_properties_duplicate_labels_unknown_fields_and_dates_stay_raw(self):
         html = '<div class="ant-descriptions-item-container"><span class="ant-descriptions-item-label">Số hiệu</span><span class="ant-descriptions-item-content">16111/QĐ-BCT</span></div>'
         html += html + '<div class="ant-descriptions-item-container"><span class="ant-descriptions-item-label">Ngày ban hành</span><span class="ant-descriptions-item-content">01/07/2026</span></div>'

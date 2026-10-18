@@ -128,6 +128,39 @@ class LegalStructureTests(unittest.TestCase):
 
 
 class TableGeometryTests(unittest.TestCase):
+    def test_source_cell_lookups_do_not_rescan_the_table_per_cell(self):
+        from unittest.mock import patch
+        from vietnam_legal_rag.ingestion.html.source import Node
+        original = Node.find
+        scans = []
+
+        def counted(node, *args, **kwargs):
+            if node.tag == 'table':
+                scans.append(node.dom_order)
+            return original(node, *args, **kwargs)
+
+        html = ('<table><tr><th scope="col">Mã</th><th scope="col">Nội dung</th></tr>' +
+                ''.join(f'<tr><td>{i}</td><td>Dữ liệu &amp; dòng {i}</td></tr>' for i in range(80)) +
+                '</table>')
+        with patch.object(Node, 'find', counted):
+            result = parse(html)
+        t = body(result)[0]
+        self.assertTrue(result['validation']['meaningful_text_preserved'])
+        self.assertEqual(t['grid_shape'], {'rows': 81, 'columns': 2})
+        self.assertEqual(cell(t, 80, 1)['effective_text'], 'Dữ liệu & dòng 79')
+        self.assertEqual(cell(t, 80, 1)['header_refs']['column'], [cell(t, 0, 1)['cell_id']])
+        self.assertLessEqual(len(scans), 20)
+
+    def test_sparse_bold_code_row_does_not_extend_implicit_column_headers(self):
+        t = table('<table><tr><td><b>Mã nhóm</b></td><td><b>Mã phân nhóm</b></td>'
+                  '<td><b>Tên</b></td></tr><tr><td><b>A</b></td><td></td>'
+                  '<td><b>Dịch vụ</b></td></tr><tr><td></td><td>01</td><td>Nhóm đầu</td></tr></table>')
+        self.assertEqual(cell(t, 1, 0)['cell_type'], 'data')
+        self.assertEqual(cell(t, 1, 2)['cell_type'], 'data')
+        self.assertEqual(len(t['semantics']['column_headers']), 3)
+        self.assertEqual(cell(t, 2, 1)['text'], '01')
+        self.assertEqual(cell(t, 2, 1)['header_refs']['column'], [cell(t, 0, 1)['cell_id']])
+
     def test_layout_heading_and_closing_tables_have_only_info_issues(self):
         for html, kind in (('<table><tr><td>BỘ CÔNG THƯƠNG<br>Số: 01/QĐ-BCT</td><td>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</td></tr></table>', 'header'),
                            ('<table><tr><td>Nơi nhận:<p>- Lưu VT</p></td><td>KT. BỘ TRƯỞNG<p>THỨ TRƯỞNG</p></td></tr></table>', 'closing')):

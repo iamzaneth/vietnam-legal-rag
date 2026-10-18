@@ -8,14 +8,14 @@ from __future__ import annotations
 import re
 from vietnam_legal_rag.ingestion.validation.extract import walk
 
-from vietnam_legal_rag.ingestion.semantics.hierarchy import (DOCUMENT_TYPES, LEVELS, TEXT_TYPES, candidate,
+from vietnam_legal_rag.ingestion.semantics.hierarchy import (ATTACHMENT_NOTE, DOCUMENT_TYPES, LEVELS, ROMAN_COUNTER, TEXT_TYPES, candidate,
                               legal_node, normalized_scan, opening_role, closing_role,
                               is_formula, short_heading, slice_unit, source_key)
 from vietnam_legal_rag.ingestion.semantics.tables import FORM_HEADING, PLACEHOLDER, refine_table_context
 
 NUMBER = re.compile(r"^(\d+(?:\.\d+)*)([.)]?)(?=\s|$)\s*")
-ROMAN = re.compile(r"M{0,3}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})$", re.I)
-NOTE = re.compile(r"^\(?\s*(?:Ban hành kèm theo|Kèm theo)\b", re.I)
+ROMAN = ROMAN_COUNTER
+NOTE = ATTACHMENT_NOTE
 FIELD = re.compile(r"^(?:\d+[.)]?\s+)?(?:Tên (?:cơ quan|đơn vị|tổ chức|báo cáo)|Địa chỉ|Điện thoại|Email|Số hiệu|Tọa độ|Tác giả)\b", re.I)
 
 
@@ -24,15 +24,17 @@ def annex_candidate(block):
         return None
     text = block.get("text", "")
     scan, offsets = normalized_scan(text)
-    start = re.match(r"^Phụ\s+lục(?=\s|$)", scan, re.I)
+    start = re.match(r"^(?:Phụ\s+(?:lục|biểu)|Appendix|Annex)(?=\s|:|\[\d+\]|$)", scan, re.I)
     if not start:
         return None
-    rest = scan[start.end():]
+    keyword_references = re.match(r'(?:\[\d+\])+', scan[start.end():])
+    prefix_end = start.end() + (keyword_references.end() if keyword_references else 0)
+    rest = scan[prefix_end:]
     if re.match(r"\s*(?:này|kèm theo tài liệu|của|được|tại)\b", rest, re.I):
         return None
-    numbered = re.match(r"\s+(?:số\s+)?(\d+|[IVXLCDM]+|[A-ZĐ])(?=[\s.:)]|$)", rest, re.I)
+    numbered = re.match(r"\s+(?:số\s+)?(\d+|[IVXLCDM]+|[A-ZĐ])(?=[\s.:()]|\[\d+\]|$)", rest, re.I)
     if numbered:
-        end = start.end() + numbered.end()
+        end = prefix_end + numbered.end()
         number = numbered[1]
         if number.isalpha() and len(number) > 1:
             while number and not ROMAN.fullmatch(number):
@@ -42,15 +44,19 @@ def annex_candidate(block):
                 return None
         if scan[end:].startswith(".") and re.match(r"\.{2,}|…", scan[end:]):
             return None  # A blank 'PHỤ LỤC SỐ....' on a cover is not an annex boundary.
+        number_end = end
+        reference_marker = re.match(r'(?:\[\d+\])+', scan[end:])
+        if reference_marker:
+            end += reference_marker.end()
         remainder = scan[end:]
-        if not remainder.startswith("\n") and re.match(r"\s+(?:của|này|được|tại)\b", remainder, re.I):
+        if not remainder.startswith("\n") and re.match(r"\s+(?:của|này|được|tại|cho biết|quy định|nêu|minh họa|chỉ ra|thể hiện|mô tả|liệt kê)\b", remainder, re.I):
             return None  # A leading appendix citation in prose is not a boundary.
-        return {"number": text[offsets[end - len(number)]:offsets[end]], "label_end": offsets[end]}
+        return {"number": text[offsets[number_end - len(number)]:offsets[number_end]], "label_end": offsets[end]}
     if re.match(r"\s*số", rest, re.I):
         return None
     if rest.strip() and not rest.startswith("\n") and not (block.get("heading_evidence") and rest.strip().isupper()):
         return None
-    return {"number": None, "label_end": offsets[start.end()]}
+    return {"number": None, "label_end": offsets[prefix_end]}
 
 
 def append_title(node, paragraph):
@@ -84,6 +90,11 @@ def refine_titles(node):
         while children and children[0]["type"] in TEXT_TYPES:
             text_node = children[0]
             text = text_node.get("text", "")
+            title_heading = re.fullmatch(r'h([1-6])', node.get('title_source_ref', node['source_ref'])['tag'])
+            following_heading = re.fullmatch(r'h([1-6])', text_node['source_ref']['tag'])
+            if (node.get('title') and title_heading and following_heading and
+                    int(following_heading[1]) > int(title_heading[1])):
+                break  # An explicit lower HTML heading starts dependent content.
             if not text or candidate(text_node) or opening_role(text_node) or closing_role(text_node) or is_formula(text_node) or annex_candidate(text_node):
                 break
             separate = source_key(text_node) > source_key(node)
@@ -206,7 +217,9 @@ def refine_article(article):
             if kind == "numbered_paragraph":
                 # An unpromoted source counter cannot silently inherit the
                 # preceding clause and make its following points look resolved.
-                stack = [("article", article)]
+                if not (node.get('evidence') in {'source_decimal_counter_with_prefix_parent', 'source_compound_counter_with_prefix_parent'} and
+                        node.get('parent_number') == stack[-1][1].get('number')):
+                    stack = [("article", article)]
             stack[-1][1]["children"].append(node)
 
 
@@ -292,7 +305,8 @@ def numbered_node(node, marker, path):
 
 
 def refine_annex(annex, quality):
-    from vietnam_legal_rag.ingestion.refinement.forms import form_boundary, make_form
+    from vietnam_legal_rag.ingestion.refinement.forms import form_boundary, make_form, form_header_role
+    from vietnam_legal_rag.ingestion.semantics.hierarchy import container
     blocks = annex["children"]
     heading = blocks.pop(0)
     marker = annex.pop("_annex_marker")
@@ -313,14 +327,82 @@ def refine_annex(annex, quality):
     current_form = None
     active = None
     prefix_nodes = {}
+    # Resolve Roman/alphabetic outline scope before converting bare numeric
+    # counters into annex sections. Their hierarchy belongs to the local list.
+    from vietnam_legal_rag.ingestion.semantics.quotations import scope_body_outlines
+    blocks = scope_body_outlines(blocks)
+    def completion_count(node):
+        count = bool(PLACEHOLDER.search(node.get('text') or ''))
+        for child in node.get('children', []):
+            count += completion_count(child)
+            if count >= 2:
+                return 2
+        for cell in node.get('cells', []):
+            count += bool(PLACEHOLDER.search(cell.get('effective_text') or ''))
+            if count >= 2:
+                return 2
+        return count
+    input_suffix = [0] * (len(blocks) + 1)
+    for index in range(len(blocks) - 1, -1, -1):
+        input_suffix[index] = min(2, completion_count(blocks[index]) + input_suffix[index + 1])
     for index, node in enumerate(blocks):
         text = node.get("text", "")
-        boundary = form_boundary(node, active=current_form is not None) if node["type"] in TEXT_TYPES else None
+        if node.pop('_ambiguous_form_label_before_annex', False):
+            current_form, active, prefix_nodes = None, None, {}
+            node.update(type='heading', evidence='source_form_label_before_annex_boundary')
+            annex['children'].append(node)
+            continue
+        if (node.get('_document_note_scope') or
+                node['type'] == 'footnote_group' and node.get('evidence') == 'source_terminal_note_sequence_with_body_references'):
+            current_form, active, prefix_nodes = None, None, {}
+            annex['children'].append(node)
+            continue
+        boundary = form_boundary(node, active=current_form is not None,
+                                 completion_evidence=input_suffix[index + 1] >= 2) if node["type"] in TEXT_TYPES else None
         if boundary:
+            header = []
+            if (current_form is None and boundary['evidence'] == 'source_qualified_cover_with_completion_inputs' and
+                    annex['children'] and annex['children'][-1]['type'] == 'table'):
+                preceding = annex['children'][-1]
+                populated = [c for c in preceding['cells'] if c.get('effective_text')]
+                if populated and all(c.get('cell_type') != 'header' and PLACEHOLDER.search(c['effective_text']) for c in populated):
+                    header = [{**container('form_header', preceding), 'children': [preceding]}]
+            if current_form is None and boundary['evidence'] == 'standalone_form_heading':
+                for preceding in reversed(annex['children'][-8:]):
+                    if preceding['type'] not in TEXT_TYPES | {'separator'} or form_header_role(preceding) not in {
+                            'issuing_authority', 'national_heading', 'national_motto', 'place_and_date', 'document_number', 'separator'}:
+                        break
+                    header.insert(0, preceding)
+                if not any(form_header_role(h) == 'national_heading' for h in header):
+                    header = []
             current_form = make_form(node, boundary)
+            if header:
+                del annex['children'][-len(header):]
+                current_form.update(order=header[0]['order'], source_ref=header[0]['source_ref'],
+                                    source_refs=[header[0]['source_ref'], node['source_ref']])
+                current_form['children'] = header + current_form['children']
             annex["children"].append(current_form)
             active, prefix_nodes = None, {}
             continue
+        if current_form is None and active is None and node['type'] in TEXT_TYPES:
+            # An official-letter template can have no displayed form title.
+            # Require its actual national header, blank source number/date,
+            # and several source placeholders; an ordinary attached act with
+            # a real date/number cannot satisfy this boundary evidence.
+            nearby = blocks[index:index + 14]
+            roles = [form_header_role(n) for n in nearby if n['type'] in TEXT_TYPES]
+            template_number = any(re.match(r'^Số\s*:\s*(?:/|\.{3,}|…|$)', n.get('text') or '', re.I)
+                                  for n in nearby)
+            template_date = any(form_header_role(n) == 'place_and_date' and PLACEHOLDER.search(n.get('text') or '')
+                                for n in nearby)
+            if (form_header_role(node) in {'issuing_authority', 'national_heading'} and
+                    'national_heading' in roles and template_number and template_date and
+                    sum(bool(PLACEHOLDER.search(n.get('text') or '')) for n in nearby) >= 2 and
+                    not any(form_boundary(n) for n in nearby if n['type'] in TEXT_TYPES)):
+                current_form = container('form', node)
+                current_form.update(number=None, title=None, text='',
+                                    boundary_evidence='source_template_letterhead_and_blank_number_date')
+                annex['children'].append(current_form)
         target = current_form or active or annex
         if node["type"] == "table":
             refine_table_context(node, quality, annex=True,
@@ -337,7 +419,7 @@ def refine_annex(annex, quality):
             marker_path = number_candidate(node)
             if marker_path:
                 match, path = marker_path
-                if current_form and len(path) == 1:
+                if current_form:
                     # Form counters are candidates, not asserted input fields
                     # or annex hierarchy. The scoped form pass owns them.
                     pass
@@ -383,7 +465,7 @@ def refine_annex(annex, quality):
 
 def group_dash_lists(node):
     from vietnam_legal_rag.ingestion.refinement.forms import group_symbol_runs
-    node["children"] = group_symbol_runs(node.get("children", []))
+    node["children"] = group_symbol_runs(node.get("children", []), parent=node)
     for child in node["children"]:
         group_dash_lists(child)
 
@@ -391,6 +473,8 @@ def group_dash_lists(node):
 def group_annex_lists(node):
     from vietnam_legal_rag.ingestion.refinement.forms import group_runs
     from vietnam_legal_rag.ingestion.semantics.quotations import scope_alpha_continuations
+    from vietnam_legal_rag.ingestion.semantics.quotations import scope_body_outlines
+    node['children'] = scope_body_outlines(node.get('children', []))
     node["children"] = scope_alpha_continuations(node.get("children", []))
     node["children"] = group_runs(node.get("children", []))
     for child in node["children"]:
@@ -416,8 +500,11 @@ def final_structural_issues(document, quality):
     codes = {"orphan_point", "orphan_clause", "ambiguous_clause_candidate", "duplicate_legal_number", "possible_page_number"}
     quality.issues[:] = [i for i in quality.issues if i["code"] not in codes]
     seen = set()
+    act_scope = None
     for node, parents in walk([document]):
         kind = node["type"]
+        if node.get('evidence') == 'attached_legal_act_header':
+            act_scope = source_key(node)
         if node.get("parent_status") == "unresolved":
             code = "orphan_numbered_item" if kind in {"numbered_section", "numbered_item"} else f"orphan_{kind}"
             details = {"reason": node.get("unresolved_reason", "no_source_backed_compatible_parent"),
@@ -427,12 +514,29 @@ def final_structural_issues(document, quality):
             quality.add("ambiguous_clause_candidate", "Numbered source unit has insufficient or contradictory evidence for clause promotion", node["source_ref"], details=node.get("candidate_evidence"))
         if kind in LEVELS:
             parent = next((p for p in reversed(parents) if p.get("type") in LEVELS or p.get("type") in {"body", "list"}), None)
-            key = (source_key(parent) if parent else None, kind, node.get("number"))
+            key = (act_scope, source_key(parent) if parent else None, kind, node.get("number"))
             if key in seen:
                 quality.add("duplicate_legal_number", "Repeated legal number retained in source order", node["source_ref"])
             seen.add(key)
         if kind in TEXT_TYPES and re.fullmatch(r"\d+", node.get("text", "")) and not any(p.get("type") in {"annex", "form", "table"} for p in parents):
             quality.add("possible_page_number", "Bare source number retained; page-transition evidence is insufficient to remove it", node["source_ref"])
+
+
+def refine_table_captions(node):
+    children = node.get('children', [])
+    for index, block in enumerate(children):
+        text = block.get('text') or ''
+        if block['type'] not in TEXT_TYPES or not text.isupper() or not re.match(r'^BẢNG\s+\S', text):
+            continue
+        end = index + 1
+        while end < min(index + 4, len(children)) and children[end]['type'] in TEXT_TYPES and (
+                children[end].get('text') or '').isupper() and children[end].get('_alignment') == 'center':
+            end += 1
+        if end < len(children) and children[end]['type'] == 'table':
+            for caption in children[index:end]:
+                caption.update(type='heading', evidence='source_table_caption_before_geometry')
+    for child in children:
+        refine_table_captions(child)
 
 
 def refine_document(document, quality, root):
@@ -449,8 +553,8 @@ def refine_document(document, quality, root):
             children = []
             for node in section["children"]:
                 scan, offsets = normalized_scan(node.get("text", ""))
-                prefix = re.match(r"^(?:" + DOCUMENT_TYPES + r")(?=\s)", scan)
-                if prefix and scan[prefix.end():].strip():
+                prefix = re.match(r"^(?:" + DOCUMENT_TYPES + r")(?=\s|$)", scan, re.I)
+                if node['type'] == 'document_type_heading' and prefix and scan[prefix.end():].strip():
                     heading = slice_unit(node, 0, offsets[prefix.end()])
                     heading["type"] = "document_type_heading"
                     title = slice_unit(node, offsets[prefix.end()])
@@ -460,8 +564,20 @@ def refine_document(document, quality, root):
                     children.append(node)
             section["children"] = children
         elif section["type"] == "annexes":
+            from vietnam_legal_rag.ingestion.refinement.forms import FORM_NUMBER
+            for previous, following in zip(section['children'], section['children'][1:]):
+                children = previous.get('children', [])
+                if (previous['type'] == following['type'] == 'annex' and children and
+                        FORM_NUMBER.fullmatch(children[-1].get('text') or '')):
+                    node = children[-1]
+                    node['_ambiguous_form_label_before_annex'] = True
+                    quality.add('form_label_before_annex_boundary',
+                                'Literal form number immediately precedes another annex; label retained without an empty form or inferred reassignment',
+                                node['source_ref'])
             for annex in section["children"]:
-                refine_annex(annex, quality)
+                if annex['type'] == 'annex':
+                    refine_annex(annex, quality)
+    refine_table_captions(document)
     refine_titles(document)
     articles = [n for n, parents in walk([document]) if n["type"] == "article" and not any(p.get("type") in {"table", "annex"} for p in parents)]
     for article in articles:

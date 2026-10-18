@@ -36,7 +36,9 @@ def note_inconsistencies(document):
                     break
                 run.append(children[j]); previous = marker; j += 1
             preceding = children[i - 1] if i else None
-            explicit = parent["type"] in {"note", "footnote_group"} or preceding and NOTE_HEADING.fullmatch(scan(preceding.get("text")))
+            explicit = (parent["type"] in {"note", "footnote_group"} or
+                        preceding and not preceding.get('children') and
+                        NOTE_HEADING.fullmatch(scan(preceding.get("text"))))
             mixed = any(n["type"] == "footnote" for n in run) and any(n["type"] != "footnote" for n in run)
             if len(run) >= 2 and (mixed or explicit and any(n["type"] != "footnote" for n in run)):
                 problems.append({"source_ref": run[0]["source_ref"], "markers": [numbered_note(n) for n in run],
@@ -53,7 +55,15 @@ def split_forms(document):
             if node["type"] != "form":
                 continue
             if previous and previous.get("number") and not node.get("number"):
-                candidates.append({"source_ref": node["source_ref"], "preceding_form_number": previous["number"]})
+                headers = [n for n in node.get('children', []) if n['type'] == 'form_header']
+                titles = [n for n in node.get('children', []) if n['type'] == 'form_title' and n.get('text')]
+                issuer = any(n['type'] == 'issuing_authority' and n.get('text')
+                             for header in headers for n, _ in walk([header]))
+                inputs = any(n['type'] == 'form_field' and n.get('field_kind') in {'input', 'input_label', 'composite'}
+                             for n, _ in walk([node]))
+                independent_header = issuer and inputs and any(h['order'] < t['order'] for h in headers for t in titles)
+                if not independent_header:
+                    candidates.append({"source_ref": node["source_ref"], "preceding_form_number": previous["number"]})
             previous = node
     return candidates
 
@@ -129,10 +139,25 @@ def structured_paragraphs(document):
         neighboring = siblings[max(0, index - 1):index] + siblings[index + 1:index + 2] if index >= 0 else []
         scope = "table_cell" if any("cell_id" in a for a in ancestors) else "form" if any(a.get("type") == "form" for a in ancestors) else "annex" if any(a.get("type") == "annex" for a in ancestors) else "legal_body"
         reason, resolved = "insufficient_structural_evidence", False
+        if scope == 'table_cell' and re.fullmatch(r'[+−-]?\d+(?:[.,]\s*\d+)*(?:\s*%)?', node['text']):
+            reason, resolved = 'source_numeric_cell_value', True
+        if (re.match(r'^\d{1,3}(?:\.\d{3})+(?:,\d+)?\s+(?:đồng|VNĐ|VND|đ)\b', node['text'], re.I) and
+                '=' in node['text'] and re.search(r'\s(?:x|×|\*|\+|:)\s', node['text'])):
+            # A displayed monetary calculation is source prose, not an outline.
+            # Require both an explicit unit and arithmetic evidence; decimal
+            # heading labels and unqualified numeric candidates stay actionable.
+            reason, resolved = 'source_monetary_calculation', True
+        if (ancestors and ancestors[-1].get('type') == 'point' and
+                re.match(r'^\d{1,3}(?:\.\d{3})+(?:,\d+)?\s+(?:ml|l|kg|g|mg|cm|mm|m)\b',
+                         node['text'], re.I)):
+            # A measured quantity inside an explicitly numbered point is its
+            # value, not a second decimal hierarchy. Units and source ownership
+            # are required; unqualified decimal headings remain actionable.
+            reason, resolved = 'source_measured_point_value', True
         if tight_recipient:
             reason = "unresolved_recipient_marker"
         symbol = SYMBOL.match(node["text"])
-        if symbol:
+        if symbol and not tight_recipient:
             if not any(c.isalpha() for c in node["text"][symbol.end():]):
                 reason, resolved = "numeric_expression_without_list_body", True
             elif symbol_sequence(siblings, index):

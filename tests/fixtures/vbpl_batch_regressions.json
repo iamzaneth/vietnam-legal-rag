@@ -399,7 +399,8 @@
       "patterns": [
         "article-local alpha list",
         "unidentified historical relation",
-        "empty-tab SVG"
+        "empty-tab SVG",
+        "explicit full-text promulgation opening with embedded enactment heading"
       ],
       "source_files": [
         {
@@ -461,7 +462,11 @@
           "form_subfield": 0,
           "footnote": 0,
           "recipients": 0,
-          "recipient": 0
+          "recipient": 0,
+          "document_type_heading": 2,
+          "document_title": 3,
+          "enacting_formula": 1,
+          "heading": 1
         }
       }
     },
@@ -519,15 +524,71 @@
           "max_depth": 0
         },
         "node_types": {
-          "list": 1,
-          "list_item": 3,
+          "list": 0,
+          "list_item": 0,
           "form": 0,
           "form_field": 0,
           "form_subfield": 0,
-          "footnote": 0,
+          "footnote": 3,
           "recipients": 1,
-          "recipient": 17
-        }
+          "recipient": 15,
+          "footnote_group": 1,
+          "national_heading": 1,
+          "national_motto": 1
+        },
+        "source_nodes": [
+          {
+            "source_order": 627,
+            "type": "heading",
+            "properties": {
+              "text": "XÁC THỰC VĂN BẢN HỢP NHẤT"
+            },
+            "excluded_ancestor_types": [
+              "recipients",
+              "article",
+              "clause"
+            ]
+          },
+          {
+            "source_order": 632,
+            "type": "place_and_date",
+            "properties": {
+              "text": "Lâm Đồng, ngày 25 tháng 8 năm 2026"
+            },
+            "excluded_ancestor_types": [
+              "recipients",
+              "article",
+              "clause"
+            ]
+          },
+          {
+            "source_order": 703,
+            "source_offset": 0,
+            "type": "footnote",
+            "properties": {
+              "text": "Khoản 2 Điều 3 được sửa đổi, bổ sung bởi điểm a khoản 1 Điều 1 Quyết định số 61/2026/QĐ-UBND ngày 25/8/2026 sửa đổi, bổ sung một số điều của Quyết định số 22/2026/QĐ-UBND ngày 06 tháng 5 năm 2026 của Ủy ban nhân dân tỉnh về việc ban hành hệ số điều chỉnh giá đất năm 2026 trên địa bàn tỉnh Lâm Đồng.",
+              "marker": "1"
+            }
+          },
+          {
+            "source_order": 712,
+            "source_offset": 0,
+            "type": "footnote",
+            "properties": {
+              "text": "Khoản 3 Điều 3 được sửa đổi, bổ sung bởi điểm b khoản 1 Điều 1 Quyết định số 61/2026/QĐ-UBND ngày 25/8/2026 sửa đổi, bổ sung một số điều của Quyết định số 22/2026/QĐ-UBND ngày 06 tháng 5 năm 2026 của Ủy ban nhân dân tỉnh về việc ban hành hệ số điều chỉnh giá đất năm 2026 trên địa bàn tỉnh Lâm Đồng.",
+              "marker": "2"
+            }
+          },
+          {
+            "source_order": 721,
+            "source_offset": 0,
+            "type": "footnote",
+            "properties": {
+              "text": "Khoản này được sửa đổi, bổ sung bởi khoản 2 Điều 1 Quyết định số 61/2026/QĐ-UBND ngày 25/8/2026 sửa đổi, bổ sung một số điều của Quyết định số 22/2026/QĐ-UBND ngày 06 tháng 5 năm 2026 của Ủy ban nhân dân tỉnh về việc ban hành hệ số điều chỉnh giá đất năm 2026 trên địa bàn tỉnh Lâm Đồng",
+              "marker": "3"
+            }
+          }
+        ]
       }
     },
     {
@@ -770,7 +831,7 @@
           "sections": 0,
           "subsections": 0,
           "articles": 29,
-          "clauses": 80,
+          "clauses": 81,
           "points": 45
         },
         "annex_hierarchy": {
@@ -780,15 +841,92 @@
           "max_depth": 0
         },
         "node_types": {
-          "list": 1,
-          "list_item": 4,
+          "list": 0,
+          "list_item": 0,
           "form": 0,
           "form_field": 0,
           "form_subfield": 0,
-          "footnote": 0,
+          "footnote": 4,
           "recipients": 1,
-          "recipient": 17
-        }
+          "recipient": 15,
+          "footnote_group": 1,
+          "national_heading": 1,
+          "national_motto": 1
+        },
+        "source_nodes": [
+          {
+            "source_order": 563,
+            "type": "clause",
+            "properties": {
+              "number": "3",
+              "label": "3[4]."
+            },
+            "excluded_ancestor_types": [
+              "footnote",
+              "table"
+            ]
+          },
+          {
+            "source_order": 1474,
+            "type": "heading",
+            "properties": {
+              "text": "XÁC THỰC VĂN BẢN HỢP NHẤT"
+            },
+            "excluded_ancestor_types": [
+              "recipients",
+              "article",
+              "clause"
+            ]
+          },
+          {
+            "source_order": 1479,
+            "type": "place_and_date",
+            "properties": {
+              "text": "Lâm Đồng, ngày 13 tháng 8 năm 2026"
+            },
+            "excluded_ancestor_types": [
+              "recipients",
+              "article",
+              "clause"
+            ]
+          },
+          {
+            "source_order": 1541,
+            "source_offset": 0,
+            "type": "footnote",
+            "properties": {
+              "text": "Điểm này được quy định tại khoản 1 Điều 1Quyết định số 58/2026/QĐ-UBND về việc sửa đổi, bổ sung một số điều củaQuyết định số 23/2026/QĐ-UBND ngày 06 tháng 5 năm 2026 của Ủy ban nhân dân tỉnhQuy định về bồi thường, hỗ trợ, tái định cư khi Nhà nước thu hồi đất trên địa bàn tỉnh Lâm Đồng có hiệu lực kể từ ngày 13 tháng 8 năm 2026.",
+              "marker": "1"
+            }
+          },
+          {
+            "source_order": 1559,
+            "source_offset": 0,
+            "type": "footnote",
+            "properties": {
+              "text": "Điều này được quy định tại khoản 2 Điều 1Quyết định số 58/2026/QĐ-UBND về việc sửa đổi, bổ sung một số điều củaQuyết định số 23/2026/QĐ-UBND ngày 06 tháng 5 năm 2026 của Ủy ban nhân dân tỉnhQuy định về bồi thường, hỗ trợ, tái định cư khi Nhà nước thu hồi đất trên địa bàn tỉnh Lâm Đồng có hiệu lực kể từ ngày 13 tháng 8 năm 2026",
+              "marker": "2"
+            }
+          },
+          {
+            "source_order": 1576,
+            "source_offset": 0,
+            "type": "footnote",
+            "properties": {
+              "text": "Điều này được quy định tại khoản 2 Điều 1Quyết định số 58/2026/QĐ-UBND về việc sửa đổi, bổ sung một số điều củaQuyết định số 23/2026/QĐ-UBND ngày 06 tháng 5 năm 2026 của Ủy ban nhân dân tỉnhQuy định về bồi thường, hỗ trợ, tái định cư khi Nhà nước thu hồi đất trên địa bàn tỉnh Lâm Đồng có hiệu lực kể từ ngày 12 tháng 8 năm 2026",
+              "marker": "3"
+            }
+          },
+          {
+            "source_order": 1593,
+            "source_offset": 0,
+            "type": "footnote",
+            "properties": {
+              "text": "Điều này được quy định tại khoản 4 Điều 1Quyết định số 58/2026/QĐ-UBND về việc sửa đổi, bổ sung một số điều củaQuyết định số 23/2026/QĐ-UBND ngày 06 tháng 5 năm 2026 của Ủy ban nhân dân tỉnhQuy định về bồi thường, hỗ trợ, tái định cư khi Nhà nước thu hồi đất trên địa bàn tỉnh Lâm Đồng có hiệu lực kể từ ngày 12 tháng 8 năm 2026.",
+              "marker": "4"
+            }
+          }
+        ]
       }
     },
     {
@@ -859,8 +997,34 @@
           "form_subfield": 0,
           "footnote": 0,
           "recipients": 1,
-          "recipient": 8
-        }
+          "recipient": 6
+        },
+        "source_nodes": [
+          {
+            "source_order": 600,
+            "type": "heading",
+            "properties": {
+              "text": "XÁC THỰC VĂN BẢN HỢP NHẤT"
+            },
+            "excluded_ancestor_types": [
+              "recipients",
+              "article",
+              "clause"
+            ]
+          },
+          {
+            "source_order": 604,
+            "type": "place_and_date",
+            "properties": {
+              "text": "Hà Nội, ngày23tháng4năm 2026"
+            },
+            "excluded_ancestor_types": [
+              "recipients",
+              "article",
+              "clause"
+            ]
+          }
+        ]
       }
     },
     {
@@ -1126,8 +1290,34 @@
           "form_subfield": 0,
           "footnote": 7,
           "recipients": 1,
-          "recipient": 15
-        }
+          "recipient": 13
+        },
+        "source_nodes": [
+          {
+            "source_order": 314,
+            "type": "heading",
+            "properties": {
+              "text": "XÁC THỰC VĂN BẢN HỢP NHẤT"
+            },
+            "excluded_ancestor_types": [
+              "recipients",
+              "article",
+              "clause"
+            ]
+          },
+          {
+            "source_order": 319,
+            "type": "place_and_date",
+            "properties": {
+              "text": "Vĩnh Long, ngày 22 tháng 8 năm 2026"
+            },
+            "excluded_ancestor_types": [
+              "recipients",
+              "article",
+              "clause"
+            ]
+          }
+        ]
       }
     },
     {
@@ -1194,8 +1384,46 @@
           "form_subfield": 0,
           "footnote": 0,
           "recipients": 1,
-          "recipient": 9
-        }
+          "recipient": 6
+        },
+        "source_nodes": [
+          {
+            "source_order": 939,
+            "type": "issuing_authority",
+            "properties": {
+              "text": "BỘ CÔNG THƯƠNG"
+            },
+            "excluded_ancestor_types": [
+              "recipients",
+              "article",
+              "clause"
+            ]
+          },
+          {
+            "source_order": 943,
+            "type": "heading",
+            "properties": {
+              "text": "XÁC THỰC VĂN BẢN HỢP NHẤT"
+            },
+            "excluded_ancestor_types": [
+              "recipients",
+              "article",
+              "clause"
+            ]
+          },
+          {
+            "source_order": 947,
+            "type": "place_and_date",
+            "properties": {
+              "text": "Hà Nội, ngày09tháng 7 năm 2026"
+            },
+            "excluded_ancestor_types": [
+              "recipients",
+              "article",
+              "clause"
+            ]
+          }
+        ]
       }
     },
     {
@@ -1233,9 +1461,11 @@
           "meaningful_text_preserved": true,
           "deterministic": true,
           "schema_valid": true,
-          "semantic_complete": true
+          "semantic_complete": false
         },
-        "warning_codes": {},
+        "warning_codes": {
+          "source_text_encoding_ambiguity": 84
+        },
         "legal_hierarchy": {
           "parts": 0,
           "chapters": 10,
@@ -1385,8 +1615,8 @@
           "max_depth": 0
         },
         "node_types": {
-          "list": 9,
-          "list_item": 31,
+          "list": 10,
+          "list_item": 32,
           "form": 0,
           "form_field": 0,
           "form_subfield": 0,

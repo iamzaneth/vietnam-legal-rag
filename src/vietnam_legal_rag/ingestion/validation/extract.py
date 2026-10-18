@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from importlib.resources import files
+import heapq
 import json
 import re
 
@@ -139,19 +140,32 @@ def validate_table(table, quality):
     cells = table["cells"]
     if [c["order"] for c in cells] != sorted(c["order"] for c in cells):
         quality.add("invalid_order", "Table cells differ from source order", table["source_ref"])
+    # Independently check rectangles using a row sweep. Sorting by geometry
+    # also covers malformed artifacts whose physical rows are out of order.
+    # Report the later source-list member, exactly as the previous pair scan.
+    active, ends, overlaps = {}, [], set()
+    for index, cell in sorted(enumerate(cells), key=lambda item: item[1]['row']):
+        while ends and ends[0][0] <= cell['row']:
+            _, expired = heapq.heappop(ends)
+            active.pop(expired, None)
+        for previous_index, previous in active.items():
+            if (cell['row'] < previous['row'] + previous['rowspan'] and
+                    previous['row'] < cell['row'] + cell['rowspan'] and
+                    cell['column'] < previous['column'] + previous['colspan'] and
+                    previous['column'] < cell['column'] + cell['colspan']):
+                overlaps.add(max(index, previous_index))
+        active[index] = cell
+        heapq.heappush(ends, (cell['row'] + cell['rowspan'], index))
     for i, cell in enumerate(cells):
         _, effective = effective_cell_text(cell)
         if effective != cell.get("effective_text"):
             quality.add("lost_cell_content", "Effective cell text does not represent its preserved textual content", cell["source_ref"], "error")
         if table["table_kind"] in NO_AXES and (cell.get("header_refs") or cell.get("row_axis") or cell.get("column_axis")):
             quality.add("invalid_table_association", "Form/key-value table has unsupported inferred data axes", cell["source_ref"], "error")
-        for previous in cells[:i]:
-            if (cell["row"] < previous["row"] + previous["rowspan"] and previous["row"] < cell["row"] + cell["rowspan"]
-                    and cell["column"] < previous["column"] + previous["colspan"]
-                    and previous["column"] < cell["column"] + cell["colspan"]):
-                # Geometry parser already reports this with the original source ref.
-                if not any(issue["code"] == "table_grid_overlap" and issue.get("source_ref") == cell["source_ref"] for issue in quality.issues):
-                    quality.add("table_grid_overlap", "Cell rectangles overlap; both source cells retained", cell["source_ref"])
+        if i in overlaps:
+            # Geometry parser may already report this with the original ref.
+            if not any(issue["code"] == "table_grid_overlap" and issue.get("source_ref") == cell["source_ref"] for issue in quality.issues):
+                quality.add("table_grid_overlap", "Cell rectangles overlap; both source cells retained", cell["source_ref"])
     by_id = {c["cell_id"]: c for c in cells}
     for cell in cells:
         for axis, refs in cell.get("header_refs", {}).items():

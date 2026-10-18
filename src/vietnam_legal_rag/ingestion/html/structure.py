@@ -86,8 +86,12 @@ def reference(node, source_url):
 
 def document_numbers(text):
     # Candidates are exact source slices, never a selected/resolved target.
-    pattern = (r"(?<![\w/])\d+(?:\.\d+)?[a-zđ]?(?:\s*/\s*(?:\d{4}\s*/\s*)?[A-ZĐ][A-ZĐa-zđ0-9.-]*(?:[-/][A-ZĐa-zđ0-9.]+)*"
-               r"|\s*-\s*[A-ZĐ][A-ZĐa-zđ0-9.]*(?:[-/][A-ZĐa-zđ0-9.]+)*)(?![\w/])")
+    # Legacy source codes may use Latin eth (Ð), distinct from Vietnamese Đ.
+    # Match both source glyphs without changing the captured identifier.
+    pattern = (r"(?<![\w/])\d+(?:\.\d+)?[a-zA-ZđĐ]?(?:\s*/\s*(?:\d{4}\s*/\s*)?[A-ZĐÐ][A-ZĐÐa-zđð0-9.-]*(?:[-/][A-ZĐÐa-zđð0-9.]+)*"
+               r"|\.(?:19|20)\d{2}\.[A-ZĐÐ]{2,}(?:[-/][A-ZĐÐ0-9]+)+"
+               r"|\s*-\s*[A-ZĐÐ][A-ZĐÐa-zđð0-9.]*(?:[-/][A-ZĐÐa-zđð0-9.]+)*"
+               r"|[ \t]+[A-ZĐÐ]{2,}[A-ZĐÐ0-9]*(?:[-/][A-ZĐÐ0-9]+)+)(?![\w/])")
     return list(dict.fromkeys(m.group().rstrip('.;,:') for m in re.finditer(pattern, text)))
 
 
@@ -183,10 +187,31 @@ class SemanticBuilder:
             self.quality.ignore(node, "decorative_separator")
             return []
         block = self.base(node, kind, text)
+        if re.fullmatch(r'[\[(]\s*(?:mất|thiếu)(?:\s+một)?\s+(?:dòng|đoạn|trang)\s*[\])]', text, re.I):
+            self.quality.add('source_declared_missing_text',
+                             'Source explicitly marks missing text; marker retained without reconstructing absent content', node.ref)
+        if node.attrs.get('parent-id'):
+            block['_source_parent_id'] = node.attrs['parent-id']
+        declared_roles = {'prov-part': 'part', 'prov-chapter': 'chapter', 'prov-section': 'section',
+                          'prov-subsection': 'subsection', 'prov-article': 'article',
+                          'prov-clause': 'clause', 'prov-item': 'point'}
+        declared = set(node.attrs.get('class', '').split()) & declared_roles.keys()
+        if len(declared) == 1:
+            block['_source_declared_kind'] = declared_roles[next(iter(declared))]
         alignment = node.attrs.get("align") or next(iter(re.findall(
             r"text-align\s*:\s*(center|left|right|justify)", node.attrs.get("style", ""), re.I)), None)
         if alignment:
             block["_alignment"] = alignment.lower()
+        # Converted closing rows can interleave a recipient with a separately
+        # emphasized signing fragment. Keep its exact offset for the semantic
+        # pass; inline emphasis alone cannot assert a personal identity.
+        if re.match(r'^[-–—•]\s*', text):
+            emphasized = [c for c in node.find() if c.tag in {'b', 'strong'} and c.text().strip()]
+            if emphasized:
+                suffix = emphasized[-1].text().strip()
+                start = text.rfind(suffix)
+                if start > 0 and text[start:] == suffix and text[:start].rstrip().endswith(';'):
+                    block['_emphasized_suffix_offset'] = start
         identifiers = reference(node, self.source_url)["identifiers"]
         if identifiers:
             block["source_identifiers"] = identifiers
@@ -204,7 +229,8 @@ class SemanticBuilder:
             block["heading_evidence"] = "whole_unit_emphasis"
         elif all(not whitespace(c) if isinstance(c, str) else c.tag in {"b", "strong", "br"} for c in node.children):
             block["heading_evidence"] = "whole_unit_emphasis"
-        elif text.isupper() and set(node.attrs.get('class', '').split()) & {'prov-part', 'prov-chapter', 'prov-section', 'prov-subsection', 'prov-article'}:
+        elif ((text.isupper() or 'prov-part' in node.attrs.get('class', '').split() and re.match(r'^[IVXLCDM]+[.)]', text)) and
+              set(node.attrs.get('class', '').split()) & {'prov-part', 'prov-chapter', 'prov-section', 'prov-subsection', 'prov-article'}):
             block['heading_evidence'] = 'source_provision_heading_class'
         for child in node.find():
             if child.tag in {"b", "strong"} and child.text().startswith(("Phụ lục", "PHỤ LỤC")):
@@ -251,6 +277,18 @@ class SemanticBuilder:
             flush()
             if child.tag == "table":
                 result.append(self.table(child))
+            elif child.tag in {'div', 'section'} and self.linked_footnote(child):
+                units = self.flow(child)
+                first = units[0] if units else None
+                marker = re.match(r'^\[(\d+)\]\s*', first.get('text') or '') if first else None
+                if marker:
+                    from vietnam_legal_rag.ingestion.refinement.forms import semantic_body
+                    note = semantic_body(first, marker, 'footnote')
+                    note['evidence'] = 'source_linked_footnote_anchor'
+                    note['children'].extend(units[1:])
+                    result.append(note)
+                else:
+                    result.extend(units)
             elif child.tag in {"tr", "tbody", "thead", "tfoot"}:
                 result.extend(self.flow(child))
             elif child.tag in {"ol", "ul"}:
@@ -287,8 +325,21 @@ class SemanticBuilder:
                     if not known:
                         self.quality.add("unknown_element", "Unrecognized source element retained as a semantic unknown unit", child.ref)
             else:
-                result.extend(self.flow(child))
+                units = self.flow(child)
+                if (child.tag == 'div' and re.search(r'display\s*:\s*grid\b', child.attrs.get('style', ''), re.I)
+                        and not any(n.tag in {'table', 'ol', 'ul'} for n in child.find())):
+                    # Presentation columns do not end the surrounding text
+                    # flow. Keep each original unit and its source anchor.
+                    for unit in units:
+                        if unit['type'] in {'paragraph', 'heading', 'unknown'}:
+                            unit['_scope'] = node.dom_order
+                            unit['_source_grid_parent'] = child.dom_order
+                result.extend(units)
         flush()
+        if node.tag in {'b', 'strong'}:
+            for block in result:
+                if block['type'] in {'paragraph', 'heading', 'unknown'}:
+                    block.setdefault('heading_evidence', 'ancestor_emphasis')
         alignment = node.attrs.get("align") or next(iter(re.findall(
             r"text-align\s*:\s*(center|left|right|justify)", node.attrs.get("style", ""), re.I)), None)
         if node.tag == "center":
@@ -304,10 +355,21 @@ class SemanticBuilder:
                     block["_page_edge"] = True
         return result
 
+    def linked_footnote(self, node):
+        anchors = node.find('a')
+        if not anchors:
+            return False
+        first = anchors[0]
+        target = re.fullmatch(r'#_ftnref(\d+)', first.attrs.get('href') or '', re.I)
+        return bool(target and first.text() == '[' + target[1] + ']' and re.fullmatch(
+            r'_ftn' + re.escape(target[1]), first.attrs.get('name') or first.attrs.get('id') or '', re.I))
+
     def list(self, node):
         result = self.base(node, "list")
         if node.attrs.get("_extract_footnote_scope"):
             result["_footnote_scope"] = True
+        if node.attrs.get('_extract_document_note_scope'):
+            result['_document_note_scope'] = True
         result["list_kind"] = "ordered" if node.tag == "ol" else "unordered"
         result["numbering"] = {k: node.attrs[k] for k in ("start", "type", "reversed") if k in node.attrs}
         step = -1 if "reversed" in node.attrs else 1
@@ -362,12 +424,18 @@ class SemanticBuilder:
                 # must not end the main body before a following attached act.
                 units = list(logical_blocks([result]))
                 group = container("signature" if evidence == "source_signature_block" else "recipients", units[0])
-                for unit in units:
+                for index, unit in enumerate(units):
                     role = closing_role(unit)
                     text = unit.get("text") or ""
                     if evidence == "source_signature_block":
-                        name = 2 <= len(text.split()) <= 7 and all(w[0].isupper() and w.isalpha() for w in text.split())
-                        unit["type"] = role or ("signer_name" if name else unit["type"])
+                        from vietnam_legal_rag.ingestion.semantics.hierarchy import signer_name_text
+                        name = signer_name_text(text)
+                        signing_evidence = any(n['type'] in {'signer_title', 'signature_status', 'signature_marker'}
+                                               for n in group['children'])
+                        if index + 1 < len(units):
+                            signing_evidence |= (not text.isupper() and closing_role(units[index + 1]) in
+                                                 {'signature_status', 'signature_marker'})
+                        unit["type"] = role or ("signer_name" if name and signing_evidence else unit["type"])
                     elif re.match(r"Kính gửi\s*:", text, re.I):
                         group.update(text=text, source_ref=unit["source_ref"], order=unit["order"])
                         continue

@@ -71,6 +71,10 @@ class Quality:
                     visit(child)
                 elif node.text_refs.get(index, node.ref)["dom_order"] not in ignored_orders:
                     parts.append(child)
+                    if '\ufffd' in child:
+                        self.add('source_text_encoding_ambiguity',
+                                 'Source text contains replacement glyphs; original glyphs retained without reconstructing lost characters',
+                                 node.text_refs.get(index, node.ref), details={'replacement_characters': child.count('\ufffd')})
         visit(root)
         source = compact_text("".join(parts))
         units = list(text_units(result)) if result is not None else self.units

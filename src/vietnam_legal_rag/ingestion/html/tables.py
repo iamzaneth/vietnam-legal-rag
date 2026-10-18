@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import re
+from bisect import bisect_right
 
-from vietnam_legal_rag.ingestion.html.source import Node, whitespace
-from vietnam_legal_rag.ingestion.semantics.tables import compound_labels
+from vietnam_legal_rag.ingestion.html.source import Node, whitespace, whole_unit_emphasis
+from vietnam_legal_rag.ingestion.semantics.tables import PLACEHOLDER, compound_labels
 
 
 MAX_GRID_SLOTS = 200_000
@@ -116,13 +117,15 @@ def parse_table(source: Node, builder, table_kind="data") -> dict:
                     line=cell["source_ref"]["line"], column=cell["source_ref"]["column"])
 
     rectangles = []
+    active_rectangles = []
     for row in rows:
+        active_rectangles = [rect for rect in active_rectangles if rect[0] + rect[2] > row['row']]
         col = 0
         for cell in row["cells"]:
             # Anchor placement follows the first free slot, without shifting a
             # colspan to hide overlaps later in the same row.
             while any(r <= row["row"] < r + rs and c <= col < c + cs
-                      for r, c, rs, cs, _ in rectangles):
+                      for r, c, rs, cs, _ in active_rectangles):
                 col += 1
             rs = span(cell, "rowspan", 65534)
             cs = span(cell, "colspan", 1000)
@@ -133,10 +136,11 @@ def parse_table(source: Node, builder, table_kind="data") -> dict:
                 warn("span_crosses_row_group", "Cell spans beyond its source row group; semantic associations disabled", source_for(cell))
             cell.update({"column": col, "rowspan": rs, "colspan": cs})
             rect = (row["row"], col, rs, cs, cell["id"])
-            for r, c, prev_rs, prev_cs, prev_id in rectangles:
+            for r, c, prev_rs, prev_cs, prev_id in active_rectangles:
                 if (rect[0] < r + prev_rs and r < rect[0] + rs and col < c + prev_cs and c < col + cs):
                     warn("overlapping_cells", f"Cells {prev_id} and {cell['id']} overlap; both retained", source_for(cell))
             rectangles.append(rect)
+            active_rectangles.append(rect)
             height = max(height, row["row"] + rs)
             width = max(width, col + cs)
             col += cs
@@ -161,7 +165,8 @@ def parse_table(source: Node, builder, table_kind="data") -> dict:
     # content exist. Adapters may provide a context-free first classification.
     if hasattr(builder, "prepare_cells"):
         builder.prepare_cells(source, cells)
-    infer_td_headers(source, rows, cells)
+    preliminary_kind = builder.classify_table(source, rows, cells)[0] if table_kind is None else table_kind
+    infer_td_headers(source, rows, cells, allow_centered=preliminary_kind not in {'layout', 'form', 'annex_form', 'key_value'})
     if table_kind is None:
         table_kind, evidence = builder.classify_table(source, rows, cells)
         table["classification_evidence"] = evidence
@@ -176,19 +181,34 @@ def parse_table(source: Node, builder, table_kind="data") -> dict:
                                      "clamped_cell_span", "grid_resource_limit", "unexpected_table_content",
                                      "unexpected_row_content", "unexpected_row_group_content"} for i in issues)
     source_ids = {}
+    by_order = {n.dom_order: n for n in source.find()}
     for cell in cells:
         html_id = cell["attributes"].get("id")
         if html_id:
             source_ids.setdefault(html_id, []).append(cell)
 
+    data_end = 0
+    leading_headers = True
+    prior_multiheader = False
     for row in rows:
         all_headers = bool(row["cells"]) and all(c["cell_type"] == "header" for c in row["cells"])
-        carried_data = any(c["cell_type"] == "data" and c["row"] <= row["row"] < c["row"] + c["rowspan"] for c in cells)
-        leading_band = all(c["cell_type"] == "header" for prev in rows[:row["row"]] for c in prev["cells"])
+        data_end = max([data_end] + [c['row'] + c['rowspan'] for c in row['cells'] if c['cell_type'] == 'data'])
+        carried_data = data_end > row['row']
+        leading_band = leading_headers
         for cell in row["cells"]:
             attrs = cell["attributes"]
             scope = attrs.get("scope")
             explicit_axis = attrs.get("data-axis")
+            internal_heading = (cell['cell_type'] == 'data' and cell['rowspan'] == 1 and
+                                len(row['cells']) == 1 and cell['column'] == 0 and cell['colspan'] == width and
+                                cell['effective_text'] and len(cell['effective_text']) <= 160 and
+                                not re.search(r'\d', cell['effective_text']) and
+                                whole_unit_emphasis(by_order[cell['order']]) and
+                                prior_multiheader)
+            if internal_heading and not scope:
+                # Typography and full-width geometry establish a heading,
+                # but do not establish which later values it categorizes.
+                cell.update(cell_type='header', evidence='emphasized_internal_spanning_heading')
             if scope and cell["cell_type"] != "header":
                 cell.update(role="ambiguous", confidence=0.0)
                 warn("scope_on_data_cell", "scope on td is not evidence for a header association", source_for(cell))
@@ -198,6 +218,8 @@ def parse_table(source: Node, builder, table_kind="data") -> dict:
             elif scope:
                 cell.update(role="unknown", confidence=0.0)
                 warn("invalid_header_scope", f"Unknown header scope: {scope}", source_for(cell))
+            elif cell.get('evidence') == 'spanning_table_caption':
+                cell.update(role='column_group_header', confidence=1.0)
             elif cell["cell_type"] == "header" and all_headers and not carried_data and (row["section"] == "thead" or leading_band):
                 cell.update(role="column_header", confidence=0.9, evidence=cell.get("evidence", "all_header_row"))
             elif cell["cell_type"] == "header" and not any(
@@ -213,19 +235,21 @@ def parse_table(source: Node, builder, table_kind="data") -> dict:
                 compound_labels(cell.get("text_segments", [c["text"] for c in cell["candidate_labels"]]),
                                 cell.get("effective_text", cell["text"])))]
             cell["candidate_labels"] = labels
-            if cell.get("evidence") in {"emphasized_ordinal_header_row", "explicit_column_label_vocabulary"} and len(labels) == 2 and re.match(
+            if cell.get("evidence") in {"emphasized_ordinal_header_row", "ordinal_header_with_body_counters", "centered_label_band", "explicit_column_label_vocabulary"} and len(labels) == 2 and re.match(
                     r"^(?:\(.+\)$|theo\s)", labels[1]["text"], re.I):
                 labels = [{"text": cell.get("effective_text", cell["text"]), "role": "unknown", "order": 0}]
                 cell["candidate_labels"] = labels
             corner = cell["row"] == 0 and cell["column"] == 0
             diagonal = bool(re.search(r"linear-gradient|diagonal|border.*(?:rotate|skew)", str(attrs), re.I))
-            axis_nodes = [n for n in find_cell_node(source, cell).find() if n.attrs.get("data-axis") in {"row", "column"}]
+            axis_nodes = [n for n in by_order[cell['order']].find() if n.attrs.get("data-axis") in {"row", "column"}]
             if axis_nodes and {n.attrs["data-axis"] for n in axis_nodes} == {"row", "column"}:
                 cell.update(role="dual_axis_header", header_kind="dual_axis_header", confidence=1.0,
                             candidate_labels=[{"text": n.text(), "role": n.attrs["data-axis"] + "_header",
                                                "order": n.dom_order, "source_ref": n.ref} for n in axis_nodes],
                             evidence="explicit_data_axis")
-            elif len(labels) > 1 and (diagonal or cell["cell_type"] == "header" or explicit_axis or corner and table_kind == "matrix" or
+            elif len(labels) > 1 and not (cell.get('evidence') in {
+                    'leading_bold_header_band', 'emphasized_ordinal_header_row', 'ordinal_header_with_body_counters', 'centered_label_band', 'explicit_column_label_vocabulary'}
+                    and cell['role'] == 'column_header' and not diagonal and not explicit_axis) and (diagonal or cell["cell_type"] == "header" or explicit_axis or corner and table_kind == "matrix" or
                                       (corner and any(c["cell_type"] == "header" for c in cells)) or
                                       (corner and len(rows) > 1 and all(len(label["text"]) <= 120 for label in labels)
                                        and any(re.fullmatch(r"[\d.,%+−-]+", c.get("effective_text", c["text"])) for c in cells))):
@@ -234,9 +258,30 @@ def parse_table(source: Node, builder, table_kind="data") -> dict:
                 warn("ambiguous_compound_header", "Multiple labels in a possible header cell; axis roles not guessed", source_for(cell))
             if cell["cell_type"] == "header" and cell["role"] == "unknown":
                 warn("unresolved_header_role", "Header cell has no reliable row/column role", source_for(cell))
+        headers_after = all(c['cell_type'] == 'header' for c in row['cells'])
+        leading_headers &= headers_after
+        prior_multiheader |= len(row['cells']) >= 2 and headers_after
 
     column_headers = [c for c in cells if c["role"] in {"column_header", "column_group_header"}]
     row_headers = [c for c in cells if c["role"] in {"row_header", "row_group_header"}]
+    data_rows_by_column = {}
+    if not bad_geometry:
+        for cell in cells:
+            if cell['cell_type'] != 'data':
+                continue
+            for column in range(cell['column'], cell['column'] + cell['colspan']):
+                starts = data_rows_by_column.setdefault(column, [])
+                if not starts or starts[-1] != cell['row']:
+                    starts.append(cell['row'])
+
+    def data_between_headers(earlier, later, cell):
+        for column in range(cell['column'], cell['column'] + cell['colspan']):
+            starts = data_rows_by_column.get(column, [])
+            index = bisect_right(starts, earlier['row'])
+            if index < len(starts) and starts[index] < later['row']:
+                return True
+        return False
+
     header_hierarchy = []
     for header in column_headers:
         parents = [h for h in column_headers if h["row"] < header["row"]
@@ -290,9 +335,7 @@ def parse_table(source: Node, builder, table_kind="data") -> dict:
             aligned = [h for h in column_headers if h["id"] in cell["header_refs"]["column"]]
             for i, earlier in enumerate(aligned):
                 for later in aligned[i + 1:]:
-                    if any(c["cell_type"] == "data" and earlier["row"] < c["row"] < later["row"]
-                           and c["column"] < cell["column"] + cell["colspan"]
-                           and cell["column"] < c["column"] + c["colspan"] for c in cells):
+                    if data_between_headers(earlier, later, cell):
                         candidates.extend([earlier["id"], later["id"]])
                         warn("ambiguous_header_bands", "Repeated header bands separated by values; no axis relationship guessed", source_for(cell))
             cell["header_evidence"] = "supported_geometry_and_header_markup"
@@ -315,7 +358,7 @@ def parse_table(source: Node, builder, table_kind="data") -> dict:
     return table
 
 
-def infer_td_headers(source, rows, cells):
+def infer_td_headers(source, rows, cells, *, allow_centered=True):
     """Use explicit typography or reusable column labels, preserving td refs.
 
     Never promote a numeric row, a diagonal corner or an unmarked prose row.
@@ -327,17 +370,91 @@ def infer_td_headers(source, rows, cells):
     def emphasized(node, inherited=False):
         bold = inherited or node.tag in {"b", "strong"} or bool(re.search(r"font-weight\s*:\s*(?:bold|[7-9]00)", node.attrs.get("style", ""), re.I))
         return all(bold or not whitespace(child) if isinstance(child, str) else emphasized(child, bold) for child in node.children)
+    def centered(cell):
+        node = by_order[cell['order']]
+        if node.attrs.get('align', '').casefold() == 'center' or re.search(r'text-align\s*:\s*center', node.attrs.get('style', ''), re.I):
+            return True
+        blocks = [n for n in node.find() if n.tag in {'p', 'div'} and n.text()]
+        return bool(blocks) and all(n.attrs.get('align', '').casefold() == 'center' or re.search(
+            r'text-align\s*:\s*center', n.attrs.get('style', ''), re.I) for n in blocks)
+
+    def sparse_code_row(row):
+        meaningful = [c for c in row['cells'] if c['effective_text']]
+        return bool(len(meaningful) >= 2 and len(meaningful) < len(row['cells']) and
+                    row['cells'][0]['column'] == first[0]['column'] and
+                    re.fullmatch(r'[A-ZĐ](?:\d+(?:\.\d+)*)?', row['cells'][0]['effective_text']))
     first = rows[0]["cells"]
+    caption = len(first) == 1 and first[0]['colspan'] > 1 and emphasized(by_order[first[0]['order']]) and re.match(
+        r'^(?:Biểu|Bảng)\s+(?:số\s*)?\d+\b', first[0]['effective_text'], re.I)
+    header_start = 1 if caption else 0
+    first = rows[header_start]['cells']
     nonempty = [c for c in first if c.get("effective_text")]
-    ordinal = first and re.fullmatch(r"STT|TT|Số TT", first[0].get("effective_text", ""), re.I)
-    labels = {"đơn vị", "đơn vị tính", "giá trị", "ghi chú", "số lượng", "nội dung", "thành tiền", "tên hàng", "đơn giá", "định mức"}
+    ordinal = first and re.fullmatch(r"STT|TT|Số TT|Số thứ tự", first[0].get("effective_text", ""), re.I)
+    labels = {"đơn vị", "đơn vị tính", "giá trị", "ghi chú", "số lượng", "nội dung", "thành tiền", "tên hàng", "đơn giá", "định mức", "mức kế hoạch"}
     named = sum(re.sub(r'\s*\([^)]*\)\s*$', '', c.get("effective_text", "")).casefold() in labels for c in nonempty)
+    source_counters = (ordinal and len(nonempty) == len(first) and len(first) >= 2 and
+                       all(any(ch.isalpha() for ch in c['effective_text']) for c in first) and
+                       not any(PLACEHOLDER.search(c['effective_text']) for r in rows[header_start + 1:] for c in r['cells']) and
+                       any(re.search(r'\d', c['effective_text']) for r in rows[header_start + 1:] for c in r['cells']) and
+                       all(r['cells'] and r['cells'][0]['column'] == first[0]['column'] and (not r['cells'][0]['effective_text'] or re.fullmatch(
+                           r'\d+[.)]?', r['cells'][0]['effective_text'])) for r in rows[header_start + 1:]))
     evidence = "emphasized_ordinal_header_row" if ordinal and len(nonempty) >= 2 and all(emphasized(by_order[c["order"]]) for c in nonempty) else (
+        'ordinal_header_with_body_counters' if source_counters else
         "explicit_column_label_vocabulary" if named >= 2 and len(nonempty) == named else None)
+    def promote(band, reason):
+        if caption:
+            rows[0]['cells'][0].update(cell_type='header', evidence='spanning_table_caption')
+        for c in band:
+            c.update(cell_type='header', evidence=reason)
+        # Rowspans on the main labels bound subordinate column labels,
+        # including emphasized year/ordinal labels below merged groups.
+        depth = max((c['rowspan'] for c in first), default=1)
+        for row in rows[header_start + 1:header_start + depth]:
+            meaningful = [c for c in row['cells'] if c['effective_text']]
+            if not meaningful or not all(centered(c) if reason == 'centered_label_band' else emphasized(by_order[c['order']]) for c in meaningful):
+                break
+            for c in row['cells']:
+                c.update(cell_type='header', evidence=reason)
     if evidence:
-        for c in first:
-            c.update(cell_type="header", evidence=evidence)
+        promote(first, evidence)
         return
+    centered_band = []
+    band_rows = 0
+    for row in rows[header_start:]:
+        meaningful = [c for c in row['cells'] if c['effective_text']]
+        if (centered_band and sparse_code_row(row) or not meaningful or
+                not all(centered(c) and any(ch.isalpha() for ch in c['effective_text']) for c in meaningful)):
+            break
+        centered_band.extend(row['cells'])
+        band_rows += 1
+    body_cells = [c for r in rows[header_start + band_rows:] for c in r['cells']]
+    if (allow_centered and sum(bool(c['effective_text']) for c in centered_band) >= 2
+            and any(c['effective_text'] and not centered(c) for c in body_cells)
+            and any(re.search(r'\d', c['effective_text']) for c in body_cells)
+            and not any(PLACEHOLDER.search(c['effective_text']) for c in body_cells)):
+        promote(centered_band, 'centered_label_band')
+        return
+    # A whole bold label band followed by unbold numeric data is explicit
+    # typography even without an ordinal column. Keep merged geometry; do
+    # not promote a uniformly bold table or an arbitrary prose row.
+    if len(nonempty) >= 2 and all(emphasized(by_order[c['order']]) and
+            len(c['effective_text']) <= 180 and not re.fullmatch(r'[\d.,%]+', c['effective_text']) for c in nonempty):
+        band = []
+        for row in rows[header_start:]:
+            meaningful = [c for c in row['cells'] if c['effective_text']]
+            if band and sparse_code_row(row) or not meaningful or not all(emphasized(by_order[c['order']]) and
+                    not re.fullmatch(r'[\d.,%]+', c['effective_text']) for c in meaningful):
+                break
+            band.extend(row['cells'])
+        remaining = cells[len(band) + (1 if caption else 0):]
+        numeric_values = any(re.fullmatch(r'[\d.,%]+', t) or re.search(
+            r'(?<!\w)\d+(?:[.,]\d+)?\s*[A-Za-z%°²³]{1,8}$', t) or re.fullmatch(
+            r'\d+(?:[.,]\d+)?\s*(?:(?:nghìn|triệu|tỷ)\s+)?(?:đồng|VNĐ|VND)(?:/[^\s]+)?', t, re.I)
+            for c in remaining for t in c['text_segments'])
+        contrasting_body = any(c['effective_text'] and not emphasized(by_order[c['order']]) for c in remaining)
+        if band and numeric_values and contrasting_body:
+            promote(band, 'leading_bold_header_band')
+            return
     band = []
     for row in rows:
         if not row["cells"] or not all(re.search(r"background(?:-color)?\s*:\s*(?!transparent|none)[^;]+", c["attributes"].get("style", ""), re.I)

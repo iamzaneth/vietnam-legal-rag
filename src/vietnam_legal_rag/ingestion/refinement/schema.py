@@ -8,7 +8,7 @@ from __future__ import annotations
 import json
 import re
 
-from vietnam_legal_rag.ingestion.refinement.forms import BLANK, INSTRUCTION, field_evidence, scan
+from vietnam_legal_rag.ingestion.refinement.forms import BLANK, INSTRUCTION, SYMBOL, field_evidence, scan, semantic_body
 from vietnam_legal_rag.ingestion.semantics.hierarchy import slice_unit
 
 FIELD_KINDS = {"input", "input_label", "instruction", "composite", "display", "unknown"}
@@ -32,7 +32,10 @@ def short_label(text, known_name=True):
     text = (text or "").strip()
     name = OPTIONAL_QUALIFIER.sub("", text).rstrip()
     body = scan(name)
-    if not name or len(text) > 80 or len(body.split()) > 12 or re.search(r"[\n:;.!?,]", body) or BLANK.search(body) or SENTENCE.search(body):
+    # A reason noun phrase can name the action requested, rather than issue
+    # that action as an imperative. Its field meaning still stays unknown.
+    sentence = SENTENCE.search(body) and not re.match(r'^Lý do\b', body, re.I)
+    if not name or len(text) > 80 or len(body.split()) > 12 or re.search(r"[\n:;.!?,]", body) or BLANK.search(body) or sentence:
         return None
     if known_name and not FIELD_NAME.fullmatch(body):
         return None
@@ -67,9 +70,36 @@ def unpunctuated_labels(nodes):
     return confirmed
 
 
+def label_colon(text):
+    """Find a field delimiter outside literal parenthetical explanations."""
+    stack = []
+    pairs = {')': '(', ']': '[', '}': '{'}
+    for index, character in enumerate(text):
+        if character == '\n':
+            return None
+        if character in '([{':
+            stack.append(character)
+        elif character in pairs and stack and stack[-1] == pairs[character]:
+            stack.pop()
+        elif character == ':' and not stack and text[:index].strip():
+            return index
+    return None
+
+
 def label_parts(node):
-    match = LABEL.fullmatch(node.get("text") or "")
-    return (match[1].strip(), match[2].strip() or None) if match else None
+    text = node.get('text') or ''
+    colon = label_colon(text)
+    if colon is None:
+        return None
+    name, value = text[:colon].strip(), text[colon + 1:].strip() or None
+    # A long terminal prompt still supplies no entered value. Longer prose
+    # containing a colon needs other evidence before asserting a value split.
+    return (name, value) if len(name) <= 80 or value is None else None
+
+
+def label_value_start(text):
+    start = label_colon(text) + 1
+    return start + len(text[start:]) - len(text[start:].lstrip())
 
 
 def refine_field(node, active):
@@ -105,19 +135,49 @@ def refine_field(node, active):
             node["value_text"] = None
         elif parts and parts[1]:
             body = parts[1]
+            qualifier = re.match(r'\([^()]+\)\s*', body)
+            completion = bool(qualifier and INSTRUCTION.search(qualifier[0]))
+            if completion:
+                rest = body[qualifier.end():]
+                blank = re.match(r'[.…_\s]+', rest)
+                if not rest.strip(' :'):
+                    node.update(field_kind='instruction', field_evidence='source_completion_qualifier', value_text=None)
+                    return
+                if blank and BLANK.search(blank[0]):
+                    node['value_text'] = blank[0].strip()
+                    prompt = rest[blank.end():].strip()
+                    if prompt.endswith(':') and short_label(prompt[:-1], known_name=False):
+                        start = label_value_start(node['text']) + qualifier.end() + blank.end()
+                        child = slice_unit(node, start)
+                        child.update(type='form_subfield', field_name=prompt[:-1], value_text=None,
+                                     field_kind='input_label', field_evidence='source_nested_prompt_after_placeholder')
+                        for key in ('number', 'label', 'marker', 'placeholder_refs'):
+                            child.pop(key, None)
+                        prefix = slice_unit(node, 0, start)
+                        node.update(text=prefix['text'], source_offset=prefix['source_offset'], field_kind='composite')
+                        if prefix.get('annotations'):
+                            node['annotations'] = prefix['annotations']
+                        else:
+                            node.pop('annotations', None)
+                        node.setdefault('children', []).insert(0, child)
+                    return
             # A second short prompt after the first colon is source-backed
             # field structure. Split it with offsets, rather than calling it a
             # value or inventing an identity.
-            if body.endswith(":") and short_label(body[:-1], known_name=False):
-                match = LABEL.fullmatch(node["text"])
-                start = match.start(2)
+            symbol = SYMBOL.match(body)
+            prompt_name = body[symbol.end():] if symbol else body
+            if body.endswith(":") and short_label(prompt_name[:-1], known_name=False):
+                start = label_value_start(node['text'])
                 child = slice_unit(node, start)
-                child.update(type="form_subfield", field_name=body[:-1].strip(), value_text=None,
+                if symbol:
+                    child = semantic_body(child, symbol, 'form_subfield')
+                child.update(type="form_subfield", field_name=prompt_name[:-1].strip(), value_text=None,
                              field_kind="input_label", field_evidence="source_nested_prompt")
                 child.pop("placeholder_refs", None)
                 child.pop("number", None)
-                child.pop("label", None)
-                child.pop("marker", None)
+                if not symbol:
+                    child.pop("label", None)
+                    child.pop("marker", None)
                 prefix = slice_unit(node, 0, start)
                 node["text"] = prefix["text"]
                 node["source_offset"] = prefix["source_offset"]
@@ -128,7 +188,7 @@ def refine_field(node, active):
                 node["value_text"] = None
                 node["field_kind"] = "composite"
                 node.setdefault("children", []).insert(0, child)
-            elif (blank := re.match(r"[.…_\s]+(?:\(\d+\)[.…_\s]*)?", body)) and BLANK.search(blank[0]) and any(c.isalpha() for c in body[blank.end():]):
+            elif (blank := re.match(r"(?:\(\d+\)\s*)?[.…_\s]+(?:\(\d+\)[.…_\s]*)?", body)) and BLANK.search(blank[0]) and any(c.isalpha() for c in body[blank.end():]):
                 # A source blank followed by another label/declaration prose
                 # is a value placeholder, not the whole display. Preserve the
                 # complete line, including later prompts, in node.text.
@@ -161,8 +221,52 @@ def composite_fields(nodes):
     return output
 
 
-def refine_prompts(nodes):
+def refine_prompts(nodes, *, in_cell=False):
     labels = unpunctuated_labels(nodes)
+    grids = {}
+    for node in nodes:
+        if node.get('_source_grid_parent') is not None:
+            grids.setdefault(node['_source_grid_parent'], []).append(node)
+    for group in grids.values():
+        parts = [label_parts(node) for node in group]
+        if (len(group) >= 2 and all(part and part[1] is None for part in parts) and
+                all(node.get('type') in {'paragraph', 'form_field'} and not node.get('heading_evidence') for node in group) and
+                any(short_label(re.sub(r'[,()]', ' ', part[0]), known_name=False) for part in parts)):
+            # Explicit source columns pair terminal input prompts. Preserve
+            # unfamiliar labels, including request addressees, without guessing
+            # field meaning or entered values from their vocabulary.
+            for node, part in zip(group, parts):
+                if node['type'] == 'paragraph':
+                    node.update(type='form_field', field_name=part[0], value_text=None,
+                                field_kind='unknown', field_evidence='source_paired_grid_prompts')
+    # Explicit unfamiliar prompts can form a chain next to actual input
+    # fields. Classify their structural role without asserting field meaning.
+    index = 0
+    while index < len(nodes):
+        end = index
+        def prompt(node):
+            parts = label_parts(node)
+            return (node.get('type') == 'paragraph' and parts and parts[1] is None and
+                    (short_label(parts[0], known_name=False) or
+                     '/' in parts[0] and not SENTENCE.match(scan(parts[0])) and not BLANK.search(parts[0])) and
+                    not CONTINUATION.match(scan(parts[0])) and
+                    not re.search(r'\b(?:kiểm tra|được|như sau|kèm theo)\b', scan(parts[0]), re.I) and
+                    not (node.get('heading_evidence') and scan(node['text']).isupper()))
+        while end < len(nodes) and prompt(nodes[end]):
+            end += 1
+        bounded = (end - index >= 2 or
+                   in_cell and end > index and not any(n.get('heading_evidence') for n in nodes[index:end]) and
+                   not (end < len(nodes) and nodes[end].get('type') == 'list') or
+                   index > 0 and (input_anchor(nodes[index - 1]) or
+                                  nodes[index - 1].get('field_evidence') == 'source_paired_grid_prompts') or
+                   end < len(nodes) and (input_anchor(nodes[end]) or
+                                        nodes[end].get('field_evidence') == 'source_paired_grid_prompts' or
+                                        nodes[end].get('field_evidence') == 'source_form_declaration'))
+        if end > index and bounded:
+            for node in nodes[index:end]:
+                node.update(type='form_field', field_name=label_parts(node)[0], value_text=None,
+                            field_kind='unknown', field_evidence='source_colon_prompt_in_input_sequence')
+        index = max(end, index + 1)
     for i, node in enumerate(nodes):
         if id(node) in labels:
             node.update(type="form_field", field_name=labels[id(node)], value_text=None,
@@ -195,6 +299,9 @@ def attach_continuations(nodes):
 def refine_form_labels(document):
     def visit(node, active=False):
         active = (active or node.get("type") == "form") and node.get("type") not in EXCLUDED_SCOPES
+        if (active and node.get('type') == 'paragraph' and
+                re.fullmatch(r'\d+[.…_\s]+', node.get('text') or '') and BLANK.search(node['text'])):
+            node.update(type='form_placeholder', evidence='source_numbered_blank_input_slot')
         refine_field(node, active)
         for child in node.get("children", []):
             visit(child, active)
@@ -225,7 +332,8 @@ def refine_form_labels(document):
             for child in cell.get("content", []):
                 visit(child, scope)
             if scope and cell.get("content"):
-                cell["content"] = composite_fields(attach_continuations(refine_prompts(cell["content"])))
+                cell["content"] = composite_fields(attach_continuations(refine_prompts(
+                    cell["content"], in_cell=cell.get('cell_type') != 'header')))
             from vietnam_legal_rag.ingestion.semantics.tables import effective_cell_text
             assert effective_cell_text(cell)[1] == before, "Form cleanup changed physical cell text"
     visit(document)
@@ -332,6 +440,7 @@ def form_label_audit(document):
     """Inspect colon prompts and short unpunctuated labels in source context."""
     from vietnam_legal_rag.ingestion.validation.forms import walk
     audit = []
+    sibling_metadata = {}
     for node, parents in walk([document]):
         colon = bool(re.fullmatch(r"[^:\n]{1,80}:\s*", node.get("text") or ""))
         bare = short_label(node.get("text"))
@@ -343,9 +452,31 @@ def form_label_audit(document):
         text = scan(node["text"])
         excluded = any(p.get("type") in EXCLUDED_SCOPES for p in parents)
         siblings = parents[-1].get("children", parents[-1].get("content", [])) if parents else []
-        confirmed_bare = id(node) in unpunctuated_labels(siblings)
+        owner = id(parents[-1]) if parents else None
+        if owner not in sibling_metadata:
+            sibling_metadata[owner] = (unpunctuated_labels(siblings),
+                                       {id(n): siblings[i + 1] if i + 1 < len(siblings) else None
+                                        for i, n in enumerate(siblings)})
+        bare_labels, next_nodes = sibling_metadata[owner]
+        confirmed_bare = id(node) in bare_labels
+        following = next_nodes.get(id(node))
+        display_caption = bool(
+            colon and re.fullmatch(r'(?:Mẫu|Biểu|Phiếu)\s*:', text, re.I) and
+            node.get('heading_evidence') and following and
+            following.get('type') in {'paragraph', 'heading', 'form_title', 'form_subtitle'} and
+            following.get('heading_evidence') and (following.get('text') or '').isupper() and
+            not BLANK.search(following.get('text') or ''))
+        literal_list_leadin = bool(
+            colon and following and following.get('type') == 'list' and
+            len(following.get('children', [])) >= 2 and
+            not any(n.get('field_kind') in {'input', 'input_label', 'composite'} or
+                    BLANK.search(n.get('text') or '') for n, _ in walk([following])))
         if excluded:
             reason = "explanatory_note_or_recipient_context"
+        elif display_caption:
+            reason = "source_display_caption_before_title"
+        elif literal_list_leadin:
+            reason = "source_leadin_before_literal_list"
         elif bare and not colon:
             reason = "unresolved_input_sequence_label" if confirmed_bare else "short_label_outside_confirmed_input_sequence"
         elif text.isupper() and node.get("heading_evidence"):
@@ -358,6 +489,6 @@ def form_label_audit(document):
             reason = "source_prose_statement"
         else:
             reason = "insufficient_form_label_evidence"
-        unresolved = not excluded and (confirmed_bare or reason == "insufficient_form_label_evidence" or bool((parts := label_parts(node)) and FIELD_NAME.fullmatch(scan(parts[0]))))
+        unresolved = not (excluded or display_caption or literal_list_leadin) and (confirmed_bare or reason == "insufficient_form_label_evidence" or bool((parts := label_parts(node)) and FIELD_NAME.fullmatch(scan(parts[0]))))
         audit.append({"order": node["order"], "source_ref": node["source_ref"], "text": node["text"], "reason": reason, "justified": not unresolved})
     return audit

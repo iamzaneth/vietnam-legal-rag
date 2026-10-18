@@ -84,7 +84,13 @@ class Node:
                 parts.append(value)
         value = "".join(parts)
         if blocks:
-            return "\n".join(whitespace(line) for line in value.split("\n")).strip()
+            rendered = "\n".join(whitespace(line) for line in value.split("\n")).strip()
+            if not rendered and "\n" in value and self.tag in {
+                    "span", "font", "b", "strong", "i", "em", "u", "s", "a", "small", "sup", "sub"}:
+                # Inline wrappers may contain only an explicit break. Keep it
+                # until the enclosing displayed block performs outer trimming.
+                return "\n"
+            return rendered
         return whitespace(value)
 
 

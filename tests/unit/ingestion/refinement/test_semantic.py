@@ -58,8 +58,20 @@ class SemanticRefinementTests(unittest.TestCase):
                 '<p>Mẫu số 01</p><p>2.1. Không được mượn cha từ phụ lục I</p>')
         result = parse(html)
         orphan = [n for n in nodes(result, "numbered_item") if n.get("parent_status")]
-        self.assertEqual(len(orphan), 3)
+        self.assertEqual(len(orphan), 2)
         self.assertTrue(all(n["unresolved_reason"] == "prefix_parent_missing_in_current_annex_scope" for n in orphan))
+        # The final literal counter belongs to the new form, rather than to
+        # either annex. With no local prefix parent it stays an actionable
+        # form candidate; no ancestor is borrowed or fabricated.
+        form = nodes(result, 'form')[0]
+        self.assertEqual([(n['type'], n['text']) for n in form['children']],
+                         [('paragraph', '2.1. Không được mượn cha từ phụ lục I')])
+        self.assertEqual(result['form_validation']['unresolved_numbered_form_items'], 1)
+        self.assertEqual(result['form_validation']['unexplained_structured_paragraphs'], 1)
+        self.assertEqual(sum(i['code'] in {'orphan_numbered_item', 'structured_paragraph_unresolved'}
+                             for i in result['issues']), 3)
+        self.assertTrue(any(i['code'] == 'structured_paragraph_unresolved' and
+                            i.get('details', {}).get('scope') == 'form' for i in result['issues']))
         validation = result["hierarchy_validation"]
         self.assertEqual(validation["status"], "valid_with_warnings")
         self.assertFalse(validation["semantic_complete"])

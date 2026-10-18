@@ -47,11 +47,22 @@ class CapturedFixtureListRegressionTests(unittest.TestCase):
                         self.assertEqual(h["annex_hierarchy"], {"annexes": 4, "numbered_sections": 5, "numbered_items": 26, "max_depth": 2})
                         self.assertTrue(h["semantic_complete"])
                         self.assertTrue(manifest["quality"]["semantic_complete"])
-                        for key, value in {"forms": 16, "fields": 80, "subfields": 14, "footnotes": 52, "placeholder_references": 65,
+                        for key, value in {"forms": 16, "fields": 80, "subfields": 14, "footnotes": 52, "placeholder_references": 66,
                                            "suspicious_value_text": 0, "semantic_empty_string_fields": 0, "unexplained_form_label_paragraphs": 0,
                                            "form_nodes_missing_field_kind": 0, "form_nodes_missing_field_evidence": 0}.items():
                             self.assertEqual(current["form_validation"][key], value, key)
                         self.assertFalse(any(manifest["issue_summary"][s] for s in ("warning", "error", "fatal")))
+                        # RAW 5709 carries the date's (1) reference before the
+                        # displayed standalone form title. Its header now
+                        # belongs to that source form rather than annex prose.
+                        date = next(n for n in nodes(current, 'place_and_date')
+                                    if n['source_ref']['dom_order'] == 5709)
+                        self.assertEqual(date['text'], '….(1)…., ngày.... tháng.... năm .....')
+                        self.assertEqual(date['placeholder_refs'], ['1'])
+                        standalone = next(n for n in nodes(current, 'form')
+                                          if n.get('title_source_ref', {}).get('dom_order') == 5717)
+                        self.assertTrue(any(c['type'] == 'form_header' and date in c['children']
+                                            for c in standalone['children']))
                         annex = next(n for n in nodes(current, "annex") if n["number"] == "III")
                         item = next(n for n in walk_content([annex]) if n["type"] == "numbered_item" and n["number"] == "1.6")
                         listing = item["children"][0]
