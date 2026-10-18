@@ -18,11 +18,44 @@ def source_evidence(raw, diagnostic):
     root = parse_html((raw / (diagnostic['tab'] + '.html')).read_text())
     order = diagnostic['source_ref']['dom_order']
     node = next((n for n in root.find() if n.dom_order == order), None)
+    text, ref = None, None
+    if node is None:
+        for owner in root.find():
+            for index, source_ref in owner.text_refs.items():
+                if source_ref == diagnostic['source_ref'] and isinstance(owner.children[index], str):
+                    node, text, ref = owner, owner.children[index], source_ref
+                    break
+            if node is not None:
+                break
     if not node:
         raise ValueError(f'Missing source anchor: {diagnostic}')
     attributes = {k: (v[:100] + '…' if len(v) > 100 else v)
                   for k, v in node.attrs.items() if k in {'href', 'src', 'alt', 'rowspan', 'colspan', 'style'}}
-    return {'source_ref': node.ref, 'source_text_excerpt': node.text()[:400], 'source_attributes': attributes}
+    return {'source_ref': ref or node.ref, 'source_text_excerpt': (text if text is not None else node.text())[:400], 'source_attributes': attributes}
+
+
+def acquisition_accounting(state):
+    """Separate network collection from selection of already captured RAW."""
+    network = [a for a in state['attempts'] if a['result'] not in {'reused_capture', 'existing_capture'}]
+    results = Counter(a['result'] for a in network)
+    source_attempts = [a for a in network
+                       if a.get('failure_classification') != 'execution_environment_network_failure']
+    source_results = Counter(a['result'] for a in source_attempts)
+    local = sum(d.get('sampling_origin') == 'existing_local_raw' for d in state['documents'])
+    collected = len(state['documents']) - local
+    return {'candidate_attempts': len(network), 'candidate_selections': len(state['attempts']),
+            'successfully_crawled_sample': collected, 'existing_local_sample_additions': local,
+            'usable_sample_captures': len(state['documents']),
+            'successful_captures_including_scope_mismatches': results['complete'] + results['scope_hint_mismatch'],
+            'reused_scope_mismatch_captures': sum(a['result'] == 'reused_capture' for a in state['attempts']),
+            'crawl_failures': results['failed'], 'interrupted_candidates': results['interrupted'],
+            'scope_mismatches': results['scope_hint_mismatch'], 'duplicates': results['duplicate'],
+            'replacements': results['failed'] + results['scope_hint_mismatch'],
+            'acceptance_rate': collected / len(network) if network else None,
+            'execution_environment_failures': len(network) - len(source_attempts),
+            'source_candidate_attempts': len(source_attempts),
+            'source_crawl_failures': source_results['failed'],
+            'source_acceptance_rate': collected / len(source_attempts) if source_attempts else None}
 
 
 def build_report(config, evidence_dir=None,
@@ -138,6 +171,46 @@ def build_report(config, evidence_dir=None,
                                     ('schema_valid', 'deterministic', 'meaningful_text_preserved', 'semantic_complete')),
               'verification': {'unit_tests': test_count, 'passed': True, 'command': '.venv/bin/python -m unittest discover -s tests -t . -q',
                                'output_log': str(evidence_dir / 'tests.txt')}}
+    if config.require_wave_gates:
+        from .wave_gate import parser_fingerprint, validation_failures
+        gates = state.get('wave_completions', [])
+        assert {g['wave'] for g in gates} == set(range(1, config.waves + 1)), 'Not all wave gates completed'
+        assert state['audited_parser_fingerprint'] == parser_fingerprint(), 'Final parser audit is stale'
+        assert state['waves'][-1]['regenerated'], 'Final uniform re-extraction is mandatory'
+        baseline = state['baseline_validations']
+        cumulative = [d['final_validation'] for d in state['documents'] + baseline] + [state['golden_validation']]
+        assert not any(validation_failures(v) for v in cumulative), 'Cumulative parser regression'
+        assert all(r.get('parser_fingerprint') == parser_fingerprint() for r in review_by_id.values()), 'Stale semantic review'
+        metrics['crawl'].update(acquisition_accounting(state))
+        metrics['repair']['new_portable_hardening_test_methods'] = test_methods('regression/test_hardening_patterns.py')
+        result['verification']['command'] = read(evidence_dir / 'test-state.json')['command']
+        metrics['quality'].update(source_ambiguity_retained=sum(bool(r.get('source_ambiguity_retained')) for r in review_by_id.values()),
+                                  source_warning_documents=sum(bool(d['important_diagnostics']) for d in documents),
+                                  expected_source_artifact_documents=sum(any(f['classification'] == 'expected_non_semantic_source_artifact'
+                                      for f in r.get('findings', [])) for r in review_by_id.values()),
+                                  parser_failure=sum(r.get('parser_failure', 0) for r in review_by_id.values()),
+                                  unexplained_semantic_failure=sum(r.get('unexplained_semantic_failure', 0) for r in review_by_id.values()))
+        cumulative_quality = {k: sum(v['quality'][k] for v in cumulative) for k in
+                              ('schema_valid', 'deterministic', 'meaningful_text_preserved', 'semantic_complete')}
+        result['cumulative_validation'] = {'documents': len(cumulative), 'previous_documents': len(baseline),
+            'new_documents': n, 'golden': 1, 'quality_counts': cumulative_quality,
+            'statuses': dict(Counter(v['status'] for v in cumulative)),
+            'issue_summary': dict(sum((Counter(v['issue_summary']) for v in cumulative), Counter())),
+            'baseline_validations': baseline, 'parser_fingerprint': parser_fingerprint()}
+        result['wave_completions'] = gates
+        result['wave_findings'] = [{'wave': g['wave'], 'documents_processed': min(config.wave_size, n - (g['wave'] - 1) * config.wave_size),
+            'new_parser_bug_classes': len(g['new_parser_bug_classes']), 'generic_repairs': g['new_parser_bug_classes'],
+            'source_ambiguity_documents': sum(r.get('source_ambiguity_retained', False) for r in review_by_id.values() if r['wave'] == g['wave']),
+            'raw_capture_defects': sum(r.get('wave') == g['wave'] for r in repairs['raw_capture_defects']),
+            'schema_gaps': sum(r.get('wave') == g['wave'] for r in repairs['schema_gaps']),
+            'unexplained_failures': sum(r.get('unexplained_semantic_failure', 0) for r in review_by_id.values() if r['wave'] == g['wave'])}
+            for g in sorted(gates, key=lambda g: g['wave'])]
+        curve = [len(g['new_parser_bug_classes']) for g in sorted(gates, key=lambda g: g['wave'])]
+        converged = len(curve) >= 2 and max(curve[-2:]) <= 2 and curve[-1] <= curve[-2]
+        result['convergence'] = {'new_bug_classes_by_wave': curve, 'cumulative_bug_classes': sum(curve),
+                                'sufficient_for_larger_validation': converged,
+                                'criterion': 'At most two new bug classes in each final wave, with no increase in the last wave; all acceptance gates pass.'}
+        result['recommendation'] = 'B: scale to a larger validation batch' if converged else 'A: continue with another hardening batch'
     return result
 
 
@@ -154,7 +227,8 @@ def markdown(report, report_dir):
              f"Extract results: {metrics['extract']}. Crawl accounting: {metrics['crawl']}.", '',
              '| Quality | Count | Rate |', '|---|---:|---:|']
     for key, value in metrics['quality'].items():
-        lines.append(f"| {key} | {value['count']}/{value['evaluated']} | {value['rate']:.0%} |")
+        if isinstance(value, dict):
+            lines.append(f"| {key} | {value['count']}/{value['evaluated']} | {value['rate']:.0%} |")
     lines += ['', f"Diagnostics: {metrics['diagnostics']}. Structure checks: {metrics['structure']}.", '',
               f"Actual source document types: {metrics['actual_document_types']}.", '',
               '## Final document inventory', '',
@@ -186,6 +260,20 @@ def markdown(report, report_dir):
               f"Machine report: `{report_dir / 'report.json'}`.", '',
               '## Remaining limitations', '']
     lines += ['- ' + item for item in report['remaining_limitations']]
+    if 'cumulative_validation' in report:
+        cumulative = report['cumulative_validation']
+        lines += ['', '## Final uniform cumulative validation', '',
+                  f"{cumulative['documents']} documents: {cumulative['golden']} golden + "
+                  f"{cumulative['previous_documents']} previous + {cumulative['new_documents']} new.",
+                  f"Quality counts: {cumulative['quality_counts']}. Statuses: {cumulative['statuses']}.",
+                  f"Diagnostics: {cumulative['issue_summary']}. Final implementation SHA-256: `{cumulative['parser_fingerprint']}`.", '',
+                  '## Wave gates and convergence', '', '| Wave | New bug classes | Accumulated documents |', '|---|---|---:|']
+        for gate in sorted(report['wave_completions'], key=lambda g: g['wave']):
+            lines.append(f"| {gate['wave']} | {', '.join(gate['new_parser_bug_classes']) or 'None'} | {gate['accumulated_documents']} |")
+        lines += ['', f"Convergence: {report['convergence']}.", '', f"Recommendation: {report['recommendation']}.", '',
+                  f"Reviewed source ambiguity documents: {metrics['quality']['source_ambiguity_retained']}; "
+                  f"parser failures: {metrics['quality']['parser_failure']}; unexplained semantic failures: "
+                  f"{metrics['quality']['unexplained_semantic_failure']}."]
     return '\n'.join(lines) + '\n'
 
 
@@ -197,3 +285,96 @@ def write_report(config: ValidationConfig, output_dir: Path | None = None, **inp
     (destination / 'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     (destination / 'report.md').write_text(markdown(report, destination), encoding='utf-8')
     return report
+
+
+def total_corpus_metrics(target, validations, fingerprint):
+    """Count source identities once and distinguish partial evidence from acceptance."""
+    target_ids = [d['document_id'] for d in target['documents']]
+    if len(target_ids) != len(set(target_ids)) or len(target_ids) > target['target_total']:
+        raise ValueError('Target contains duplicates or exceeds its total')
+    identities = [d['document_id'] for d in validations]
+    if len(identities) != len(set(identities)) or not set(identities) <= set(target_ids):
+        raise ValueError('Validation records must be distinct target source identities')
+    current = [d for d in validations if d.get('parser_fingerprint') == fingerprint]
+    statuses = Counter(d['validation']['status'] for d in current)
+    quality = Counter(k for d in current for k, v in d['validation']['quality'].items() if v)
+    diagnostics = sum((Counter(d['validation']['issue_summary']) for d in current), Counter())
+    from .wave_gate import validation_failures
+    failures = [d['document_id'] for d in current if validation_failures(d['validation']) or d.get('semantic_review', {}).get('parser_failure', 0)]
+    reviewed = [d for d in current if d.get('semantic_review', {}).get('reviewed')
+                and d['semantic_review'].get('parser_fingerprint') == fingerprint]
+    complete = (len(target_ids) == target['target_total'] == len(current) == len(reviewed)
+                and not failures and not any(d.get('semantic_review', {}).get('unexplained_semantic_failure', 0) for d in current)
+                and all(quality[k] == len(current) for k in
+                    ('schema_valid', 'deterministic', 'meaningful_text_preserved')))
+    return {'target_total': target['target_total'], 'target_assembled': len(target_ids),
+            'current_parser_validated': len(current), 'source_reviewed': len(reviewed),
+            'pending_target_assembly': target['target_total'] - len(target_ids),
+            'pending_current_parser_validation': len(target_ids) - len(current),
+            'acceptance_complete': complete, 'statuses': {
+                **dict(statuses), **{k: statuses[k] for k in ('success', 'success_with_warnings', 'failed')}},
+            'quality': {k: {'count': quality[k], 'evaluated': len(current),
+                           'rate': quality[k] / len(current) if current else None} for k in
+                        ('schema_valid', 'deterministic', 'meaningful_text_preserved', 'semantic_complete')},
+            'source_ambiguity_retained': sum(d.get('semantic_review', {}).get('source_ambiguity_retained', False) for d in current),
+            'parser_failure': len(failures),
+            'unexplained_semantic_failure': sum(d.get('semantic_review', {}).get('unexplained_semantic_failure', 0) for d in current),
+            'diagnostics': {k: diagnostics[k] for k in ('info', 'warning', 'error', 'fatal')},
+            'unresolved_ids': failures}
+
+
+def write_total_report(report_dir, target, validations, fingerprint, **context):
+    """Publish resumable total-corpus evidence, including an explicitly incomplete run."""
+    from .progress import atomic_json
+    metrics = total_corpus_metrics(target, validations, fingerprint)
+    completion = context.get('completion_checks', {})
+    metrics['corpus_validation_complete'] = metrics['acceptance_complete']
+    metrics['acceptance_complete'] &= all(completion.get(k) is True for k in (
+        'uniform_revalidation', 'wave_gates', 'tests', 'repository_hygiene'))
+    report = {'generated_at': datetime.now(timezone.utc).isoformat(),
+              'status': 'complete' if metrics['acceptance_complete'] else 'incomplete',
+              'parser_fingerprint': fingerprint, 'metrics': metrics,
+              'target_manifest': target, 'documents': validations, **context}
+    atomic_json(report_dir / 'report.json', report)
+    lines = [f"# VBPL total-{target['target_total']} validation", '',
+             f"Status: **{report['status']}**. This is a total local source-document target; it is not a newly crawled-document count.", '',
+             f"Target assembled: {metrics['target_assembled']}/{metrics['target_total']}. "
+             f"Current-parser validated: {metrics['current_parser_validated']}. Source-reviewed: {metrics['source_reviewed']}.", '',
+             f"Documents still needed: {metrics['pending_target_assembly']}. "
+             f"Final total-{target['target_total']} acceptance: {metrics['acceptance_complete']}.", '',
+             f"Implementation fingerprint: `{fingerprint}`.", '',
+             f"Extract: {metrics['statuses']}. Quality: {metrics['quality']}.", '',
+             f"Source ambiguity documents: {metrics['source_ambiguity_retained']}; parser failures: {metrics['parser_failure']}; "
+             f"unexplained semantic failures: {metrics['unexplained_semantic_failure']}. Diagnostics: {metrics['diagnostics']}.", '']
+    for key, value in context.items():
+        if key == 'previous_milestone':
+            lines += ['## Preserved first milestone', '', str(value), '']
+        else:
+            lines += [f"## {key.replace('_', ' ').capitalize()}", '', '```json',
+                      json.dumps(value, ensure_ascii=False, indent=2), '```', '']
+    lines += ['## Resume', '', 'Read evidence/state.json, checkpoint.md, target_manifest.json and resume.md. '
+              'Preserve complete RAW and reviewed fixtures; regenerate stale outputs offline. '
+              'Resume the first unfinished operation; preserve unique evidence during cleanup.', '']
+    (report_dir / 'report.md').write_text('\n'.join(lines), encoding='utf-8')
+    return report
+
+
+def write_target_report(config, target_path, output_dir=None):
+    """Reuse stored cumulative audits and explicit source reviews for a total target."""
+    from .wave_gate import parser_fingerprint
+    evidence = config.report_dir / 'evidence'
+    state = read(config.sample_manifest)
+    target = read(target_path)
+    reviews = {d['document_id']: d for d in read(evidence / 'cumulative_reviews.json')['documents']}
+    records = [
+        {'document_id': d['document_id'], 'parser_fingerprint': d.get('audited_parser_fingerprint'),
+         'validation': d['final_validation'], 'semantic_review': reviews.get(d['document_id'], {})}
+        for d in state.get('baseline_validations', []) + state['documents'] if 'final_validation' in d
+    ]
+    if 'golden_validation' in state:
+        identity = 'vbpl:' + config.golden_id
+        records.append({'document_id': identity, 'parser_fingerprint': state.get('audited_parser_fingerprint'),
+                        'validation': state['golden_validation'], 'semantic_review': reviews.get(identity, {})})
+    context_path = evidence / 'report-context.json'
+    context = read(context_path) if context_path.exists() else {}
+    return write_total_report(output_dir or config.report_dir, target, records, parser_fingerprint(), **context)

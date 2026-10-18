@@ -1,6 +1,9 @@
 """CLI dispatch, configuration forwarding and preservation of legacy adapters."""
 import contextlib
 import io
+import json
+import tempfile
+import zipfile
 from pathlib import Path
 import unittest
 from unittest.mock import patch
@@ -10,6 +13,81 @@ from vietnam_legal_rag.cli import audit, validate
 
 
 class ToolingCLITests(unittest.TestCase):
+    def test_canonical_defaults_resolve_saved_sample_baselines_and_total_report(self):
+        from vietnam_legal_rag.evaluation.validation_runner import load_state
+        from vietnam_legal_rag.evaluation.wave_gate import baseline_documents
+        with tempfile.TemporaryDirectory() as temporary, contextlib.chdir(temporary):
+            root = Path('reports/validation')
+            evidence = root / 'evidence'
+            evidence.mkdir(parents=True)
+            baseline_member = 'reports/original/evidence/state.json'
+            baseline_locator = str(root / 'history.zip') + '!/' + baseline_member
+            baseline = [{'document_id': 'vbpl:' + str(i), 'url': 'url:' + str(i),
+                         'raw_directory': 'raw/' + str(i), 'document_scope': 'trung_uong'}
+                        for i in range(1, 151)]
+            with zipfile.ZipFile(root / 'history.zip', 'w') as history:
+                history.writestr(baseline_member, json.dumps({'documents': baseline}))
+            scopes = ['trung_uong', 'dia_phuong'] * 170 + ['trung_uong'] * 9
+            selected = [{'document_id': 'vbpl:' + str(i + 151), 'document_scope': scope}
+                        for i, scope in enumerate(scopes)]
+            state = {'target': 349, 'scope_targets': {'trung_uong': 179, 'dia_phuong': 170},
+                     'documents': selected, 'baseline_validations': baseline,
+                     'run_configuration': {'wave_size': 20, 'require_wave_gates': True,
+                                           'baseline_manifests': [baseline_locator],
+                                           'scope_prefix': scopes}}
+            (evidence / 'state.json').write_text(json.dumps({'target_total': 500}))
+            (evidence / 'corpus_validation_state.json').write_text(json.dumps(state))
+            (evidence / 'target_manifest.json').write_text(json.dumps({
+                'target_total': 500, 'documents': [{'document_id': 'vbpl:' + str(i)} for i in range(1, 500)] +
+                [{'document_id': 'vbpl:a9bea550-bbe3-11f1-a338-51a5cc429fc7'}]}))
+            (evidence / 'cumulative_reviews.json').write_text(json.dumps({'documents': []}))
+
+            def audit_config(regenerate, config):
+                loaded = load_state(config)
+                previous = baseline_documents(config)
+                self.assertEqual(config.batch_size, 349)
+                self.assertEqual(config.wave_size, 20)
+                self.assertTrue(config.require_wave_gates)
+                self.assertEqual(config.scope_prefix, tuple(scopes))
+                # The actual audit includes saved baselines plus the golden,
+                # never just the last selected subrun.
+                self.assertEqual(len(loaded['documents']) + len(previous) + 1, 500)
+                self.assertEqual(previous, baseline)
+                self.assertFalse(regenerate)
+                return 0
+
+            with patch.object(validate.runner, 'audit_wave', side_effect=audit_config):
+                self.assertEqual(main(['validate', 'audit']), 0)
+            output = Path('rebuilt')
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(main(['validate', 'report', '--output-dir', str(output)]), 0)
+            report = json.loads((output / 'report.json').read_text())
+            self.assertEqual(report['metrics']['target_total'], 500)
+            self.assertFalse(report['metrics']['acceptance_complete'])
+            self.assertEqual(json.loads((evidence / 'corpus_validation_state.json').read_text()), state)
+            with patch.object(validate.runner, 'audit_wave', return_value=0) as explicit:
+                self.assertEqual(main(['validate', 'audit', '--sample-manifest', 'explicit.json',
+                                       '--batch-size', '12', '--central-target', '8']), 0)
+            config = explicit.call_args.args[1]
+            self.assertEqual(config.sample_manifest, Path('explicit.json'))
+            self.assertEqual(config.batch_size, 12)
+            self.assertEqual(config.scope_targets, {'trung_uong': 8, 'dia_phuong': 4})
+            self.assertEqual(config.baseline_manifests, ())
+
+    def test_explicit_saved_scope_override_is_not_replaced_by_inferred_quotas(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            evidence = root / 'evidence'
+            evidence.mkdir()
+            (evidence / 'corpus_validation_state.json').write_text(json.dumps({
+                'target': 3, 'scope_targets': {'trung_uong': 1, 'dia_phuong': 2}}))
+            with patch.object(validate.runner, 'audit_wave', return_value=0) as operation:
+                self.assertEqual(main(['validate', 'audit', '--report-dir', str(root),
+                                       '--central-target', '2', '--wave-size', '1']), 0)
+            config = operation.call_args.args[1]
+            self.assertEqual(config.scope_targets, {'trung_uong': 2, 'dia_phuong': 1})
+            self.assertEqual(config.wave_size, 1)
+
     def test_help_for_every_command_avoids_operational_work(self):
         for arguments in (['--help'], ['crawl', '--help'], ['extract', '--help'],
                           ['validate', '--help'], ['audit', '--help'],

@@ -16,7 +16,7 @@ from vietnam_legal_rag.ingestion.validation.quality import Quality, issue_summar
 from vietnam_legal_rag.ingestion.validation.extract import (
     schema_validator, semantic_roots, validate_result, walk_content,
 )
-from vietnam_legal_rag.ingestion.html.source import parse_html
+from vietnam_legal_rag.ingestion.html.source import parse_html, NON_CONTENT
 
 
 def sha(path):
@@ -68,6 +68,8 @@ def audit_document(directory, regenerate=False, extracted_dir=Path("data/extract
         if not evidence["meaningful_text_preserved"]:
             errors.append(f"{path.name}: meaningful source text differs")
         errors.extend(f"{path.name}: {error}" for error in audit_source_records(root, data))
+        if path.stem == 'content':
+            errors.extend(f"{path.name}: {error}" for error in audit_physical_tables(root, data))
         if data['status'] != status(data['issue_summary']):
             errors.append(f"{path.name}: status differs from diagnostics")
         tab_manifest = manifest['tabs'][path.stem]
@@ -167,4 +169,55 @@ def audit_source_records(root, data):
                     value = value.get('text')
                 if value and source_cell and compact_text(value) not in compact_text(source_cell.text()):
                     errors.append('History field differs from its explicit source cell')
+    return errors
+
+
+def audit_physical_tables(root, data):
+    """Compare physical cell membership/spans/text directly to stored HTML.
+
+    This does not invoke the extractor's geometry or semantic classification.
+    Nested tables have their own physical rows and cells.
+    """
+    errors = []
+    sources = {n.dom_order: n for n in root.find()}
+    ignored = {i['order'] for i in data.get('ignored_elements', [])}
+    def meaningful(node):
+        if node.dom_order in ignored or node.tag in NON_CONTENT:
+            return ''
+        return ''.join(c if isinstance(c, str) else meaningful(c) for c in node.children)
+    for table in walk_content([data['document']]) if data.get('document') else []:
+        if table['type'] != 'table':
+            continue
+        source = sources.get(table['source_ref']['dom_order'])
+        if not source or source.tag != 'table':
+            errors.append('Semantic table has no physical source table')
+            continue
+        rows = []
+        for child in source.children:
+            if not hasattr(child, 'tag'):
+                continue
+            if child.tag == 'tr':
+                rows.append(child)
+            elif child.tag in {'thead', 'tbody', 'tfoot'}:
+                rows.extend(n for n in child.children if hasattr(n, 'tag') and n.tag == 'tr')
+        cells = [(r, c) for r, row in enumerate(rows) for c in row.children
+                 if hasattr(c, 'tag') and c.tag in {'td', 'th'}]
+        actual = {c['source_ref']['dom_order']: c for c in table['cells']}
+        if len(actual) != len(table['cells']) or set(actual) != {c.dom_order for _, c in cells}:
+            errors.append('Physical table cell set differs from source')
+        for row, source_cell in cells:
+            cell = actual.get(source_cell.dom_order)
+            if not cell:
+                continue
+            if cell['row'] != row:
+                errors.append('Physical cell row differs from source')
+            for name in ('rowspan', 'colspan'):
+                if cell['original_' + name] != source_cell.attrs.get(name, '1'):
+                    errors.append('Physical source span attribute changed')
+            if compact_text(cell['effective_text']) != compact_text(meaningful(source_cell)):
+                errors.append('Effective cell text differs from physical source text')
+        height = max([len(rows), *(c['row'] + c['rowspan'] for c in table['cells'])])
+        width = max([0, *(c['column'] + c['colspan'] for c in table['cells'])])
+        if table['grid_shape'] != {'rows': height, 'columns': width}:
+            errors.append('Logical grid extent differs from physical rectangles')
     return errors
