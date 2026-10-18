@@ -1,0 +1,1185 @@
+--- baseline/src/vietnam_legal_rag/cli/validate.py
++++ current/src/vietnam_legal_rag/cli/validate.py
+@@ -18,7 +18,7 @@
+     parser.add_argument('--wave-size', type=int, default=10)
+     parser.add_argument('--wave-offset', type=int, default=0, help='Offset for continuous milestone progress wave numbering')
+     parser.add_argument('--sample-manifest', '--state', dest='sample_manifest', type=Path)
+-    parser.add_argument('--report-dir', type=Path, help='Run reports/evidence directory; defaults to reports/extract-validation-N')
++    parser.add_argument('--report-dir', type=Path, help='Run reports/evidence directory; defaults to reports/validation')
+     parser.add_argument('--target-manifest', type=Path, help='Total-corpus target for the report action; reads cumulative source reviews')
+     parser.add_argument('--scope-prefix-manifest', type=Path, help='Preserve actual source-scope order from an earlier selected sample')
+     parser.add_argument('--central-target', type=int)
+--- baseline/src/vietnam_legal_rag/evaluation/progress.py
++++ current/src/vietnam_legal_rag/evaluation/progress.py
+@@ -22,7 +22,7 @@
+     evidence = report_dir / 'evidence'
+     path = evidence / 'state.json'
+     state = json.loads(path.read_text()) if path.exists() else {
+-        'run_identifier': 'vbpl-total-500', 'target_total': 500,
++        'run_identifier': report_dir.name, 'target_total': updates.get('target_total', 0),
+         'target_manifest': [], 'selected_ids': [], 'successfully_captured_ids': [],
+         'extracted_ids': [], 'validated_ids': [], 'audited_ids': [],
+         'parser_bug_ids': [], 'source_ambiguity_ids': [], 'unresolved_ids': [],
+@@ -43,8 +43,8 @@
+             'Inspect git status/diff and the interrupted RAW/Extract artifact. Reconcile saved '
+             'progress with actual manifests and parser fingerprints. Never restart completed '
+             'work or recrawl complete RAW. Regenerate stale derived output offline and continue '
+-            'from the first unfinished atomic operation. Complete the current 100 milestone '
+-            'before assembling the total-500 target. Gate each hardening wave before acquisition.\n')
++            'from the first unfinished atomic operation. Use the configured target and sample '
++            'manifests. Gate each hardening wave before acquisition.\n')
+     checkpoint = evidence / 'checkpoint.md'
+     checkpoint.write_text(
+         '# Current resumable validation progress\n\n'
+@@ -56,6 +56,6 @@
+         f"Current document: {state.get('current_document')}\n\n"
+         f"Next operation: {state.get('next_required_step')}\n\n"
+         'Read state.json for parser fingerprints, test status, unresolved findings, target '
+-        'membership and interruption history. Preserve all completed work; no final cleanup '
+-        'until the total-500 milestone is complete.\n')
++        'membership and interruption history. Preserve all completed work and unique evidence '
++        'until the configured target has passed its acceptance gates.\n')
+     return state
+--- baseline/src/vietnam_legal_rag/evaluation/report_writer.py
++++ current/src/vietnam_legal_rag/evaluation/report_writer.py
+@@ -354,7 +354,7 @@
+                       json.dumps(value, ensure_ascii=False, indent=2), '```', '']
+     lines += ['## Resume', '', 'Read evidence/state.json, checkpoint.md, target_manifest.json and resume.md. '
+               'Preserve complete RAW and reviewed fixtures; regenerate stale outputs offline. '
+-              'Do not perform final repository cleanup while the target is incomplete.', '']
++              'Resume the first unfinished operation; preserve unique evidence during cleanup.', '']
+     (report_dir / 'report.md').write_text('\n'.join(lines), encoding='utf-8')
+     return report
+ 
+--- baseline/src/vietnam_legal_rag/evaluation/validation_runner.py
++++ current/src/vietnam_legal_rag/evaluation/validation_runner.py
+@@ -120,6 +120,7 @@
+         captured = list(dict.fromkeys(previous.get('successfully_captured_ids', []) +
+                                       [d['document_id'] for d in documents]))
+         record_progress(config.progress_dir, step,
++                        target_total=previous.get('target_total', config.batch_size),
+                         active_validation_state=str(config.sample_manifest),
+                         current_wave=config.wave_offset + ((len(state['documents']) - 1) // config.wave_size + 1 if state['documents'] else 1),
+                         current_document=state.get('current_document'),
+--- baseline/src/vietnam_legal_rag/evaluation/config.py
++++ current/src/vietnam_legal_rag/evaluation/config.py
+@@ -41,7 +41,7 @@
+                 self.scope_prefix.count('trung_uong') > central or
+                 self.scope_prefix.count('dia_phuong') > local):
+             raise ValueError('scope prefix must fit the batch and actual scope targets')
+-        report_dir = self.report_dir or Path(f'reports/extract-validation-{self.batch_size}')
++        report_dir = self.report_dir or Path('reports/validation')
+         object.__setattr__(self, 'central_target', central)
+         object.__setattr__(self, 'local_target', local)
+         object.__setattr__(self, 'report_dir', report_dir)
+--- baseline/src/vietnam_legal_rag/evaluation/audit/hierarchy.py
++++ current/src/vietnam_legal_rag/evaluation/audit/hierarchy.py
+@@ -306,5 +306,5 @@
+               f'{report["totals"]["tabs"]} tab bảo toàn text và deterministic. Properties/history/relations giữ source records, URL, identifier, ngày, số hiệu và provenance so với baseline. Table kind/grid/raw cell text/text_segments/effective_text và legal/annex counts giữ nguyên.', '',
+               '```bash', 'PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t .',
+               'PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.ingestion.extract_legal_documents --debug-tree',
+-              'PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.cli audit hierarchy --raw data/raw/vbpl --extracted data/extracted/vbpl --sample 0c389a00-78f6-11f1-a726-87c913cf8f30 --report docs/extract-hierarchy.json', '```', '']
++              'PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.cli audit hierarchy --raw data/raw/vbpl --extracted data/extracted/vbpl --sample 0c389a00-78f6-11f1-a726-87c913cf8f30 --report reports/validation/runtime/hierarchy-audit.json', '```', '']
+     return '\n'.join(lines)
+--- baseline/src/vietnam_legal_rag/evaluation/audit/schema.py
++++ current/src/vietnam_legal_rag/evaluation/audit/schema.py
+@@ -265,7 +265,7 @@
+         'Files changed: schema_cleanup.py; extract_quality.py; form_refinement.py; form_validation.py; table_semantics.py; structured_html.py; schemas/extracted.schema.json; audit_vbpl_hierarchy.py; audit_extract_schema.py; test_consistency_cleanup.py; test_form_node_invariant.py; test_form_refinement.py; docs/extracted-schema.md; README.md; generated Extract artifacts and audit reports. The packaged schema uses the existing symlink.', '',
+         '```bash', 'PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t .',
+         'PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.ingestion.extract_legal_documents --debug-tree',
+-        'PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.cli audit schema --raw data/raw/vbpl --extracted data/extracted/vbpl --before /path/to/v2.3.1/extracted --report docs/extract-v2.3.2-schema-audit.json', '```', '',
++        'PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.cli audit schema --raw data/raw/vbpl --extracted data/extracted/vbpl --before /path/to/v2.3.1/extracted --report reports/validation/runtime/schema-audit.json', '```', '',
+         'Freeze decision: no additional semantic rules until a new real-world VBPL source exposes a structure that cannot be faithfully represented.', '']
+     return '\n'.join(lines)
+ 
+--- baseline/tests/unit/evaluation/test_runner.py
++++ current/tests/unit/evaluation/test_runner.py
+@@ -15,6 +15,18 @@
+ 
+ 
+ class ValidationRunnerTests(unittest.TestCase):
++    def test_first_progress_uses_configured_target_without_assuming_milestone_size(self):
++        from vietnam_legal_rag.evaluation.validation_runner import save_state
++        with tempfile.TemporaryDirectory() as temporary:
++            root = Path(temporary)
++            config = ValidationConfig(batch_size=12, report_dir=root, progress_dir=root,
++                                      sample_manifest=root / 'selected.json')
++            state = {'documents': [{'document_id': 'vbpl:1'}]}
++            save_state(state, config)
++            progress = json.loads((root / 'evidence/state.json').read_text())
++            self.assertEqual(progress['target_total'], 12)
++            self.assertEqual(progress['target_manifest_pending_ids'], ['vbpl:1'])
++
+     def test_dns_failure_persists_environment_classification_and_stops_collection(self):
+         import socket
+         from urllib.error import URLError
+@@ -134,7 +146,7 @@
+ 
+     def test_default_paths_follow_batch_size(self):
+         config = ValidationConfig(batch_size=12, wave_size=5)
+-        self.assertEqual(config.report_dir, Path('reports/extract-validation-12'))
++        self.assertEqual(config.report_dir, Path('reports/validation'))
+         self.assertEqual(config.sample_manifest, config.report_dir / 'evidence/state.json')
+         self.assertEqual(config.waves, 3)
+ 
+--- baseline/tests/unit/evaluation/test_report.py
++++ current/tests/unit/evaluation/test_report.py
+@@ -4,6 +4,7 @@
+ from pathlib import Path
+ import tempfile
+ import unittest
++import zipfile
+ 
+ from vietnam_legal_rag.evaluation.config import ValidationConfig
+ from vietnam_legal_rag.evaluation.report_writer import (
+@@ -13,7 +14,7 @@
+ 
+ from tests.support import ROOT
+ from vietnam_legal_rag.ingestion.html.source import parse_html
+-BASELINE = ROOT / 'reports/extract-validation-50'
++HISTORY = ROOT / 'reports/validation/history.zip'
+ 
+ 
+ class SourceEvidenceTests(unittest.TestCase):
+@@ -96,15 +97,33 @@
+ 
+ class ValidationReportTests(unittest.TestCase):
+     def setUp(self):
+-        if not BASELINE.is_dir():
+-            self.skipTest('Historical batch evidence is not available')
+-        self.state = json.loads((BASELINE / 'evidence/state.json').read_text())
++        if not HISTORY.is_file():
++            self.skipTest('Historical batch evidence archive is not available')
++        temporary = tempfile.TemporaryDirectory()
++        self.addCleanup(temporary.cleanup)
++        with zipfile.ZipFile(HISTORY) as archive:
++            prefix = 'reports/extract-validation-50/'
++            for name in archive.namelist():
++                if name.startswith(prefix):
++                    archive.extract(name, temporary.name)
++        self.baseline = Path(temporary.name) / prefix
++        self.state = json.loads((self.baseline / 'evidence/state.json').read_text())
+         if not all((ROOT / d['raw_directory']).is_dir() for d in self.state['documents']):
+             self.skipTest('Immutable batch RAW captures are not available locally')
+ 
+     def test_batch_baseline_metrics_and_documents_are_preserved(self):
+-        result = build_report(ValidationConfig(report_dir=BASELINE))
+-        expected = json.loads((BASELINE / 'report.json').read_text())
++        result = build_report(ValidationConfig(report_dir=self.baseline))
++        expected = json.loads((self.baseline / 'report.json').read_text())
++        # Historical legal/source/audit decisions are immutable. The report also
++        # describes current serialized bundles, which were upgraded uniformly.
++        # Assert those two fields against actual canonical artifacts separately.
++        for document in expected['documents']:
++            output = ROOT / 'data/extracted/vbpl' / document['document_id'].removeprefix('vbpl:')
++            manifest = json.loads((output / 'manifest.json').read_text())
++            document['extracted_files'] = manifest['files']
++            document['text_hashes'] = {
++                f['path']: json.loads((output / f['path']).read_text())['validation']
++                for f in manifest['files']}
+         for key in ('metrics', 'documents', 'repairs', 'golden_validation', 'wave_audits', 'unsuccessful_candidates'):
+             self.assertEqual(result[key], expected[key], key)
+ 
+@@ -133,7 +152,7 @@
+                 path = Path(temporary) / 'selected.json'
+                 path.write_text(json.dumps(state))
+                 result = build_report(ValidationConfig(batch_size=size, central_target=central,
+-                                                       sample_manifest=path, report_dir=BASELINE))
++                                                       sample_manifest=path, report_dir=self.baseline))
+                 self.assertEqual(result['metrics']['crawl']['selected'], size)
+                 self.assertEqual(result['metrics']['crawl']['central'], central)
+                 self.assertEqual(result['metrics']['quality']['schema_valid']['evaluated'], size)
+@@ -144,17 +163,17 @@
+ 
+     def test_report_rejects_incomplete_sample_and_unfinished_review(self):
+         with tempfile.TemporaryDirectory() as temporary:
+-            config = ValidationConfig(batch_size=51, report_dir=BASELINE)
++            config = ValidationConfig(batch_size=51, report_dir=self.baseline)
+             with self.assertRaises(AssertionError):
+                 build_report(config)
+             evidence = Path(temporary)
+             for name in ('repairs.json', 'tests.txt'):
+-                (evidence / name).write_bytes((BASELINE / 'evidence' / name).read_bytes())
+-            reviews = json.loads((BASELINE / 'evidence/reviews.json').read_text())
++                (evidence / name).write_bytes((self.baseline / 'evidence' / name).read_bytes())
++            reviews = json.loads((self.baseline / 'evidence/reviews.json').read_text())
+             reviews['documents'][0]['reviewed'] = False
+             (evidence / 'reviews.json').write_text(json.dumps(reviews))
+             with self.assertRaisesRegex(ValueError, 'unfinished'):
+-                build_report(ValidationConfig(report_dir=BASELINE), evidence_dir=evidence)
++                build_report(ValidationConfig(report_dir=self.baseline), evidence_dir=evidence)
+ 
+ 
+ if __name__ == '__main__':
+--- baseline/docs/extract-validation-workflow.md
++++ current/docs/extract-validation-workflow.md
+@@ -1,282 +1,85 @@
+ # Extract validation workflow
+ 
+-Run commands from the repository root with the existing `.venv`. Extraction
+-and audits are offline; discovery, crawl and source inspection use the network.
++Run from the repository root using `.venv`. Collection is explicit and uses the
++network; extraction, audits, and report rebuilding operate offline on stored RAW.
++Reusable implementation belongs in `ingestion/` and `evaluation/`; command parsing
++belongs in `cli/`. The four scripts remain thin compatibility entrypoints.
+ 
+-## Repository hygiene classification
++## Canonical locations
+ 
+-- **A — keep permanently:** production modules, both extraction schema copies,
+-  reusable audit/comparison modules, all tests and fixture definitions, existing
+-  documentation and the canonical batch-50 Markdown/JSON reports. The packaged
+-  schema serves installed distributions; it is not a redundant scratch copy.
+-- **B — keep and reorganize:** batch-50 audit/test logs and repairs/reviews/state
+-  JSON belong in `reports/extract-validation-50/evidence/`. Preserve all five:
+-  state records candidate attempts and audit history; reviews record explicit
+-  semantic decisions; repairs include sampling fixes and expectation corrections;
+-  logs record the original checks. Overlap with the report does not justify
+-  discarding that evidence.
+-- **C — regenerable and ignored:** Python bytecode/cache directories and temporary
+-  verification files under report `runtime/` or `tmp/` directories.
+-- **D — safe to delete:** the inspected Python caches and cleanup verification
+-  scratch outputs after their checks complete. No unique source, corpus or
+-  validation evidence is classified for deletion.
++- `data/raw/vbpl/<document_scope>/<source-id>/`: immutable capture evidence.
++- `data/extracted/vbpl/<source-id>/`: one accepted JSON bundle per source identity.
++- `reports/validation/report.json` and `report.md`: current total-corpus results.
++- `reports/validation/evidence/`: live state, target, cumulative reviews, parser
++  freeze, uniform verification, tests, and completion context.
++- `reports/validation/history.zip` and `history-index.json`: unique earlier
++  acceptance/source-review evidence, exact original commands, and member hashes.
++- `reports/consolidation/migration.json`: migration inventory and disposition ledger.
+ 
+-Retain `AGENTS.md`: its package layout, offline extraction, RAW immutability and
+-regression rules remain applicable. Retain the installed `.venv`, its active
+-distribution metadata, local configuration,
+-all versioned historical audits in `docs/`, and the older local
+-`evaluation/results/vbpl-verification.json`: these are useful history or active
+-environment files, not proven disposable scratch files.
++History members retain original paths and bytes. `history.zip!/reports/...`
++locators must be extracted before use. Historical batch-report tests extract the
++50-document evidence to a temporary directory and run the real report assertions.
++Older generated documentation and superseded intermediate diagnostics are removed;
++current operational guidance and unique acceptance proof remain.
+ 
+-## Python tooling architecture
+-
+-Reusable capture/extraction logic stays in `ingestion/`. `evaluation/` owns
+-`config.py`, `validation_sampler.py`, `validation_runner.py`, `audit/extract.py`,
+-`audit/hierarchy.py`, `audit/schema.py`, `extract_comparison.py` and
+-`report_writer.py`. Golden count expectations are declarative packaged data in
+-`evaluation/golden_invariants.json`, with the original invariants unchanged.
+-`cli/` owns all argument parsing and user-facing commands. Libraries receive
+-explicit configuration; the runner no longer mutates module globals.
+-
+-`pyproject.toml` defines `vlr` and the two retained console aliases.
+-Install/editably reinstall the package locally to refresh those entrypoints.
+-The same commands work through `.venv/bin/python -m vietnam_legal_rag.cli`;
+-individual `cli.crawl`, `cli.extract`, `cli.validate`, `cli.audit` and
+-`cli.compare` modules are also runnable. The old ingestion `main()` functions
+-are lazy adapters to preserve existing imports and module invocations.
+-
+-| Existing script | Decision | Implementation |
+-|---|---|---|
+-| `audit_extract_schema.py` | Move logic; retain wrapper | `evaluation/audit/schema.py`, `cli/audit.py` |
+-| `audit_vbpl_hierarchy.py` | Move logic; retain wrapper | `evaluation/audit/hierarchy.py`, `cli/audit.py` |
+-| `compare_vbpl_extract.py` | Move logic; retain wrapper | `evaluation/extract_comparison.py`, `cli/compare.py` |
+-| `run_extract_validation.py` | Move logic; retain wrapper | runner, sampler, per-document audit and `cli/validate.py` |
+-| `write_extract_validation_50_report.py` | Remove redundant batch-specific wrapper after equivalent report verification | `evaluation/report_writer.py`, `vlr validate report` |
+-
+-The audit/comparison wrappers retain historical commands; the generic validation
+-wrapper preserves the existing operational command.
+-They contain only imports and argument forwarding. The batch-specific report
+-wrapper was removed after the generic command reproduced the canonical report
+-metrics and evidence. Use `vlr validate report --report-dir RUN --output-dir DEST`.
+-New batch sizes need no new source files.
+-
+-`src/vietnam_legal_rag.egg-info/` is ignored, untracked generated build metadata.
+-It can be removed after a verified editable install: active distribution
+-metadata resides under `.venv/.../site-packages/*.dist-info`, and the editable
+-`.pth` points to `src/`. Building/installing may regenerate egg-info; do not
+-commit it. Keep the virtual environment's installed metadata.
+-
+-## Batch-50 regression baseline
+-
+-Canonical results: [report.md](../reports/extract-validation-50/report.md) and
+-[report.json](../reports/extract-validation-50/report.json). Original supporting
+-evidence is in `../reports/extract-validation-50/evidence/`.
+-
+-`evidence/state.json` is the fixed selected-sample manifest as well as resumable
+-run state. Preserve its 50 document identities, order, RAW paths, attempts and
+-wave history. Preserve `data/interim/discovered_urls.jsonl` and its companion
+-discovery JSON, all RAW captures (including failed/scope-mismatch captures),
+-the golden RAW, and current Extract results. Large local corpora remain ignored
+-by Git and need to be retained separately when reproducing on another machine.
+-
+-`tests/fixtures/vbpl_batch_regressions.json` pins 25 promoted real captures by
+-source hash and expected structure/diagnostics. `vbpl_primary_captures.json`
+-pins the five original representative captures. Neither fixture is temporary.
+-Portable parser-pattern tests and sampler tests run independently of those
+-local captures; capture-dependent tests can skip when RAW is unavailable.
++## Commands and configuration
+ 
+ ```bash
++.venv/bin/python -m vietnam_legal_rag.cli validate --help
++.venv/bin/python -m vietnam_legal_rag.cli extract --help
+ PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests -t . -v
+-.venv/bin/python -m vietnam_legal_rag.cli validate --help
+-.venv/bin/python -m vietnam_legal_rag.cli validate audit
++.venv/bin/python -m vietnam_legal_rag.cli validate report \
++  --report-dir reports/validation \
++  --sample-manifest reports/validation/evidence/corpus_validation_state.json \
++  --target-manifest reports/validation/evidence/target_manifest.json \
++  --output-dir reports/validation/runtime/rebuilt
+ ```
+ 
+-The audit reads existing Extract files, reparses RAW for deterministic comparison,
+-and updates its selected state file with the new audit. To preserve historical
+-state during a check, copy `evidence/state.json` into the ignored `runtime/`
+-directory and pass that copy with `--sample-manifest` (`--state` remains an alias).
+-Its exit status is **1** for the retained source warnings (41/50 semantically
+-complete), even when all integrity checks pass; inspect `audit_errors`, quality
+-flags and diagnostics. The golden must retain all invariants and zero warnings.
+-`audit --regenerate` re-extracts from immutable RAW with the current parser;
+-use it only when regeneration is intended.
++Default report root is `reports/validation`; default Extract root is
++`data/extracted/vbpl`. A new independent validation run must explicitly select a
++separate report/state root; changing batch size does not create a new data store.
++The selected state declares its target; mismatched configuration is rejected.
++`--batch-size`, `--wave-size`, scope quotas and `--wave-offset` configure sampling.
++Scope targets must sum to the sample target; selection alternates until a quota
++fills. `--sample-manifest` is full state JSON, not a bare URL list.
+ 
+-Generic reporting requires the selected run state plus `repairs.json`,
+-`reviews.json` and a passing `tests.txt` in its evidence directory. The fixtures
+-and test-source paths are configurable; `--tests-dir` is the test root containing
+-`unit/` and `regression/`. It checks the configured sample count,
+-distinct identities/URLs, scope quotas/order, completed semantic reviews and all
+-previous integrity/structure criteria. Warnings keep their existing quality flags.
+-Markdown describes the actual metrics, waves and golden counts rather than
+-making batch-specific historical claims. Original canonical batch-50 reports
+-remain unchanged; rebuild to a separate directory:
++`inventory-local` verifies complete RAW, provenance, identity and duplicates.
++`select-local` reuses verified unused captures without network requests. Crawl,
++discover and inspect are separate network operations. Never recrawl complete RAW
++merely to refresh derived output. Never alter extracted legal JSON manually.
+ 
+-```bash
+-.venv/bin/python -m vietnam_legal_rag.cli validate report \
+-  --report-dir reports/extract-validation-50 \
+-  --output-dir reports/extract-validation-50/runtime/rebuilt
+-```
++## Gates, recovery and evidence
+ 
+-`vlr audit hierarchy`, `vlr audit schema` and `vlr compare` expose the existing
+-independent checks. Some freeze-contract checks intentionally refer to the
+-representative fixtures; their invariants are preserved, not generalized away.
++`--require-wave-gates` requires current-parser audits, explicit source reviews,
++repair evidence and passing tests before acquiring the next wave. Repeat
++`--baseline-manifest` to include earlier samples without editing their historical
++state. Extract archived baseline state to a temporary working directory first.
++`complete-wave --wave N` records each gate; partial final waves are allowed only
++when the configured overall target is assembled.
+ 
+-## Next validation phase and final extraction
++`audit --regenerate` rebuilds from preserved RAW; audits check schema, source text,
++provenance, order, hierarchy, tables and determinism against independent evidence.
++Warnings may produce exit 1; classify actual diagnostics rather than treating an
++exit status as proof of parser failure. Golden invariants remain unchanged.
++After the last parser change, uniformly regenerate and audit the complete target.
++A passing sample is never proof of corpus-wide correctness.
+ 
+-The currently authorized sequence is **batch-50 baseline → 100 new documents
+-in five gated waves of 20 → a milestone of 500 distinct usable local documents
+-total**. The total includes golden, previous samples and complete unused local
+-captures, each source identity counted once. Inventory all RAW before collecting
+-the deficit; preserve surplus captures. Final repository hygiene follows the
+-complete total-500 milestone, rather than the intermediate 100 report.
++`--progress-dir` records atomic state/checkpoint/resume evidence. Before expensive
++operations persist the command, parser/schema state, scope, output and recovery
++step; immediately record the actual exit/result afterward. On interruption read
++AGENTS.md, state, target manifest, checkpoint, and actual artifacts, then continue
++from the first unfinished operation. Do not restart completed work.
+ 
+-`vlr validate` accepts `--batch-size`, `--wave-size`, `--sample-manifest`,
+-`--report-dir`, `--central-target`, `--local-target`, `--inventory`, `--raw-dir`
+-and `--extracted-dir`, plus `--regenerate` during audit. `--audit` is an alias
+-for the audit action. Defaults reproduce batch-50
+-(50 documents, ten per wave, the existing discovery inventory and Extract root).
+-A future batch must use a separate state path and explicit batch size; a target
+-mismatch is rejected. Candidate selection and parser/audit semantics are retained.
+-Targets default to an even split (Central receives the extra document for an
+-odd batch). Supplying one scope target derives the other; supplying both must
+-sum to the batch size. Selection alternates until one quota is filled and then
+-uses the remaining scope. Resuming checks target and scope membership/order.
+-`--sample-manifest` points to the full run-state JSON, whose `documents` list
+-records the fixed selected sample; it is not a bare URL list. New state files
+-also record `scope_targets`; historical state without that field is supported.
+-The sampler excludes the golden and already
+-captured URLs. Existing discovery/crawl/inspect actions remain separate from the
+-offline audit. Do not rediscover into the original inventory merely to reproduce
+-an already selected sample.
++The total-report action reads cumulative validations from the selected state,
++`cumulative_reviews.json`, and `report-context.json`. Source reviews must match
++the current implementation fingerprint. Explicit successful uniform validation,
++wave gates, tests and repository hygiene are also required for final acceptance.
++Automated semantic completeness (312/500 in the accepted milestone) is distinct
++from reviewed semantic completeness (300/500); 200 documents retain source
++ambiguity. Preserve missing/ambiguous source information rather than inventing it.
+ 
+-For the eventual final parser, regenerate the selected corpora from unchanged
+-RAW, run the complete unit/capture regression suite, and audit actual Extract
+-artifacts. Keep new run reports/evidence separate from this historical baseline.
+-Normalized, Chunking, Embeddings and RAG remain outside this workflow.
+-
+-### Incremental gates and recovery
+-
+-Use repeatable `--baseline-manifest` arguments to include previous sample states
+-without writing to their evidence. `--require-wave-gates` prevents acquisition
+-before the preceding wave has current parser audits, explicit source reviews,
+-repair evidence and passing regression tests. `complete-wave --wave N` records
+-that gate. `audit --regenerate` must cover every accumulated document before a
+-gate and after the last parser change. The parser fingerprint records code
+-changes within the existing schema/parser release contract.
+-
+-`select-local --wave N` verifies source hashes/completeness and selects unused
+-local RAW using the configured quotas and diversity hints. It performs no
+-network requests. Repeated `--exclude-document-id` arguments protect additional
+-previously reviewed identities. `inventory-local` writes the canonical identity,
+-URL, completeness, duplicate and role evidence to
+-`evidence/local_raw_inventory.json`; unusable captures never count.
+-
+-`--progress-dir` maintains atomic overall progress in `evidence/state.json` and
+-human recovery instructions in `checkpoint.md` and `resume.md`. State is saved
+-after each capture, selection, extraction and document audit, and after each
+-completed cumulative validation. Repair/test/source-review evidence must also
+-be persisted before proceeding. On interruption, reconcile these files with
+-actual RAW/Extract manifests and git status, then continue the first unfinished
+-step. Never recrawl complete RAW or trust a stale parser fingerprint.
+-
+-Use a separate `--extracted-dir` for current accumulated validations to preserve
+-the reproducibility of historical reports and their recorded output hashes.
+-Historical parser artifacts are evidence, not current acceptance outputs.
+-Reports distinguish actual new network captures from reused local documents.
+-
+-Meaningful RAW text containing U+FFFD replacement glyphs is retained exactly and
+-reported as `source_text_encoding_ambiguity`. Do not reconstruct lost characters
+-or force semantic completeness. Source-review evidence supports exact HTML text
+-leaf references as well as element references. When a newly detected source
+-ambiguity or corrected source role exposes an incorrect fixture expectation,
+-record its before/after values and RAW anchors in the active report. Preserve
+-historical reports and source hashes; retain or strengthen the unrelated
+-structural assertions.
+-
+-### Total-corpus reports and partial waves
+-
+-`inventory-local` accepts repeated `--baseline-manifest` and `--capture-fixture`
+-arguments to record sample and reviewed-capture membership without counting a
+-source identity twice. Keep the canonical inventory and target manifest under
+-the total milestone's evidence directory. Target assembly can remain incomplete;
+-do not fill it with duplicate identities or incomplete captures.
+-
+-`--wave-offset` gives later configured subruns continuous progress numbering.
+-A partial local subrun is not automatically a completed hardening wave: when
+-`--progress-dir` records an incomplete overall target, `complete-wave` rejects
+-a partial final subrun wave. Keep those already processed documents pending and
+-add only the documents needed to finish their 20-document wave. A shorter final
+-wave is permitted when the overall target has actually been assembled.
+-
+-The generic report action also accepts `--target-manifest`. It reads cumulative
+-audits from `--sample-manifest`, source reviews from
+-`evidence/cumulative_reviews.json`, and optional narrative/completion evidence
+-from `evidence/report-context.json`. For example, while the existing-local subrun
+-is the current accumulated audit:
+-
+-```bash
+-.venv/bin/python scripts/run_extract_validation.py report \
+-  --batch-size 32 --wave-size 20 --central-target 4 \
+-  --sample-manifest reports/extract-validation-500/evidence/local_validation_state.json \
+-  --report-dir reports/extract-validation-500 \
+-  --target-manifest reports/extract-validation-500/evidence/target_manifest.json
+-```
+-
+-Rates use the actual current-parser validated denominator; the report separately
+-states the target deficit. Current source reviews must match the implementation
+-fingerprint. Overall completion additionally requires explicit successful
+-uniform revalidation, wave gates, tests and repository hygiene checks. An
+-incomplete total report and its continuously written checkpoint remain valid
+-recovery evidence; they do not claim that the total milestone is finished.
+-
+-The read-only source inspector waits for document tabs or an explicit missing
+-document response, with a bounded timeout. A loading screen alone is inconclusive.
+-Record source availability separately from parser failures, and preserve complete
+-local RAW when discovery is empty or the source refuses access.
+-
+-When continuing a differently balanced earlier local subrun, use
+-`--scope-prefix-manifest` to preserve its actual selected scope order. The
+-configured total quotas must cover that prefix; subsequent selection alternates
+-within the remaining quotas. State/configuration mismatch checks still apply.
+-Retain the earlier subrun as evidence and adopt its already validated records
+-into a separately configured cumulative state rather than recrawling them.
+-
+-For a total milestone with `--progress-dir`, collection checks the complete local
+-inventory before any source request and each further candidate. Successful
+-captures also refresh the usable local count immediately, including captures
+-whose source scope differs from the sampling hint. Reaching the overall RAW
+-total stops acquisition; assemble/reuse those stored documents to finish the
+-target rather than collecting extra samples solely to satisfy a scope quota.
+-
+-## Cleanup verification (2026-10-08)
+-
+-The full unit suite passed: 251 tests, no skips, including golden, parser,
+-batch-pattern, capture and sampler regressions. The reserved integration
+-directory contains no tests. An offline audit of a temporary state copy
+-reproduced every document validation and golden invariant exactly: zero audit
+-errors, with the nine historical source-warning cases retained. The five evidence
+-files remained byte-identical. Rebuilt report Markdown matched byte-for-byte;
+-report JSON matched apart from its regenerated timestamp. The canonical reports
+-were only edited to update paths/commands.
+-
+-SHA-256 checks confirmed all 1,139 protected data, source, schema, fixture and
+-evaluation files stayed unchanged. All 50 selected RAW paths, 25 promoted
+-regression captures and five primary capture identities resolved. No new sample
+-was selected, no crawl started, and no parser/schema behavior changed. Temporary
+-verification outputs and Python caches were removed after verification.
+-
+-## CLI consolidation verification (2026-10-08)
+-
+-All 264 unit tests passed, with no skips. Generic-report tests cover smaller and
+-unequal-scope samples and reject incomplete samples/unreviewed evidence. The
+-batch-50 machine metrics, document evidence, repairs, golden and wave history
+-reproduced exactly. Offline auditing of copied state reproduced all existing
+-document validations and golden invariants. CLI/module/compatibility help,
+-editable installation and regular wheel contents were verified. Canonical
+-reports/evidence and RAW/Extract data were not rewritten. No crawl was started.
+-Independent hierarchy/schema/comparison commands also passed against all five
+-original representative captures (25 JSON artifacts), preserving their two
+-existing source warnings. Pre-existing crawler/extractor functions/classes and
+-all independent audit calculations/checks remained structurally identical.
+-
+-Source responsibilities, move mappings and test discovery: [Python layout](python-layout.md).
++The accepted 500-document collection includes earlier samples and unused local
++captures, counting each source identity once. Its final frozen output hashes and
++RAW hashes are retained. The migration validates those bytes without expensive
++regeneration. Later parser work must establish new uniform acceptance evidence.
++Keep regression fixtures, schemas, RAW, secrets and all `.gitkeep` files intact.
+--- baseline/docs/data-conventions.md
++++ current/docs/data-conventions.md
+@@ -1,6 +1,6 @@
+ # Quy ước dữ liệu pháp luật
+ 
+-Schema extracted đã được triển khai: xem [extracted 2.1.0](extracted-schema.md).
++Schema extracted đã được triển khai: xem [extracted 2.3.2](extracted-schema.md).
+ Các trường tài liệu canonical và đoạn trích bên dưới vẫn là đề xuất cho các bước sau.
+ 
+ ## Tài liệu
+@@ -64,3 +64,22 @@
+ 
+ `data/samples/`, `tests/fixtures/` và `evaluation/datasets/` có thể chứa dữ liệu nhỏ
+ để chia sẻ trong repo; kiểm tra quyền sử dụng và loại bỏ thông tin nhạy cảm trước khi commit.
++
++## Canonical Extract and validation evidence
++
++All accepted VBPL Extract bundles live at `data/extracted/vbpl/<source-id>/`,
++independent of sample size. The directory name is the stable source identity
++suffix of `document_id` (`vbpl:<source-id>`), not the legal document number.
++Never overwrite conflicting bundles by filename alone: verify identity, RAW
++provenance, schema, parser fingerprint and accepted output hashes first.
++Future ordinary extraction and validation use this collection. For experiments,
++use a disposable explicit output root and promote only verified results.
++
++The active report and operational state live in `reports/validation/` and its
++`evidence/` directory. Unique earlier acceptance/source-review evidence is in
++`history.zip`, with original repository member paths and SHA-256 values in
++`history-index.json`. A locator `history.zip!/reports/...` identifies an immutable
++member, not a filesystem directory. Extract members to a temporary directory
++when reproducing historical commands. Original bytes and commands stay unchanged
++in the archive; active manifests use current paths. Migration dispositions,
++identity comparisons and before/after inventory live in `reports/consolidation/`.
+--- baseline/docs/python-layout.md
++++ current/docs/python-layout.md
+@@ -17,41 +17,9 @@
+ - `evaluation/progress.py` and `wave_gate.py`: atomic resumable evidence and source-review/test/cumulative-validation gates.
+ - `cli/`: thin crawl/extract/validate/audit/compare commands.
+ 
+-Domain implementations stay separate. At the initial organization checkpoint,
+-none exceeded 640 lines; subsequent parser hardening expanded these modules.
+-Only identical helpers were consolidated: ancestor-aware `walk` in validation,
+-`sha` in the extract audit, and `semantic_nodes` in schema refinement. Existing
+-callers import those shared functions. No blanket compatibility modules were added.
+-
+-## Module move/rename map
+-
+-All listed modules were moved with import updates. Other source modules and
+-placeholder `__init__.py` files were retained.
+-
+-| Previous package-relative module | Current module |
+-|---|---|
+-| `ingestion.html_source` | `ingestion.html.source` |
+-| `ingestion.html_tables` | `ingestion.html.tables` |
+-| `ingestion.structured_html` | `ingestion.html.structure` |
+-| `ingestion.legal_hierarchy` | `ingestion.semantics.hierarchy` |
+-| `ingestion.quoted_content` | `ingestion.semantics.quotations` |
+-| `ingestion.table_semantics` | `ingestion.semantics.tables` |
+-| `ingestion.vbpl_tabs` | `ingestion.semantics.vbpl` |
+-| `ingestion.form_refinement` | `ingestion.refinement.forms` |
+-| `ingestion.semantic_refinement` | `ingestion.refinement.semantic` |
+-| `ingestion.schema_cleanup` | `ingestion.refinement.schema` |
+-| `ingestion.extract_quality` | `ingestion.validation.quality` |
+-| `ingestion.extract_validation` | `ingestion.validation.extract` |
+-| `ingestion.form_validation` | `ingestion.validation.forms` |
+-| `ingestion.hierarchy_validation` | `ingestion.validation.hierarchy` |
+-| `evaluation.extract_audit` | `evaluation.audit.extract` |
+-| `evaluation.hierarchy_audit` | `evaluation.audit.hierarchy` |
+-| `evaluation.schema_audit` | `evaluation.audit.schema` |
+-
+-The schema resource stays anchored to `vietnam_legal_rag.ingestion`; packaged
+-golden invariants stay in `evaluation/golden_invariants.json`. Versions remain
+-2.3.2. Old module imports in active source/tests are replaced; historical audit
+-documents retain the names used when those runs happened.
++The packaged schema points to the authoritative repository schema; packaged golden
++invariants live in `evaluation/golden_invariants.json`. Schema/parser release 2.3.2
++is separate from the implementation fingerprint used by validation gates.
+ 
+ ## Test organization
+ 
+@@ -67,27 +35,6 @@
+ and wave-selection tests remain under `tests/unit/evaluation/`.
+ Package `__init__.py` files allow standard unittest discovery to recurse.
+ 
+-| Previous test filename(s) under `tests/unit/` | Current path(s) under `tests/` |
+-|---|---|
+-| `test_crawl_legal_documents.py` | `unit/ingestion/test_crawl.py` |
+-| `test_legal_hierarchy.py` | `unit/ingestion/semantics/test_hierarchy.py` |
+-| `test_structured_html.py` | `unit/ingestion/html/test_structure.py` |
+-| `test_semantic_refinement.py` | `unit/ingestion/refinement/test_semantic.py` |
+-| `test_tooling_cli.py` | `unit/cli/test_commands.py` |
+-| `test_validation_report.py` | `unit/evaluation/test_report.py` |
+-| `test_validation_runner.py` | `unit/evaluation/test_runner.py` |
+-| `test_validation_sampler.py` | `unit/evaluation/test_sampler.py` |
+-| `test_batch_capture_regressions.py` | `regression/test_batch_capture.py` |
+-| `test_batch_source_patterns.py` | `regression/test_source_patterns.py` |
+-| `test_form_refinement.py`, `test_form_node_invariant.py` | `unit/ingestion/refinement/test_forms.py` (merged) |
+-| `test_schema_cleanup.py`, `test_consistency_cleanup.py` | `unit/ingestion/refinement/test_schema.py` (merged) |
+-| `test_symbol_list_finalization.py` | `unit/ingestion/refinement/test_lists.py`, `regression/test_golden.py` (split) |
+-| `test_extract_legal_documents.py` | `unit/ingestion/test_extract.py`, `unit/ingestion/semantics/test_vbpl.py`, `unit/ingestion/validation/test_extract.py` (split) |
+-
+-The original classes and all 264 test methods/assertions remain. Small, identical
+-synthetic parser helpers and the RAW builder are shared in `tests/support.py`;
+-tests no longer import other test-case classes for fixture creation.
+-
+ ```bash
+ PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m unittest discover -s tests -t . -v
+ ```
+@@ -100,132 +47,6 @@
+ Retain `audit_extract_schema.py`, `audit_vbpl_hierarchy.py`,
+ `compare_vbpl_extract.py` and `run_extract_validation.py` as six-line wrappers
+ to preserve historical audit/comparison commands and the existing validation interface.
+-The redundant `write_extract_validation_50_report.py` wrapper was removed after
+-verifying that generic `vlr validate report` reproduces batch-50 evidence. There is no batch-specific
+-report implementation and no new batch-numbered script.
+-
+-Existing directories, including empty pipeline placeholders and `scripts/`,
+-remain. All 17 `.gitkeep` files remain unchanged. No RAW, current Extract, fixture,
+-schema, canonical report or historical evidence file was removed or modified.
+-
+-## Historical organization file counts and size review
+-
+-The counts and line lengths below describe the 2026-10-08 organization checkpoint,
+-before the 500-document hardening milestone. They are preserved as historical
+-evidence rather than current module-size limits. Current milestone results and
+-tree-review evidence are recorded in
+-[`reports/extract-validation-500/report.md`](../reports/extract-validation-500/report.md)
+-and its evidence directory.
+-
+-Counts include `__init__.py` and are recursive; rows overlap. New package markers
+-increase counts while duplicate implementations decrease. There are 17 test files
+-with cases, plus ten package markers and one shared helper module.
+-
+-| Directory | Before | After |
+-|---|---:|---:|
+-| `src` | 40 | 45 |
+-| `src/vietnam_legal_rag/ingestion` | 17 | 21 |
+-| `src/vietnam_legal_rag/evaluation` | 9 | 10 |
+-| `src/vietnam_legal_rag/cli` | 7 | 7 |
+-| `tests` | 16 | 28 |
+-| `tests/unit` | 16 | 22 |
+-| `scripts` | 5 | 4 |
+-
+-Every remaining Python file is classified as a retained implementation/test,
+-a relocated implementation/test, a merged test, a necessary package marker,
+-a shared fixture helper, or a compatibility wrapper. Empty future packages
+-remain intentionally; the tiny CLI adapters avoid duplicating argument parsing.
+-No identical top-level production function/class implementations remain.
+-
+-| Python file | Lines |
+-|---|---:|
+-| `src/vietnam_legal_rag/__init__.py` | 1 |
+-| `src/vietnam_legal_rag/api/__init__.py` | 1 |
+-| `src/vietnam_legal_rag/cli/__init__.py` | 1 |
+-| `src/vietnam_legal_rag/cli/__main__.py` | 20 |
+-| `src/vietnam_legal_rag/cli/audit.py` | 48 |
+-| `src/vietnam_legal_rag/cli/compare.py` | 22 |
+-| `src/vietnam_legal_rag/cli/crawl.py` | 30 |
+-| `src/vietnam_legal_rag/cli/extract.py` | 20 |
+-| `src/vietnam_legal_rag/cli/validate.py` | 68 |
+-| `src/vietnam_legal_rag/core/__init__.py` | 1 |
+-| `src/vietnam_legal_rag/evaluation/__init__.py` | 1 |
+-| `src/vietnam_legal_rag/evaluation/audit/__init__.py` | 1 |
+-| `src/vietnam_legal_rag/evaluation/audit/extract.py` | 170 |
+-| `src/vietnam_legal_rag/evaluation/audit/hierarchy.py` | 310 |
+-| `src/vietnam_legal_rag/evaluation/audit/schema.py` | 330 |
+-| `src/vietnam_legal_rag/evaluation/config.py` | 55 |
+-| `src/vietnam_legal_rag/evaluation/extract_comparison.py` | 62 |
+-| `src/vietnam_legal_rag/evaluation/report_writer.py` | 199 |
+-| `src/vietnam_legal_rag/evaluation/validation_runner.py` | 217 |
+-| `src/vietnam_legal_rag/evaluation/validation_sampler.py` | 53 |
+-| `src/vietnam_legal_rag/generation/__init__.py` | 1 |
+-| `src/vietnam_legal_rag/indexing/__init__.py` | 1 |
+-| `src/vietnam_legal_rag/ingestion/__init__.py` | 1 |
+-| `src/vietnam_legal_rag/ingestion/crawl_legal_documents.py` | 510 |
+-| `src/vietnam_legal_rag/ingestion/extract_legal_documents.py` | 213 |
+-| `src/vietnam_legal_rag/ingestion/html/__init__.py` | 1 |
+-| `src/vietnam_legal_rag/ingestion/html/source.py` | 191 |
+-| `src/vietnam_legal_rag/ingestion/html/structure.py` | 451 |
+-| `src/vietnam_legal_rag/ingestion/html/tables.py` | 353 |
+-| `src/vietnam_legal_rag/ingestion/refinement/__init__.py` | 1 |
+-| `src/vietnam_legal_rag/ingestion/refinement/forms.py` | 593 |
+-| `src/vietnam_legal_rag/ingestion/refinement/schema.py` | 363 |
+-| `src/vietnam_legal_rag/ingestion/refinement/semantic.py` | 483 |
+-| `src/vietnam_legal_rag/ingestion/semantics/__init__.py` | 1 |
+-| `src/vietnam_legal_rag/ingestion/semantics/hierarchy.py` | 640 |
+-| `src/vietnam_legal_rag/ingestion/semantics/quotations.py` | 318 |
+-| `src/vietnam_legal_rag/ingestion/semantics/tables.py` | 175 |
+-| `src/vietnam_legal_rag/ingestion/semantics/vbpl.py` | 281 |
+-| `src/vietnam_legal_rag/ingestion/validation/__init__.py` | 1 |
+-| `src/vietnam_legal_rag/ingestion/validation/extract.py` | 165 |
+-| `src/vietnam_legal_rag/ingestion/validation/forms.py` | 237 |
+-| `src/vietnam_legal_rag/ingestion/validation/hierarchy.py` | 192 |
+-| `src/vietnam_legal_rag/ingestion/validation/quality.py` | 157 |
+-| `src/vietnam_legal_rag/preprocessing/__init__.py` | 1 |
+-| `src/vietnam_legal_rag/retrieval/__init__.py` | 1 |
+-| `tests/__init__.py` | 1 |
+-| `tests/regression/__init__.py` | 1 |
+-| `tests/regression/test_batch_capture.py` | 46 |
+-| `tests/regression/test_golden.py` | 71 |
+-| `tests/regression/test_source_patterns.py` | 419 |
+-| `tests/support.py` | 44 |
+-| `tests/unit/__init__.py` | 1 |
+-| `tests/unit/cli/__init__.py` | 1 |
+-| `tests/unit/cli/test_commands.py` | 65 |
+-| `tests/unit/evaluation/__init__.py` | 1 |
+-| `tests/unit/evaluation/test_report.py` | 63 |
+-| `tests/unit/evaluation/test_runner.py` | 64 |
+-| `tests/unit/evaluation/test_sampler.py` | 20 |
+-| `tests/unit/ingestion/__init__.py` | 1 |
+-| `tests/unit/ingestion/html/__init__.py` | 1 |
+-| `tests/unit/ingestion/html/test_structure.py` | 239 |
+-| `tests/unit/ingestion/refinement/__init__.py` | 1 |
+-| `tests/unit/ingestion/refinement/test_forms.py` | 324 |
+-| `tests/unit/ingestion/refinement/test_lists.py` | 198 |
+-| `tests/unit/ingestion/refinement/test_schema.py` | 377 |
+-| `tests/unit/ingestion/refinement/test_semantic.py` | 294 |
+-| `tests/unit/ingestion/semantics/__init__.py` | 1 |
+-| `tests/unit/ingestion/semantics/test_hierarchy.py` | 274 |
+-| `tests/unit/ingestion/semantics/test_vbpl.py` | 124 |
+-| `tests/unit/ingestion/test_crawl.py` | 397 |
+-| `tests/unit/ingestion/test_extract.py` | 113 |
+-| `tests/unit/ingestion/validation/__init__.py` | 1 |
+-| `tests/unit/ingestion/validation/test_extract.py` | 34 |
+-| `scripts/audit_extract_schema.py` | 6 |
+-| `scripts/audit_vbpl_hierarchy.py` | 6 |
+-| `scripts/compare_vbpl_extract.py` | 6 |
+-| `scripts/run_extract_validation.py` | 6 |
+-
+-## Verification (2026-10-08)
+-
+-- All 264 tests passed with no skips, including ingestion, evaluation, CLI, batch capture, source patterns and golden fixtures.
+-- All 214 pre-existing source functions/classes remain structurally equivalent after import and test-path/help updates. Five removed duplicate helper definitions match their shared replacements. All test identities and assertion/subtest/skip expressions were preserved.
+-- Offline auditing of a copied batch-50 state reparsed 209 published tab JSON artifacts across the 50 captures and golden, with exact byte equality and zero audit errors. All prior document and golden validations match. The audit exits 1 for the nine pre-existing source-warning documents; warnings were not changed.
+-- Generic reporting reproduces canonical metrics, all document evidence, repairs, golden validation, wave history and unsuccessful candidates exactly. Generated timestamps, command paths and generic wording may differ; canonical reports were untouched.
+-- All source modules import; console/module/alias/wrapper help and package discovery were checked.
+-- Hashes verified all 1,113 protected corpus/schema/fixture/report files and 17 placeholders unchanged. All 351 pre-existing directories remain, including the installed virtual environment.
+-- No crawl or sample selection was run. No parser/schema versions or Extract rules changed.
+-
+-See [validation workflow](extract-validation-workflow.md) for baseline reproduction
+-and the separately authorized next validation phase.
++No batch-specific reporting implementation is required. Validation defaults to
++`reports/validation`; extracted documents use `data/extracted/vbpl/<source-id>/`.
++Preserve intentional pipeline placeholder directories and every `.gitkeep`.
+--- baseline/docs/extracted-schema.md
++++ current/docs/extracted-schema.md
+@@ -2,7 +2,6 @@
+ 
+ Extract is source-faithful semantic parsing. RAW HTML and its manifest remain the source of truth. EXTRACTED identifies source-backed structure without rewriting legal meaning, correcting spelling, inventing data, resolving cross-document references, summarizing, chunking or generating embeddings. Normalized will perform canonical field mapping and cross-tab merge; Chunks will create retrieval units and any deterministic structural IDs.
+ 
+-Formal contract: [Draft 2020-12 JSON Schema](../schemas/extracted.schema.json). The packaged schema references this same file. Acceptance specification: [Extract finalization](EXTRACTION_FINALIZATION_SPEC.md). Latest actual-output verification: [finalization audit](extract-v2.3.2-finalization-audit.md), [machine-readable audit](extract-v2.3.2-finalization-audit.json). Earlier audits: [form invariant hotfix](extract-v2.3.2-form-invariant-audit.md), [V2.3.2 cleanup](extract-v2.3.2-schema-audit.md), [V2.2](extract-v2.2-report.md), [V2.3](extract-v2.3-report.md).
+ 
+ ## Artifacts and envelope
+ 
+@@ -135,28 +134,21 @@
+ ```bash
+ PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t .
+ PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.ingestion.extract_legal_documents --debug-tree
+-PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.cli audit schema --raw data/raw/vbpl --extracted data/extracted/vbpl --before /path/to/pre-hotfix/v2.3.2/extracted --report docs/extract-v2.3.2-form-invariant-audit.json
++PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.cli audit schema --raw data/raw/vbpl --extracted data/extracted/vbpl --before /path/to/pre-hotfix/v2.3.2/extracted --report reports/validation/runtime/schema-audit.json
+ ```
+ 
+ The freeze audit includes every available representative capture: simple Decision, Decree with annexes, technical Circular with a matrix, Circular with forms/decimal annex numbering, and Resolution. Passing tests alone is insufficient; generated JSON, fallback paragraphs, form boundaries, node/property vocabularies and metadata/table regressions are inspected independently.
+ 
+ ## Broader source validation within V2.3.2
+ 
+-The [50-document batch report](../reports/extract-validation-50/report.md) records five interleaved Central/Local waves, generic parser repairs, source evidence, regression membership and final diagnostics. The schema and parser version remain 2.3.2: all observed structures fit the existing contract.
+ 
+ Explicit English legal labels and legacy spaced hyphen/slash counters use the same legal hierarchy as their Vietnamese counterparts. Quoted replacement provisions, contract articles and Roman/alphabetic local outlines keep their own counter scope. An attached legal act can retain intermediate signing and letterhead blocks in the canonical body without duplicating root document sections. Annex counters and nested lists stay within their source annex/form scope.
+ 
+ Source CSS emphasis, provision-heading classes and bold/shaded table header bands can support classification. Formula and symbol-definition tables retain their physical cells and spans using the existing key_value representation when the source supports that purpose; factual axes are never invented. Missing relation identifiers, headerless table axes, formula media, isolated possible page numbers, duplicated source legal numbers and incomplete quotations keep their diagnostics. For an incomplete quotation, an explicit next sequential amendment can bound local counters without inserting a closing mark.
+ 
+-The final batch has schema_valid, deterministic and meaningful_text_preserved at 50/50. semantic_complete remains 41/50 because nine reviewed documents retain source warnings; the report does not override that flag. The original golden fixture retains all expected invariants and zero warnings/errors/fatals.
++The accepted collection has schema-valid, deterministic and source-faithful
++outputs for all 500 source documents. Reviewed semantic completeness is 300/500;
++200 documents retain source ambiguity. The automated Extract flag is separately
++312/500. See the canonical report and workflow for evidence and rebuilding.
+ 
+-Reproduce validation from the retained local RAW captures:
+-
+-```bash
+-.venv/bin/python -m vietnam_legal_rag.cli validate --help
+-.venv/bin/python -m vietnam_legal_rag.cli validate audit --regenerate
+-.venv/bin/python -m unittest discover -s tests -t . -q
+-.venv/bin/python -m vietnam_legal_rag.cli validate report --output-dir reports/extract-validation-50/runtime/rebuilt
+-```
+-
+-The batch audit exits nonzero when source warnings remain; review the diagnostics rather than treating command success as semantic acceptance. Capture regressions reference immutable local RAW by identity and hash, while portable pattern tests run without those captures. The crawler's existing HTML-only policy excludes Tải về and Văn bản gốc; attachment validation is outside this recorded batch.
++Formal contract: [JSON Schema](../schemas/extracted.schema.json). Acceptance rules: [specification](EXTRACTION_FINALIZATION_SPEC.md). Current evidence: [report](../reports/validation/report.md).
+--- baseline/docs/vbpl-crawl.md
++++ current/docs/vbpl-crawl.md
+@@ -120,9 +120,9 @@
+ `--`, giữ mọi số hiệu candidate và URL/identifier, không tự resolve.
+ Tab hợp nhất giữ document cards cùng ngày xác thực; mọi tab vẫn riêng JSON.
+ 
+-Xem [schema extracted 2.1.0](extracted-schema.md),
++Xem [schema extracted 2.3.2](extracted-schema.md),
+ [JSON Schema](../schemas/extracted.schema.json) và
+-[kết quả so sánh mẫu](extract-comparison.md).
++[quy trình kiểm chứng offline](extract-validation-workflow.md).
+ 
+ Validator kiểm tra identity/checksum/schema, bảo toàn text từ actual output,
+ source order/hierarchy/table/count/duplicates và parse lặp deterministic.
+--- /dev/null
++++ current/tests/unit/evaluation/test_consolidation.py
+@@ -0,0 +1,61 @@
++"""Canonical migration preserves accepted identities and immutable proof."""
++import hashlib
++import json
++import re
++from pathlib import Path
++import unittest
++import zipfile
++
++from tests.support import ROOT
++from vietnam_legal_rag.evaluation.config import ValidationConfig
++from vietnam_legal_rag.evaluation.wave_gate import parser_fingerprint
++
++
++class ConsolidationTests(unittest.TestCase):
++    def test_defaults_do_not_partition_storage_by_sample_size(self):
++        for size in (12, 50, 100, 500):
++            config = ValidationConfig(batch_size=size)
++            self.assertEqual(config.extracted_dir, Path('data/extracted/vbpl'))
++            self.assertEqual(config.report_dir, Path('reports/validation'))
++            self.assertEqual(config.sample_manifest, Path('reports/validation/evidence/state.json'))
++
++    def test_available_accepted_collection_matches_frozen_identity_and_hashes(self):
++        proof = ROOT / 'reports/validation/evidence/final-parser-candidate.json'
++        if not proof.exists():
++            self.skipTest('Local accepted corpus proof is unavailable')
++        frozen = json.loads(proof.read_text())
++        collection = ROOT / 'data/extracted/vbpl'
++        if not collection.exists():
++            self.skipTest('Local accepted corpus is unavailable')
++        bundles = frozen['approved_current_outputs']
++        self.assertEqual(parser_fingerprint(), frozen['parser_fingerprint'])
++        self.assertEqual({p.name for p in collection.iterdir() if p.is_dir()},
++                         {identity.removeprefix('vbpl:') for identity in bundles})
++        for identity, record in bundles.items():
++            folder = collection / identity.removeprefix('vbpl:')
++            actual = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in folder.iterdir()}
++            self.assertEqual(actual, record['extract_hashes'], identity)
++            self.assertEqual(json.loads((folder / 'manifest.json').read_text())['document_id'], identity)
++
++    def test_live_archive_locators_resolve_after_pruning(self):
++        root = ROOT / 'reports/validation'
++        index_path = root / 'history-index.json'
++        if not index_path.exists():
++            self.skipTest('Local report archive index is unavailable')
++        members = json.loads(index_path.read_text())['members']
++        for path in [*root.glob('evidence/*.json'), root / 'report.json', root / 'report.md']:
++            for member in re.findall(r'history.zip!/(reports/[^\s";]+?\.(?:json|md|txt))', path.read_text()):
++                self.assertIn(member, members, str(path))
++
++    def test_available_history_archive_matches_member_hash_index(self):
++        root = ROOT / 'reports/validation'
++        archive = root / 'history.zip'
++        if not archive.exists():
++            self.skipTest('Local historical acceptance archive is unavailable')
++        index = json.loads((root / 'history-index.json').read_text())['members']
++        with zipfile.ZipFile(archive) as history:
++            self.assertEqual(set(history.namelist()), set(index))
++            for name, record in index.items():
++                content = history.read(name)
++                self.assertEqual(len(content), record['bytes'], name)
++                self.assertEqual(hashlib.sha256(content).hexdigest(), record['sha256'], name)
+
+# Review cycle 1 corrections relative to the initial consolidation
+
+--- review-cycle-1/src/vietnam_legal_rag/cli/validate.py
++++ current/src/vietnam_legal_rag/cli/validate.py
+@@ -14,8 +14,8 @@
+     parser = argparse.ArgumentParser(prog='vlr validate', description=__doc__)
+     parser.add_argument('action', choices=['discover', 'crawl', 'select-local', 'inventory-local', 'audit', 'complete-wave', 'inspect', 'report'], nargs='?')
+     parser.add_argument('--audit', action='store_true', help='Alias for the offline audit action')
+-    parser.add_argument('--batch-size', type=int, default=50)
+-    parser.add_argument('--wave-size', type=int, default=10)
++    parser.add_argument('--batch-size', type=int, help='Sample size; defaults to saved canonical run or 50')
++    parser.add_argument('--wave-size', type=int, help='Wave size; defaults to saved canonical run or 10')
+     parser.add_argument('--wave-offset', type=int, default=0, help='Offset for continuous milestone progress wave numbering')
+     parser.add_argument('--sample-manifest', '--state', dest='sample_manifest', type=Path)
+     parser.add_argument('--report-dir', type=Path, help='Run reports/evidence directory; defaults to reports/validation')
+@@ -25,7 +25,7 @@
+     parser.add_argument('--local-target', type=int)
+     parser.add_argument('--baseline-manifest', type=Path, action='append', default=[],
+                         help='Previous fixed sample state; audit its RAW without changing historical evidence')
+-    parser.add_argument('--require-wave-gates', action='store_true',
++    parser.add_argument('--require-wave-gates', action='store_true', default=None,
+                         help='Require reviewed cumulative audits and passing tests before acquiring the next wave')
+     parser.add_argument('--progress-dir', type=Path, help='Overall milestone progress and recovery evidence directory')
+     parser.add_argument('--exclude-document-id', action='append', default=[], help='Additional already-reviewed identity excluded from new samples')
+@@ -47,13 +47,29 @@
+     if action is None or args.audit and action != 'audit':
+         parser.error('choose an action; --audit can only select audit')
+     try:
+-        config = ValidationConfig(batch_size=args.batch_size, wave_size=args.wave_size,
++        # The canonical root contains both overall progress and the accumulated
++        # audit sample. Resolve action inputs before constructing strict config;
++        # explicit selected-state/configuration arguments retain their behavior.
++        report_dir = args.report_dir or Path('reports/validation')
++        canonical_state = report_dir / 'evidence/corpus_validation_state.json'
++        saved = {}
++        if action in {'audit', 'report'} and args.sample_manifest is None and canonical_state.is_file():
++            saved = json.loads(canonical_state.read_text())
++            args.sample_manifest = canonical_state
++            if action == 'report' and args.target_manifest is None:
++                args.target_manifest = report_dir / 'evidence/target_manifest.json'
++        stored = saved.get('run_configuration', {})
++        scopes = saved.get('scope_targets', {})
++        config = ValidationConfig(batch_size=args.batch_size if args.batch_size is not None else saved.get('target', 50),
++                                  wave_size=args.wave_size if args.wave_size is not None else stored.get('wave_size', 10),
+                                   wave_offset=args.wave_offset,
+                                   scope_prefix=tuple(d['document_scope'] for d in json.loads(
+-                                      args.scope_prefix_manifest.read_text())['documents']) if args.scope_prefix_manifest else (),
++                                      args.scope_prefix_manifest.read_text())['documents']) if args.scope_prefix_manifest else tuple(stored.get('scope_prefix', ())),
+                                   sample_manifest=args.sample_manifest, report_dir=args.report_dir,
+-                                  central_target=args.central_target, local_target=args.local_target,
+-                                  baseline_manifests=tuple(args.baseline_manifest), require_wave_gates=args.require_wave_gates,
++                                  central_target=args.central_target if args.central_target is not None or args.local_target is not None else scopes.get('trung_uong'),
++                                  local_target=args.local_target if args.central_target is not None or args.local_target is not None else scopes.get('dia_phuong'),
++                                  baseline_manifests=tuple(args.baseline_manifest or [Path(p) for p in stored.get('baseline_manifests', [])]),
++                                  require_wave_gates=args.require_wave_gates if args.require_wave_gates is not None else stored.get('require_wave_gates', False),
+                                   progress_dir=args.progress_dir,
+                                   excluded_ids=tuple(args.exclude_document_id),
+                                   capture_fixtures=tuple(args.capture_fixture),
+--- review-cycle-1/src/vietnam_legal_rag/evaluation/wave_gate.py
++++ current/src/vietnam_legal_rag/evaluation/wave_gate.py
+@@ -3,8 +3,9 @@
+ 
+ import hashlib
+ import json
+-from pathlib import Path
++from pathlib import Path, PurePosixPath
+ import re
++import zipfile
+ 
+ from vietnam_legal_rag.ingestion.crawl_legal_documents import CrawlError
+ 
+@@ -19,10 +20,25 @@
+     return digest.hexdigest()
+ 
+ 
++def read_manifest(path):
++    """Read state from a file or an immutable ``archive.zip!/member`` locator."""
++    archive, separator, member = str(path).partition('!/')
++    if not separator:
++        return json.loads(Path(path).read_text())
++    location = PurePosixPath(member)
++    if not archive or not member or location.is_absolute() or '..' in location.parts:
++        raise CrawlError('Invalid archived manifest locator: ' + str(path))
++    try:
++        with zipfile.ZipFile(archive) as history:
++            return json.loads(history.read(member))
++    except zipfile.BadZipFile as exc:
++        raise CrawlError('Invalid manifest archive: ' + archive) from exc
++
++
+ def baseline_documents(config):
+     documents, identities, urls = [], set(), set()
+     for path in config.baseline_manifests:
+-        state = json.loads(path.read_text())
++        state = read_manifest(path)
+         for original in state['documents']:
+             identity, url = original['document_id'], original['url']
+             if identity in identities or url in urls:
+--- review-cycle-1/tests/unit/cli/test_commands.py
++++ current/tests/unit/cli/test_commands.py
+@@ -1,6 +1,9 @@
+ """CLI dispatch, configuration forwarding and preservation of legacy adapters."""
+ import contextlib
+ import io
++import json
++import tempfile
++import zipfile
+ from pathlib import Path
+ import unittest
+ from unittest.mock import patch
+@@ -10,6 +13,81 @@
+ 
+ 
+ class ToolingCLITests(unittest.TestCase):
++    def test_canonical_defaults_resolve_saved_sample_baselines_and_total_report(self):
++        from vietnam_legal_rag.evaluation.validation_runner import load_state
++        from vietnam_legal_rag.evaluation.wave_gate import baseline_documents
++        with tempfile.TemporaryDirectory() as temporary, contextlib.chdir(temporary):
++            root = Path('reports/validation')
++            evidence = root / 'evidence'
++            evidence.mkdir(parents=True)
++            baseline_member = 'reports/original/evidence/state.json'
++            baseline_locator = str(root / 'history.zip') + '!/' + baseline_member
++            baseline = [{'document_id': 'vbpl:' + str(i), 'url': 'url:' + str(i),
++                         'raw_directory': 'raw/' + str(i), 'document_scope': 'trung_uong'}
++                        for i in range(1, 151)]
++            with zipfile.ZipFile(root / 'history.zip', 'w') as history:
++                history.writestr(baseline_member, json.dumps({'documents': baseline}))
++            scopes = ['trung_uong', 'dia_phuong'] * 170 + ['trung_uong'] * 9
++            selected = [{'document_id': 'vbpl:' + str(i + 151), 'document_scope': scope}
++                        for i, scope in enumerate(scopes)]
++            state = {'target': 349, 'scope_targets': {'trung_uong': 179, 'dia_phuong': 170},
++                     'documents': selected, 'baseline_validations': baseline,
++                     'run_configuration': {'wave_size': 20, 'require_wave_gates': True,
++                                           'baseline_manifests': [baseline_locator],
++                                           'scope_prefix': scopes}}
++            (evidence / 'state.json').write_text(json.dumps({'target_total': 500}))
++            (evidence / 'corpus_validation_state.json').write_text(json.dumps(state))
++            (evidence / 'target_manifest.json').write_text(json.dumps({
++                'target_total': 500, 'documents': [{'document_id': 'vbpl:' + str(i)} for i in range(1, 500)] +
++                [{'document_id': 'vbpl:a9bea550-bbe3-11f1-a338-51a5cc429fc7'}]}))
++            (evidence / 'cumulative_reviews.json').write_text(json.dumps({'documents': []}))
++
++            def audit_config(regenerate, config):
++                loaded = load_state(config)
++                previous = baseline_documents(config)
++                self.assertEqual(config.batch_size, 349)
++                self.assertEqual(config.wave_size, 20)
++                self.assertTrue(config.require_wave_gates)
++                self.assertEqual(config.scope_prefix, tuple(scopes))
++                # The actual audit includes saved baselines plus the golden,
++                # never just the last selected subrun.
++                self.assertEqual(len(loaded['documents']) + len(previous) + 1, 500)
++                self.assertEqual(previous, baseline)
++                self.assertFalse(regenerate)
++                return 0
++
++            with patch.object(validate.runner, 'audit_wave', side_effect=audit_config):
++                self.assertEqual(main(['validate', 'audit']), 0)
++            output = Path('rebuilt')
++            with contextlib.redirect_stdout(io.StringIO()):
++                self.assertEqual(main(['validate', 'report', '--output-dir', str(output)]), 0)
++            report = json.loads((output / 'report.json').read_text())
++            self.assertEqual(report['metrics']['target_total'], 500)
++            self.assertFalse(report['metrics']['acceptance_complete'])
++            self.assertEqual(json.loads((evidence / 'corpus_validation_state.json').read_text()), state)
++            with patch.object(validate.runner, 'audit_wave', return_value=0) as explicit:
++                self.assertEqual(main(['validate', 'audit', '--sample-manifest', 'explicit.json',
++                                       '--batch-size', '12', '--central-target', '8']), 0)
++            config = explicit.call_args.args[1]
++            self.assertEqual(config.sample_manifest, Path('explicit.json'))
++            self.assertEqual(config.batch_size, 12)
++            self.assertEqual(config.scope_targets, {'trung_uong': 8, 'dia_phuong': 4})
++            self.assertEqual(config.baseline_manifests, ())
++
++    def test_explicit_saved_scope_override_is_not_replaced_by_inferred_quotas(self):
++        with tempfile.TemporaryDirectory() as temporary:
++            root = Path(temporary)
++            evidence = root / 'evidence'
++            evidence.mkdir()
++            (evidence / 'corpus_validation_state.json').write_text(json.dumps({
++                'target': 3, 'scope_targets': {'trung_uong': 1, 'dia_phuong': 2}}))
++            with patch.object(validate.runner, 'audit_wave', return_value=0) as operation:
++                self.assertEqual(main(['validate', 'audit', '--report-dir', str(root),
++                                       '--central-target', '2', '--wave-size', '1']), 0)
++            config = operation.call_args.args[1]
++            self.assertEqual(config.scope_targets, {'trung_uong': 2, 'dia_phuong': 1})
++            self.assertEqual(config.wave_size, 1)
++
+     def test_help_for_every_command_avoids_operational_work(self):
+         for arguments in (['--help'], ['crawl', '--help'], ['extract', '--help'],
+                           ['validate', '--help'], ['audit', '--help'],
+--- review-cycle-1/tests/unit/evaluation/test_runner.py
++++ current/tests/unit/evaluation/test_runner.py
+@@ -15,6 +15,12 @@
+ 
+ 
+ class ValidationRunnerTests(unittest.TestCase):
++    def test_archived_manifest_locator_rejects_ambiguous_member_paths(self):
++        from vietnam_legal_rag.evaluation.wave_gate import read_manifest
++        for locator in ('history.zip!/', 'history.zip!/../state.json', 'history.zip!//state.json'):
++            with self.subTest(locator=locator), self.assertRaisesRegex(CrawlError, 'Invalid archived'):
++                read_manifest(locator)
++
+     def test_first_progress_uses_configured_target_without_assuming_milestone_size(self):
+         from vietnam_legal_rag.evaluation.validation_runner import save_state
+         with tempfile.TemporaryDirectory() as temporary:
+--- review-cycle-1/tests/unit/evaluation/test_consolidation.py
++++ current/tests/unit/evaluation/test_consolidation.py
+@@ -1,5 +1,6 @@
+ """Canonical migration preserves accepted identities and immutable proof."""
+ import hashlib
++from copy import deepcopy
+ import json
+ import re
+ from pathlib import Path
+@@ -29,13 +30,33 @@
+             self.skipTest('Local accepted corpus is unavailable')
+         bundles = frozen['approved_current_outputs']
+         self.assertEqual(parser_fingerprint(), frozen['parser_fingerprint'])
+-        self.assertEqual({p.name for p in collection.iterdir() if p.is_dir()},
+-                         {identity.removeprefix('vbpl:') for identity in bundles})
++        self.assertTrue({identity.removeprefix('vbpl:') for identity in bundles}.issubset(
++            {p.name for p in collection.iterdir() if p.is_dir()}))
+         for identity, record in bundles.items():
+             folder = collection / identity.removeprefix('vbpl:')
+             actual = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in folder.iterdir()}
+             self.assertEqual(actual, record['extract_hashes'], identity)
+             self.assertEqual(json.loads((folder / 'manifest.json').read_text())['document_id'], identity)
++
++    def test_frozen_target_hash_maps_to_identical_migrated_membership_and_provenance(self):
++        ledger = ROOT / 'reports/consolidation/migration.json'
++        if not ledger.exists():
++            self.skipTest('Local migration evidence is unavailable')
++        mapping = json.loads(ledger.read_text())['target_manifest_migration']
++        with zipfile.ZipFile(ROOT / mapping['original_archive']) as history:
++            original = history.read(mapping['original_member'])
++        current = (ROOT / mapping['current_path']).read_bytes()
++        self.assertEqual(hashlib.sha256(original).hexdigest(), mapping['original_sha256'])
++        self.assertEqual(hashlib.sha256(current).hexdigest(), mapping['current_sha256'])
++        frozen = json.loads((ROOT / 'reports/validation/evidence/final-parser-candidate.json').read_text())
++        self.assertEqual(frozen['target_manifest_sha256'], mapping['original_sha256'])
++        expected = deepcopy(json.loads(original))
++        for document in expected['documents']:
++            for role in document['roles']:
++                path = role.get('manifest')
++                if path in mapping['role_manifest_path_mappings']:
++                    role['manifest'] = mapping['role_manifest_path_mappings'][path]
++        self.assertEqual(expected, json.loads(current))
+ 
+     def test_live_archive_locators_resolve_after_pruning(self):
+         root = ROOT / 'reports/validation'

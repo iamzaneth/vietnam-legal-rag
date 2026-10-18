@@ -1,0 +1,447 @@
+{
+  "run": {
+    "identifier": "vbpl-total-500",
+    "started_at": "2026-10-08T20:06:11+00:00",
+    "end_time": "2026-10-15T07:47:32.410827+00:00",
+    "current_phase": "complete",
+    "schema_version": "2.3.2",
+    "parser_version": "2.3.2",
+    "parser_fingerprint": "988535905f88162fd6fefc9a9636c2bba7d6fa31a632dcd9f2c233637541bbdb",
+    "latest_wave_completed": 23
+  },
+  "semantic_accounting": {
+    "semantic_complete": 300,
+    "source_ambiguity_retained": 200,
+    "automated_available_source_semantic_complete": 312,
+    "definition": "Human semantic completeness requires complete captured semantics with no retained meaningful source ambiguity. The automated Extract flag is reported separately; reviewed source limitations may exist without parser warnings.",
+    "parser_failure": 0,
+    "unexplained_semantic_failure": 0,
+    "warning_finding_classifications": {
+      "source_ambiguity": 852,
+      "expected_non_semantic_source_artifact": 21
+    },
+    "review_evidence": "evidence/cumulative_reviews.json"
+  },
+  "collection": {
+    "target_documents": 500,
+    "usable_local_raw": 500,
+    "raw_capture_paths": 501,
+    "unusable_staging_paths_preserved": 1,
+    "duplicate_capture_paths": 0,
+    "initial_usable_raw": 183,
+    "actual_newly_crawled": 317,
+    "accepted_target_documents": 500,
+    "rejected_target_documents": 0,
+    "missing_target_documents": 0,
+    "collection_closed": true,
+    "scope_counts": {
+      "trung_uong": 250,
+      "dia_phuong": 250
+    },
+    "scope_by_acquisition_origin": {
+      "initial_local": {
+        "trung_uong": 75,
+        "dia_phuong": 108
+      },
+      "newly_crawled": {
+        "trung_uong": 175,
+        "dia_phuong": 142
+      }
+    },
+    "attempt_accounting": {
+      "candidate_attempts": 459,
+      "candidate_selections": 516,
+      "successfully_crawled_sample": 296,
+      "existing_local_sample_additions": 53,
+      "usable_sample_captures": 349,
+      "successful_captures_including_scope_mismatches": 317,
+      "reused_scope_mismatch_captures": 4,
+      "crawl_failures": 142,
+      "interrupted_candidates": 0,
+      "scope_mismatches": 25,
+      "duplicates": 0,
+      "replacements": 167,
+      "acceptance_rate": 0.644880174291939,
+      "execution_environment_failures": 82,
+      "source_candidate_attempts": 377,
+      "source_crawl_failures": 60,
+      "source_acceptance_rate": 0.7851458885941645
+    },
+    "counting_note": "Failed candidate attempts are separate from rejected validation targets. All500 distinct usable local identities belong to the target; no extra capture filled the final9-document wave."
+  },
+  "document_type_distribution": {
+    "Thông tư": 26,
+    "Quyết định": 83,
+    "Bản dịch văn bản": 19,
+    "Nghị quyết": 97,
+    "Chỉ thị": 41,
+    "Văn bản hành chính liên quan": 25,
+    "Luật": 38,
+    "Văn bản hợp nhất": 41,
+    "Văn bản liên quan": 10,
+    "Pháp lệnh": 20,
+    "Nghị định": 82,
+    "Thông tư liên tịch": 8,
+    "Chương trình": 2,
+    "Sắc lệnh": 3,
+    "Nghị định thư": 1,
+    "Quy định": 1,
+    "Nghị quyết liên tịch": 1,
+    "Văn bản hệ thống hóa": 2
+  },
+  "uniform_validation": {
+    "verified_at": "2026-10-15T07:40:33.523347+00:00",
+    "parser_fingerprint": "988535905f88162fd6fefc9a9636c2bba7d6fa31a632dcd9f2c233637541bbdb",
+    "target_documents": 500,
+    "actually_regenerated": 500,
+    "independently_audited": 500,
+    "raw_hashes_unchanged": 500,
+    "approved_extract_bundles_byte_identical": 500,
+    "quality_counts": {
+      "meaningful_text_preserved": 500,
+      "deterministic": 500,
+      "schema_valid": 500,
+      "semantic_complete": 312
+    },
+    "statuses": {
+      "success": 312,
+      "success_with_warnings": 188
+    },
+    "diagnostics": {
+      "info": 1354,
+      "warning": 873,
+      "error": 0,
+      "fatal": 0
+    },
+    "semantic_complete": 300,
+    "source_ambiguity_retained": 200,
+    "parser_failure": 0,
+    "unexplained_semantic_failure": 0,
+    "source_scope_counts": {
+      "trung_uong": 250,
+      "dia_phuong": 250
+    },
+    "source_review_basis": "All500 current-parser source reviews remain valid: frozen approved output/RAW hashes exactly match every forced final regeneration and independent audit.",
+    "final_test_gate_pending": false,
+    "repository_hygiene_pending": false,
+    "final_test_evidence": "evidence/final-full-tests.txt",
+    "repository_hygiene_evidence": "evidence/repository-hygiene.json",
+    "post_hygiene_test_evidence": "evidence/post-hygiene-tests.txt"
+  },
+  "verification": {
+    "command": "PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t . -v > reports/validation/evidence/final-full-tests.txt 2>&1",
+    "tests": 640,
+    "elapsed_seconds": 132.285,
+    "skips": 0,
+    "failures": 0,
+    "errors": 0,
+    "exit_code": 0,
+    "result": "pass",
+    "parser_fingerprint": "988535905f88162fd6fefc9a9636c2bba7d6fa31a632dcd9f2c233637541bbdb",
+    "schema_version": "2.3.2",
+    "parser_version": "2.3.2",
+    "evidence": "evidence/final-full-tests.txt",
+    "command_evidence": "evidence/final-full-tests.txt",
+    "final_regeneration_command_evidence": "evidence/state.json and history.zip!/reports/extract-validation-500/evidence/wave-23-operation-reproduction.json",
+    "backward491": {
+      "raw_unchanged": 491,
+      "byte_identical": 471,
+      "changed_bundles_source_reviewed": 20,
+      "field_metadata_units_source_checked": 2550,
+      "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-23-backward-source-review.json"
+    }
+  },
+  "hardening": {
+    "recorded_new_bug_class_ids": 187,
+    "first100_new_classes": 36,
+    "expansion_new_classes": 151,
+    "new_class_count_by_continuous_wave": {
+      "1": 14,
+      "2": 4,
+      "3": 6,
+      "4": 8,
+      "5": 4,
+      "6": 3,
+      "7": 10,
+      "8": 8,
+      "9": 10,
+      "10": 9,
+      "11": 11,
+      "12": 16,
+      "13": 4,
+      "14": 12,
+      "15": 4,
+      "16": 4,
+      "17": 4,
+      "18": 3,
+      "19": 1,
+      "20": 3,
+      "21": 18,
+      "22": 20,
+      "23": 11
+    },
+    "latest_wave_generic_repairs": [
+      {
+        "id": "parenthetical_colon_in_terminal_form_prompt",
+        "status": "repaired and verified",
+        "root_cause": "First-colon/80-character splitting treats explanatory examples inside parentheses as entered values. Balanced delimiter lookup preserves actual long terminal labels, with null values and source offsets."
+      },
+      {
+        "id": "referenced_blank_before_completion_prose",
+        "status": "repaired and verified",
+        "root_cause": "A footnote counter before a literal blank prevents placeholder-prefix isolation, absorbing following confirmation prose into value_text. Recognize the referenced blank prefix while preserving the full source sentence."
+      },
+      {
+        "id": "unknown_bilingual_prompts_in_source_input_scope",
+        "status": "repaired and verified",
+        "root_cause": "Unfamiliar labels and punctuation in slash-separated prompts interrupt known-name runs, including simple physical form cells. Explicit terminal prompts in bounded input runs or simple non-header form cells retain unknown field semantics and null values; headings, prose and outside-form cells remain guarded."
+      },
+      {
+        "id": "completion_template_after_unsigned_closing",
+        "status": "repaired and verified",
+        "root_cause": "A source closing lacks a signer name and is followed by a template issuer/header with one literal blank and several actual colon inputs. Blank-only completion lookahead misses the boundary and a template institution is misclassified as the source signer."
+      },
+      {
+        "id": "explicit_template_caption_in_physical_header_table",
+        "status": "repaired and verified",
+        "root_cause": "Explicit template codes with colon/alphanumeric counters inside physical header tables were not form boundaries. Reuse generic caption recognition with first-row attachment-note evidence, preserving physical table geometry and source text under a form header."
+      },
+      {
+        "id": "source_grid_pair_prompt_evidence",
+        "status": "repaired and verified",
+        "root_cause": "Presentation grid lineage was erased when flattening source columns, preventing unfamiliar literal prompts from being represented. Preserve private grid provenance and confirm paired colon prompts only in active form scopes, using unknown semantics/null values."
+      },
+      {
+        "id": "qualified_report_cover_with_source_completion_inputs",
+        "status": "repaired and verified",
+        "root_cause": "A source-emphasized uppercase cover has a mixed-case parenthetical reporting-period qualifier and was left outside form scope. Count actual completion evidence once per annex and retain the qualified cover plus preceding blank header table, without treating ordinary published annex prose as a form."
+      },
+      {
+        "id": "repeated_uncoded_template_letterhead",
+        "status": "repaired and verified",
+        "root_cause": "Repeated source template issuers, displayed titles and actual input blanks require new uncoded form scopes. Preserve numbered source case variants and institutional placeholders; share a single title predicate so Đơn vị/Đơn giản compounds cannot end the header region or become application titles."
+      },
+      {
+        "id": "explicit_template_caption_retains_first_letterhead",
+        "status": "repaired and verified",
+        "root_cause": "Repeated-letterhead detection must not split the first header of an explicit source template caption into an additional uncoded form. Require preceding current-form content."
+      },
+      {
+        "id": "document_set_title_vs_authority",
+        "status": "repaired and verified",
+        "root_cause": "Bộ followed by a document-set noun is a document heading, not a ministry. Share source noun-compound title evidence; institutional header placeholders require actual institutional wording rather than any uppercase line."
+      },
+      {
+        "id": "partial_template_document_number_suffix",
+        "status": "repaired and verified",
+        "root_cause": "A literal slash-prefixed uppercase document-number suffix in a template header must remain a form number without an invented prefix; it must not replace the displayed title."
+      }
+    ],
+    "existing_class_extensions": 34,
+    "additional_regression_repairs": 5,
+    "repair_evidence": [
+      "reports/validation/history.zip!/reports/extract-validation-100/evidence/repairs.json",
+      "evidence/repairs.json"
+    ],
+    "schema_gaps": [],
+    "raw_capture_code_defects": [],
+    "schema_changes": false,
+    "tests_added_wave23": 21,
+    "portable_hardening_test_methods": 331,
+    "hardening_regression_captures": 86,
+    "captures_promoted_wave23": 4,
+    "golden_expectations_preserved": true
+  },
+  "table_performance": {
+    "largest_reviewed_capture": "vbpl:ecd2aa70-affa-11f1-b619-e1a7258dcb11",
+    "retained_physical_cells": 46485,
+    "repair": "Reusable source-cell and row/column indexes plus active merged-cell rectangles replace repeated full-table scans. Sparse code-row/header rules preserve actual semantics; no size-specific skipping.",
+    "invariants": [
+      "physical cells",
+      "logical grid",
+      "rowspan/colspan",
+      "source references",
+      "source order",
+      "effective_text",
+      "header evidence",
+      "determinism"
+    ],
+    "verification": "Focused performance regressions, actual large capture regeneration/audit and final full640 suite; see Wave21 table evidence and final uniform cache."
+  },
+  "source_limitations": {
+    "reviewed_warning_documents": 188,
+    "warning_diagnostics": 873,
+    "raw_capture_checksum_failures_in_targets": 0,
+    "retained": [
+      "Incomplete quotation punctuation and duplicate legal counters are preserved literally.",
+      "Image-only content is retained without fabricated OCR.",
+      "Table axes remain unknown/partial when source markup does not establish safe associations.",
+      "Hidden or unresolved document relationships are retained without invented links.",
+      "Referenced attached bodies absent from captured HTML remain source ambiguities, including expansion positions324and348.",
+      "Incomplete source dates and absent signer names remain incomplete."
+    ],
+    "unusable_staging_note": "One pre-existing unusable staging path is preserved outside the500 usable targets."
+  },
+  "repository_hygiene": {
+    "completed": true,
+    "completed_at": "2026-10-15T07:46:28.402613+00:00",
+    "parser_fingerprint": "988535905f88162fd6fefc9a9636c2bba7d6fa31a632dcd9f2c233637541bbdb",
+    "inspection_scope": "Full project tree; environment/session/credential/Git internals excluded from content inspection and modification.",
+    "tree_evidence": "history.zip!/reports/extract-validation-500/evidence/repository-tree-final.txt",
+    "git_status_evidence": "history.zip!/reports/extract-validation-500/evidence/final-git-status.txt",
+    "git_diff_stat_evidence": "history.zip!/reports/extract-validation-500/evidence/final-git-diff-stat.txt",
+    "changed_files": [
+      " M AGENTS.md",
+      " M docs/extract-validation-workflow.md",
+      " M docs/python-layout.md",
+      " M src/vietnam_legal_rag/cli/validate.py",
+      " M src/vietnam_legal_rag/evaluation/audit/extract.py",
+      " M src/vietnam_legal_rag/evaluation/config.py",
+      " M src/vietnam_legal_rag/evaluation/report_writer.py",
+      " M src/vietnam_legal_rag/evaluation/validation_runner.py",
+      " M src/vietnam_legal_rag/evaluation/validation_sampler.py",
+      " M src/vietnam_legal_rag/ingestion/html/source.py",
+      " M src/vietnam_legal_rag/ingestion/html/structure.py",
+      " M src/vietnam_legal_rag/ingestion/html/tables.py",
+      " M src/vietnam_legal_rag/ingestion/refinement/forms.py",
+      " M src/vietnam_legal_rag/ingestion/refinement/schema.py",
+      " M src/vietnam_legal_rag/ingestion/refinement/semantic.py",
+      " M src/vietnam_legal_rag/ingestion/semantics/hierarchy.py",
+      " M src/vietnam_legal_rag/ingestion/semantics/quotations.py",
+      " M src/vietnam_legal_rag/ingestion/semantics/tables.py",
+      " M src/vietnam_legal_rag/ingestion/semantics/vbpl.py",
+      " M src/vietnam_legal_rag/ingestion/validation/extract.py",
+      " M src/vietnam_legal_rag/ingestion/validation/forms.py",
+      " M src/vietnam_legal_rag/ingestion/validation/hierarchy.py",
+      " M src/vietnam_legal_rag/ingestion/validation/quality.py",
+      " M tests/fixtures/vbpl_batch_regressions.json",
+      " M tests/regression/test_batch_capture.py",
+      " M tests/regression/test_golden.py",
+      " M tests/unit/evaluation/test_report.py",
+      " M tests/unit/evaluation/test_runner.py",
+      " M tests/unit/ingestion/html/test_structure.py",
+      " M tests/unit/ingestion/refinement/test_semantic.py",
+      " M tests/unit/ingestion/semantics/test_vbpl.py",
+      " M tests/unit/ingestion/validation/test_extract.py",
+      "?? .codex/",
+      "?? reports/extract-validation-100/",
+      "?? reports/extract-validation-500/",
+      "?? src/vietnam_legal_rag/evaluation/local_inventory.py",
+      "?? src/vietnam_legal_rag/evaluation/progress.py",
+      "?? src/vietnam_legal_rag/evaluation/target_manifest.py",
+      "?? src/vietnam_legal_rag/evaluation/wave_gate.py",
+      "?? src/vietnam_legal_rag/ingestion/semantics/technical.py",
+      "?? tests/fixtures/vbpl_hardening_regressions.json",
+      "?? tests/regression/test_hardening_patterns.py",
+      "?? tests/unit/evaluation/test_local_inventory.py",
+      "?? tests/unit/evaluation/test_progress.py",
+      "?? tests/unit/evaluation/test_target_manifest.py",
+      "?? tests/unit/evaluation/test_wave_sampling.py"
+    ],
+    "tracked_deletions": [],
+    "diff_check": "pass",
+    "files_deleted_during_final_hygiene": [],
+    "temporary_artifact_review": "No obsolete task-local temporary files or extraction staging outputs identified. Reproduction launchers, focused failures/pass logs and completed historical evidence retained.",
+    "temporary_candidates": [],
+    "documentation_correction": "docs/python-layout.md: historical module-size snapshot clarified; redundant-wrapper removal recorded as completed rather than a current instruction.",
+    "reusable_code_placement": {
+      "ingestion": "source/HTML/semantics/refinement/validation",
+      "evaluation": "inventory, target selection, independent audit, state, wave gates, reports",
+      "cli": "argument parsing",
+      "tests": "mirrored unit tests and portable/capture regressions",
+      "scripts": "Four thin retained compatibility entrypoints; no wave-specific implementation files"
+    },
+    "source_python_files": 50,
+    "test_python_files": 33,
+    "stale_imports": [],
+    "stale_path_search": "Active source/tests/scripts/entrypoints contain no removed scheduler/helper paths or removed batch report imports. Historical move/removal maps intentionally retain old names.",
+    "entrypoints_verified": {
+      "vlr": "vietnam_legal_rag.cli.__main__:main",
+      "vbpl-crawl-one": "vietnam_legal_rag.cli.crawl:main",
+      "vbpl-extract": "vietnam_legal_rag.cli.extract:main"
+    },
+    "gitkeep_preserved": 17,
+    "gitkeep_paths": [
+      "configs/.gitkeep",
+      "data/chunks/.gitkeep",
+      "data/extracted/.gitkeep",
+      "data/normalized/.gitkeep",
+      "data/raw/.gitkeep",
+      "data/samples/.gitkeep",
+      "evaluation/datasets/.gitkeep",
+      "evaluation/results/.gitkeep",
+      "frontend/.gitkeep",
+      "notebooks/.gitkeep",
+      "prompts/.gitkeep",
+      "scripts/.gitkeep",
+      "storage/cache/.gitkeep",
+      "storage/indexes/.gitkeep",
+      "tests/fixtures/.gitkeep",
+      "tests/integration/.gitkeep",
+      "tests/unit/.gitkeep"
+    ],
+    "gitkeep_bytes_unchanged": true,
+    "placeholder_directories_preserved": true,
+    "target_manifest_hash_unchanged": true,
+    "schema_hash_unchanged": true,
+    "parser_hash_unchanged": true,
+    "raw_targets_hash_unchanged": 500,
+    "extract_bundles_hash_unchanged": 500,
+    "usable_raw": 500,
+    "total_capture_paths": 501,
+    "unusable_staging_paths_preserved": 1,
+    "raw_deleted": 0,
+    "current_session_persistence_untouched": true,
+    "unrelated_working_tree_edits_preserved": true,
+    "post_hygiene_tests": {
+      "command": "PYTHONPATH=src .venv/bin/python -m unittest tests.unit.evaluation.test_local_inventory tests.unit.evaluation.test_progress tests.unit.evaluation.test_report tests.unit.evaluation.test_runner tests.unit.evaluation.test_sampler tests.unit.evaluation.test_target_manifest tests.unit.evaluation.test_wave_sampling tests.unit.cli.test_commands tests.regression.test_hardening_patterns tests.regression.test_golden -v > reports/validation/evidence/post-hygiene-tests.txt 2>&1",
+      "tests": 387,
+      "elapsed_seconds": 7.837,
+      "skips": 0,
+      "failures": 0,
+      "errors": 0,
+      "exit_code": 0,
+      "result": "pass",
+      "parser_fingerprint": "988535905f88162fd6fefc9a9636c2bba7d6fa31a632dcd9f2c233637541bbdb",
+      "evidence": "evidence/post-hygiene-tests.txt"
+    },
+    "structural_code_changes": false,
+    "no_commit_or_push": true
+  },
+  "scheduler_cleanup": {
+    "verified": true,
+    "removed_units": [
+      "codex-vbpl-500-20261015.timer",
+      "codex-vbpl-500-20261015.service"
+    ],
+    "directory_removed": true,
+    "related_timer_count": 0,
+    "service_active": false,
+    "protected_hashes_unchanged": 137,
+    "gitkeep_preserved": 17,
+    "linger_restored": false,
+    "session_persistence_untouched": true,
+    "linger_restored_to_previous_state": true,
+    "linger_enabled_after_cleanup": false
+  },
+  "convergence": {
+    "validated_milestone_only": 500,
+    "no_known_parser_defect_in_accepted_scope": true,
+    "latest_wave_new_classes": 11,
+    "unreviewed_full_corpus_correctness_claim": false,
+    "conclusion": "The500-document milestone passes its source-faithful acceptance gates. Late-discovered form patterns mean this is not evidence of corpus-wide correctness or readiness for unreviewed production-scale extraction.",
+    "stop_boundary": "STOP after500 acceptance and hygiene. No further collection or downstream RAG stages."
+  },
+  "historical_evidence": {
+    "first50": "reports/extract-validation-50",
+    "first100": "reports/extract-validation-100",
+    "previous_partial_context": "history.zip!/reports/extract-validation-500/evidence/pre-final-report-context.json",
+    "original491_backward_snapshot": "history.zip!/reports/extract-validation-500/evidence/wave-23-backward-before.json"
+  },
+  "completion_checks": {
+    "uniform_revalidation": true,
+    "wave_gates": true,
+    "tests": true,
+    "repository_hygiene": true
+  }
+}

@@ -1,0 +1,106 @@
+$ .venv/bin/python -m vietnam_legal_rag.cli --help
+usage: vlr [-h] {crawl,extract,validate,audit,compare} ...
+
+VBPL capture, extraction and evaluation tools
+
+positional arguments:
+  {crawl,extract,validate,audit,compare}
+    crawl               Capture one VBPL document
+    extract             Extract retained RAW offline
+    validate            Run configured sampling, audits and reporting
+    audit               Audit hierarchy or the schema freeze contract
+    compare             Compare two Extract corpora
+
+options:
+  -h, --help            show this help message and exit
+
+$ .venv/bin/python -m vietnam_legal_rag.cli extract --help
+usage: vlr extract [-h] [--input INPUT] [--output OUTPUT] [--debug-tree]
+
+Extract semantic JSON từ HTML raw; không truy cập mạng
+
+options:
+  -h, --help       show this help message and exit
+  --input INPUT
+  --output OUTPUT
+  --debug-tree     In cây semantic ra console để audit; không lưu TXT
+
+$ .venv/bin/python -m vietnam_legal_rag.cli validate --help
+usage: vlr validate [-h] [--audit] [--batch-size BATCH_SIZE]
+                    [--wave-size WAVE_SIZE] [--wave-offset WAVE_OFFSET]
+                    [--sample-manifest SAMPLE_MANIFEST]
+                    [--report-dir REPORT_DIR]
+                    [--target-manifest TARGET_MANIFEST]
+                    [--scope-prefix-manifest SCOPE_PREFIX_MANIFEST]
+                    [--central-target CENTRAL_TARGET]
+                    [--local-target LOCAL_TARGET]
+                    [--baseline-manifest BASELINE_MANIFEST]
+                    [--require-wave-gates] [--progress-dir PROGRESS_DIR]
+                    [--exclude-document-id EXCLUDE_DOCUMENT_ID]
+                    [--capture-fixture CAPTURE_FIXTURE]
+                    [--inventory INVENTORY] [--raw-dir RAW_DIR]
+                    [--extracted-dir EXTRACTED_DIR] [--wave WAVE]
+                    [--channel CHANNEL] [--timeout TIMEOUT] [--url URL]
+                    [--regenerate] [--output-dir OUTPUT_DIR]
+                    [--evidence-dir EVIDENCE_DIR]
+                    [--regression-fixtures REGRESSION_FIXTURES]
+                    [--tests-dir TESTS_DIR]
+                    [{discover,crawl,select-local,inventory-local,audit,complete-wave,inspect,report}]
+
+Sample, audit or report a configured VBPL validation run.
+
+positional arguments:
+  {discover,crawl,select-local,inventory-local,audit,complete-wave,inspect,report}
+
+options:
+  -h, --help            show this help message and exit
+  --audit               Alias for the offline audit action
+  --batch-size BATCH_SIZE
+                        Sample size; defaults to saved canonical run or 50
+  --wave-size WAVE_SIZE
+                        Wave size; defaults to saved canonical run or 10
+  --wave-offset WAVE_OFFSET
+                        Offset for continuous milestone progress wave
+                        numbering
+  --sample-manifest SAMPLE_MANIFEST, --state SAMPLE_MANIFEST
+  --report-dir REPORT_DIR
+                        Run reports/evidence directory; defaults to
+                        reports/validation
+  --target-manifest TARGET_MANIFEST
+                        Total-corpus target for the report action; reads
+                        cumulative source reviews
+  --scope-prefix-manifest SCOPE_PREFIX_MANIFEST
+                        Preserve actual source-scope order from an earlier
+                        selected sample
+  --central-target CENTRAL_TARGET
+  --local-target LOCAL_TARGET
+  --baseline-manifest BASELINE_MANIFEST
+                        Previous fixed sample state; audit its RAW without
+                        changing historical evidence
+  --require-wave-gates  Require reviewed cumulative audits and passing tests
+                        before acquiring the next wave
+  --progress-dir PROGRESS_DIR
+                        Overall milestone progress and recovery evidence
+                        directory
+  --exclude-document-id EXCLUDE_DOCUMENT_ID
+                        Additional already-reviewed identity excluded from new
+                        samples
+  --capture-fixture CAPTURE_FIXTURE
+                        Reviewed real-capture fixture membership for the local
+                        inventory
+  --inventory INVENTORY
+  --raw-dir RAW_DIR
+  --extracted-dir EXTRACTED_DIR
+  --wave WAVE
+  --channel CHANNEL
+  --timeout TIMEOUT
+  --url URL
+  --regenerate          Re-extract selected RAW during audit
+  --output-dir OUTPUT_DIR
+                        Report output override; reads evidence from --report-
+                        dir
+  --evidence-dir EVIDENCE_DIR
+                        Report evidence override (repairs, reviews and tests)
+  --regression-fixtures REGRESSION_FIXTURES
+  --tests-dir TESTS_DIR
+                        Test root containing unit/ and regression/

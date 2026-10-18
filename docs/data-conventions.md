@@ -1,6 +1,6 @@
 # Quy ước dữ liệu pháp luật
 
-Schema extracted đã được triển khai: xem [extracted 2.1.0](extracted-schema.md).
+Schema extracted đã được triển khai: xem [extracted 2.3.2](extracted-schema.md).
 Các trường tài liệu canonical và đoạn trích bên dưới vẫn là đề xuất cho các bước sau.
 
 ## Tài liệu
@@ -64,3 +64,22 @@ Dữ liệu gốc cần có phương án sao lưu riêng khi bắt đầu thu th
 
 `data/samples/`, `tests/fixtures/` và `evaluation/datasets/` có thể chứa dữ liệu nhỏ
 để chia sẻ trong repo; kiểm tra quyền sử dụng và loại bỏ thông tin nhạy cảm trước khi commit.
+
+## Canonical Extract and validation evidence
+
+All accepted VBPL Extract bundles live at `data/extracted/vbpl/<source-id>/`,
+independent of sample size. The directory name is the stable source identity
+suffix of `document_id` (`vbpl:<source-id>`), not the legal document number.
+Never overwrite conflicting bundles by filename alone: verify identity, RAW
+provenance, schema, parser fingerprint and accepted output hashes first.
+Future ordinary extraction and validation use this collection. For experiments,
+use a disposable explicit output root and promote only verified results.
+
+The active report and operational state live in `reports/validation/` and its
+`evidence/` directory. Unique earlier acceptance/source-review evidence is in
+`history.zip`, with original repository member paths and SHA-256 values in
+`history-index.json`. A locator `history.zip!/reports/...` identifies an immutable
+member, not a filesystem directory. The baseline-manifest loader reads ZIP locators directly; extract members to a
+temporary directory when reproducing historical commands. Original bytes and commands stay unchanged
+in the archive; active manifests use current paths. Migration dispositions,
+identity comparisons and before/after inventory live in `reports/consolidation/`.

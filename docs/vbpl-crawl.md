@@ -120,9 +120,9 @@ giữ label_raw, relation_type_raw, declared_count, real items; bỏ placeholder
 `--`, giữ mọi số hiệu candidate và URL/identifier, không tự resolve.
 Tab hợp nhất giữ document cards cùng ngày xác thực; mọi tab vẫn riêng JSON.
 
-Xem [schema extracted 2.1.0](extracted-schema.md),
+Xem [schema extracted 2.3.2](extracted-schema.md),
 [JSON Schema](../schemas/extracted.schema.json) và
-[kết quả so sánh mẫu](extract-comparison.md).
+[quy trình kiểm chứng offline](extract-validation-workflow.md).
 
 Validator kiểm tra identity/checksum/schema, bảo toàn text từ actual output,
 source order/hierarchy/table/count/duplicates và parse lặp deterministic.

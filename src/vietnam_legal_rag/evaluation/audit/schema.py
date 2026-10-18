@@ -265,7 +265,7 @@ def markdown(report):
         'Files changed: schema_cleanup.py; extract_quality.py; form_refinement.py; form_validation.py; table_semantics.py; structured_html.py; schemas/extracted.schema.json; audit_vbpl_hierarchy.py; audit_extract_schema.py; test_consistency_cleanup.py; test_form_node_invariant.py; test_form_refinement.py; docs/extracted-schema.md; README.md; generated Extract artifacts and audit reports. The packaged schema uses the existing symlink.', '',
         '```bash', 'PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t .',
         'PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.ingestion.extract_legal_documents --debug-tree',
-        'PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.cli audit schema --raw data/raw/vbpl --extracted data/extracted/vbpl --before /path/to/v2.3.1/extracted --report docs/extract-v2.3.2-schema-audit.json', '```', '',
+        'PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.cli audit schema --raw data/raw/vbpl --extracted data/extracted/vbpl --before /path/to/v2.3.1/extracted --report reports/validation/runtime/schema-audit.json', '```', '',
         'Freeze decision: no additional semantic rules until a new real-world VBPL source exposes a structure that cannot be faithfully represented.', '']
     return '\n'.join(lines)
 

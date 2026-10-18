@@ -1,0 +1,508 @@
+{
+  "command": "PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t . -v > reports/validation/evidence/final-full-tests.txt 2>&1",
+  "tests": 640,
+  "elapsed_seconds": 132.285,
+  "skips": 0,
+  "failures": 0,
+  "errors": 0,
+  "exit_code": 0,
+  "result": "pass",
+  "parser_fingerprint": "988535905f88162fd6fefc9a9636c2bba7d6fa31a632dcd9f2c233637541bbdb",
+  "schema_version": "2.3.2",
+  "parser_version": "2.3.2",
+  "evidence": "evidence/final-full-tests.txt",
+  "previous_results": {
+    "command": "PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t . -v > reports/validation/history.zip!/reports/extract-validation-500/evidence/wave-23-source-reviewed-candidate-full-tests.txt 2>&1",
+    "tests": 640,
+    "skips": 0,
+    "failures": 0,
+    "errors": 0,
+    "exit_code": 0,
+    "result": "pass",
+    "parser_fingerprint": "988535905f88162fd6fefc9a9636c2bba7d6fa31a632dcd9f2c233637541bbdb",
+    "schema_version": "2.3.2",
+    "parser_version": "2.3.2",
+    "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-23-source-reviewed-candidate-full-tests.txt",
+    "previous_results": {
+      "command": "PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t . -v > reports/validation/history.zip!/reports/extract-validation-500/evidence/wave-23-candidate-full-tests.txt 2>&1",
+      "tests": 637,
+      "skips": 0,
+      "failures": 0,
+      "errors": 0,
+      "exit_code": 0,
+      "result": "pass",
+      "parser_fingerprint": "1d9d1d1b42f403aeedd66af30d30087900b10aa7062f9163af4868ac24d4200d",
+      "schema_version": "2.3.2",
+      "parser_version": "2.3.2",
+      "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-23-candidate-full-tests.txt",
+      "previous_results": {
+        "command": "PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t . -v > reports/validation/history.zip!/reports/extract-validation-500/evidence/wave-22-final-candidate-full-tests.txt 2>&1",
+        "tests": 619,
+        "skips": 0,
+        "failures": 0,
+        "errors": 0,
+        "exit_code": 0,
+        "result": "pass",
+        "parser_fingerprint": "13b0715e0d5e2c4370d1487369b63da8e4bbc1e2821b1fac91d6a71cca4eeb94",
+        "schema_version": "2.3.2",
+        "parser_version": "2.3.2",
+        "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-22-final-candidate-full-tests.txt",
+        "previous_results": {
+          "command": "PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t . -v > reports/validation/history.zip!/reports/extract-validation-500/evidence/wave-22-signature-full-tests.txt 2>&1",
+          "tests": 618,
+          "skips": 0,
+          "failures": 0,
+          "errors": 0,
+          "exit_code": 0,
+          "result": "pass",
+          "parser_fingerprint": "dd3b68a5d6f8ea676edd840af5dd0ce8faf0c4186279c4855ea91b391bcb0315",
+          "schema_version": "2.3.2",
+          "parser_version": "2.3.2",
+          "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-22-signature-full-tests.txt",
+          "previous_results": {
+            "command": "PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t . -v > reports/validation/history.zip!/reports/extract-validation-500/evidence/wave-22-repaired-full-tests.txt 2>&1",
+            "tests": 616,
+            "skips": 0,
+            "failures": 0,
+            "errors": 0,
+            "exit_code": 0,
+            "result": "pass",
+            "parser_fingerprint": "3003d6edf79ed87e93de42a10d819d2a987ccd4bf7b6b8f064b789db5af7e7b3",
+            "schema_version": "2.3.2",
+            "parser_version": "2.3.2",
+            "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-22-repaired-full-tests.txt",
+            "previous_results": {
+              "command": "PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t . -v",
+              "tests": 584,
+              "skips": 0,
+              "failures": 0,
+              "errors": 0,
+              "exit_code": 0,
+              "result": "pass",
+              "parser_fingerprint": "62f39b8a334e65a75dc659bc59e763364c6f55f330a529798f5e45f2361412e0",
+              "schema_version": "2.3.2",
+              "parser_version": "2.3.2",
+              "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-21-scope-full-tests.txt",
+              "previous_results": {
+                "command": "PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t . -v",
+                "tests": 578,
+                "skips": 0,
+                "failures": 0,
+                "errors": 0,
+                "exit_code": 0,
+                "result": "pass",
+                "parser_fingerprint": "2ff78c0cc6a60fb3b9bcb394ee94d3de3965647c6e9fd435aba5c9f2b5607880",
+                "schema_version": "2.3.2",
+                "parser_version": "2.3.2",
+                "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-21-final-frozen-full-tests.txt",
+                "previous_results": {
+                  "command": "PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t . -v",
+                  "tests": 555,
+                  "skips": 0,
+                  "failures": 0,
+                  "errors": 0,
+                  "exit_code": 0,
+                  "result": "pass",
+                  "parser_fingerprint": "c9e77545472a0f2c798b2a51670bbdbfa7d7365580f1153c862c981d2e340447",
+                  "schema_version": "2.3.2",
+                  "parser_version": "2.3.2",
+                  "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-20-final-full-tests.txt",
+                  "previous_results": {
+                    "command": "PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t . -v",
+                    "tests": 552,
+                    "skips": 0,
+                    "failures": 0,
+                    "errors": 0,
+                    "exit_code": 0,
+                    "result": "pass",
+                    "parser_fingerprint": "d9de75323ea75f6f057b3c72b865e5cafb46aa6637b21fdd7bcbca1041e1860b",
+                    "schema_version": "2.3.2",
+                    "parser_version": "2.3.2",
+                    "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-19-final-full-tests.txt",
+                    "previous_results": {
+                      "command": "PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t . -v",
+                      "tests": 547,
+                      "skips": 0,
+                      "failures": 0,
+                      "errors": 0,
+                      "exit_code": 0,
+                      "result": "pass",
+                      "parser_fingerprint": "cfad0810b65416c6e5b4407b87d382ae3e3de948abed966a4e69e8c7a93976ec",
+                      "schema_version": "2.3.2",
+                      "parser_version": "2.3.2",
+                      "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-18-final-accepted-full-tests.txt",
+                      "previous_results": {
+                        "command": "PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t . -v",
+                        "tests": 546,
+                        "skips": 0,
+                        "failures": 0,
+                        "errors": 0,
+                        "exit_code": 0,
+                        "result": "pass",
+                        "parser_fingerprint": "bcf217b28cb4215c041df69906ee740cb4a94b83ac6684c2556ca6bab6e619c9",
+                        "schema_version": "2.3.2",
+                        "parser_version": "2.3.2",
+                        "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-18-final-full-tests.txt",
+                        "previous_results": {
+                          "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                          "tests": 538,
+                          "skips": 0,
+                          "failures": 0,
+                          "errors": 0,
+                          "exit_code": 0,
+                          "result": "pass",
+                          "parser_fingerprint": "1226c4d5ec9a1fc379349e376259c9a296cc6999f811b35e932b0c01121bdc7a",
+                          "schema_version": "2.3.2",
+                          "parser_version": "2.3.2",
+                          "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-17-final-accepted-full-tests.txt",
+                          "previous_results": {
+                            "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                            "tests": 528,
+                            "skips": 0,
+                            "failures": 0,
+                            "errors": 0,
+                            "exit_code": 0,
+                            "result": "pass",
+                            "parser_fingerprint": "0551694851307ece1df06bfc67d93bccedaab743312c0d0d0163374fb291fe1d",
+                            "schema_version": "2.3.2",
+                            "parser_version": "2.3.2",
+                            "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-16-first-full-tests.txt",
+                            "previous_results": {
+                              "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                              "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-15-final-full-tests.txt",
+                              "parser_fingerprint": "cf6898a0bd24778afdef3376e073a37594b30c5c453787fddaf75c8a1e196a12",
+                              "tests": 523,
+                              "skips": 0,
+                              "failures": 0,
+                              "errors": 0,
+                              "exit_code": 0,
+                              "result": "pass",
+                              "schema_version": "2.3.2",
+                              "parser_version": "2.3.2",
+                              "previous_results": {
+                                "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-14-final-header-full-tests.txt",
+                                "parser_fingerprint": "8c90d41c9e0cbc34819c8b5be673e9960e8c634f86e59b8a23897519b2509f3b",
+                                "tests": 515,
+                                "skips": 0,
+                                "failures": 0,
+                                "errors": 0,
+                                "exit_code": 0,
+                                "result": "pass",
+                                "schema_version": "2.3.2",
+                                "parser_version": "2.3.2",
+                                "completed_at": "2026-10-11T23:19:42.272534+00:00",
+                                "previous_results": {
+                                  "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                  "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-14-final-full-tests.txt",
+                                  "parser_fingerprint": "d62909deac4041c25adb4d41caf7af410604611daf7fe9942755715a03f0bc1b",
+                                  "tests": 512,
+                                  "skips": 0,
+                                  "failures": 0,
+                                  "errors": 0,
+                                  "exit_code": 0,
+                                  "result": "pass",
+                                  "schema_version": "2.3.2",
+                                  "parser_version": "2.3.2",
+                                  "completed_at": "2026-10-11T23:04:49.795793+00:00",
+                                  "previous_results": {
+                                    "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                    "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-13-final-reviewed-tests.txt",
+                                    "parser_fingerprint": "9e9a8b7d7666ff48e5037d548486ba677547abb487bd890b05e56d574e0ce54d",
+                                    "tests": 488,
+                                    "skips": 0,
+                                    "failures": 0,
+                                    "errors": 0,
+                                    "exit_code": 0,
+                                    "previous_results": {
+                                      "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                      "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-12-final-recovery-tests.txt",
+                                      "parser_fingerprint": "9bb757851d860a4caa04be6006b1a9139200e5639c24f60adcda5d3ada0a7b6e",
+                                      "tests": 479,
+                                      "skips": 0,
+                                      "failures": 0,
+                                      "errors": 0,
+                                      "exit_code": 0,
+                                      "result": "pass",
+                                      "completed_at": "2026-10-11T17:04:38.378728+00:00",
+                                      "schema_version": "2.3.2",
+                                      "parser_version": "2.3.2",
+                                      "previous_results": [
+                                        {
+                                          "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                          "tests": 478,
+                                          "skips": 0,
+                                          "failures": 0,
+                                          "errors": 0,
+                                          "exit_code": 0,
+                                          "result": "pass",
+                                          "parser_fingerprint": "d6a25534fd034b7312674f29b2e257c63458f808ca6ee31e32870740e68f6d16",
+                                          "schema_version": "2.3.2",
+                                          "parser_version": "2.3.2",
+                                          "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-12-recovery-full-tests.txt",
+                                          "completed_at": "2026-10-11T16:58:28.910648+00:00",
+                                          "previous_results": [
+                                            {
+                                              "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                              "tests": 470,
+                                              "skips": 0,
+                                              "failures": 0,
+                                              "errors": 0,
+                                              "result": "pass",
+                                              "parser_fingerprint": "51f1d0b3d82ac5b4f8b07b8dab1082bf6b4983f75491adc85c2d0140fa98d9e3",
+                                              "schema_version": "2.3.2",
+                                              "parser_version": "2.3.2",
+                                              "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-12-verified-full-tests.txt",
+                                              "completed_at": "2026-10-10T12:02:50.157943+00:00",
+                                              "previous_results": [
+                                                {
+                                                  "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                                  "tests": 449,
+                                                  "skips": 0,
+                                                  "failures": 0,
+                                                  "errors": 0,
+                                                  "result": "pass",
+                                                  "parser_fingerprint": "2928e17eedb17e9ba41a4bbf69adef823097e566afb9fb52f53dd7577f929c47",
+                                                  "schema_version": "2.3.2",
+                                                  "parser_version": "2.3.2",
+                                                  "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-11-final-full-tests.txt",
+                                                  "completed_at": "2026-10-10T11:18:49.421900+00:00",
+                                                  "previous_results": [
+                                                    {
+                                                      "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                                      "tests": 437,
+                                                      "skips": 0,
+                                                      "failures": 7,
+                                                      "errors": 0,
+                                                      "result": "failed",
+                                                      "parser_fingerprint": "6f30195e91006f5a2ed55f0ee272f67f9c7afd2b5f61d5c51be8b0f62d1755a1",
+                                                      "schema_version": "2.3.2",
+                                                      "parser_version": "2.3.2",
+                                                      "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-11-regression-candidate.txt",
+                                                      "failed_document_ids": [
+                                                        "vbpl:78155",
+                                                        "vbpl:9799",
+                                                        "vbpl:84524",
+                                                        "vbpl:13cec670-a067-11f1-a046-1d9fd94170da",
+                                                        "vbpl:75226",
+                                                        "vbpl:b260b6e0-6539-11f1-bc75-076118afd391",
+                                                        "vbpl:90930"
+                                                      ],
+                                                      "stale_after_subsequent_parser_corrections": true,
+                                                      "previous_results": [
+                                                        {
+                                                          "parser_fingerprint": "5248ce81068a2827a5d6227072f8aee2064b8e51ae4f5a1ddcd8985e55cad102",
+                                                          "schema_version": "2.3.2",
+                                                          "parser_version": "2.3.2",
+                                                          "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                                          "tests": 411,
+                                                          "skips": 0,
+                                                          "failures": 0,
+                                                          "errors": 0,
+                                                          "result": "pass",
+                                                          "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-10-final-verified-tests.txt",
+                                                          "previous_results": [
+                                                            {
+                                                              "parser_fingerprint": "7dd45a580d687c5100322bcedfc541c8d650d92ca4298ecc5454052c5d9ea91f",
+                                                              "schema_version": "2.3.2",
+                                                              "parser_version": "2.3.2",
+                                                              "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                                              "tests": 408,
+                                                              "skips": 0,
+                                                              "failures": 0,
+                                                              "errors": 0,
+                                                              "result": "pass",
+                                                              "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-10-verified-full-tests.txt",
+                                                              "previous_results": [
+                                                                {
+                                                                  "parser_fingerprint": "0a13393a00a94124d193fc38f5d70b29561c0bcae74fe387c2816e40d3816bc5",
+                                                                  "schema_version": "2.3.2",
+                                                                  "parser_version": "2.3.2",
+                                                                  "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                                                  "tests": 388,
+                                                                  "skips": 0,
+                                                                  "failures": 0,
+                                                                  "errors": 0,
+                                                                  "result": "pass",
+                                                                  "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-9-verified-tests.txt",
+                                                                  "previous_results": [
+                                                                    {
+                                                                      "parser_fingerprint": "57fac9687467c05deba5fb4624b9171ffdc7816850fe46889caa3b91c49f8054",
+                                                                      "schema_version": "2.3.2",
+                                                                      "parser_version": "2.3.2",
+                                                                      "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                                                      "tests": 370,
+                                                                      "skips": 0,
+                                                                      "failures": 0,
+                                                                      "errors": 0,
+                                                                      "result": "passed",
+                                                                      "evidence": "history.zip!/reports/extract-validation-500/evidence/tests-wave-8-reviewed-full.txt",
+                                                                      "previous_results": [
+                                                                        {
+                                                                          "parser_fingerprint": "4e82017efe3b3b2d157b621c10dba6250bcccf09385deec84b70de3238c8bb15",
+                                                                          "schema_version": "2.3.2",
+                                                                          "parser_version": "2.3.2",
+                                                                          "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                                                          "tests": 359,
+                                                                          "skips": 0,
+                                                                          "failures": 0,
+                                                                          "errors": 0,
+                                                                          "result": "passed",
+                                                                          "evidence": "history.zip!/reports/extract-validation-500/evidence/tests-wave-8-full.txt",
+                                                                          "previous_results": [
+                                                                            {
+                                                                              "parser_fingerprint": "aa21618437f4c5b125a4e23490939fc4b939d901ed2d2f1be7652da06ce205b9",
+                                                                              "schema_version": "2.3.2",
+                                                                              "parser_version": "2.3.2",
+                                                                              "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                                                              "tests": 350,
+                                                                              "skips": 0,
+                                                                              "failures": 0,
+                                                                              "errors": 0,
+                                                                              "result": "passed",
+                                                                              "completed_at": "2026-10-09T09:57:22.031841+00:00",
+                                                                              "evidence": "history.zip!/reports/extract-validation-500/evidence/tests-wave-7-recovered-full.txt",
+                                                                              "previous_results": [
+                                                                                {
+                                                                                  "parser_fingerprint": "03c183369b4f97c541089f654dc785c7d1aa4208ce877313650059d87180a7e0",
+                                                                                  "schema_version": "2.3.2",
+                                                                                  "parser_version": "2.3.2",
+                                                                                  "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                                                                  "tests": 348,
+                                                                                  "skips": 0,
+                                                                                  "failures": 4,
+                                                                                  "errors": 0,
+                                                                                  "result": "failed",
+                                                                                  "completed_at": "2026-10-09T07:07:23.659184+00:00",
+                                                                                  "evidence": "reports/validation/history.zip!/reports/extract-validation-500/evidence/tests-wave-7-full.txt",
+                                                                                  "failed_document_ids": [
+                                                                                    "vbpl:0781f27b881b5bf75a3c3b265534be25",
+                                                                                    "vbpl:21754",
+                                                                                    "vbpl:00116f5c255a41e59dca8a99dcf7c25a",
+                                                                                    "vbpl:1832f2f1652ed1f451955e82105019cd"
+                                                                                  ],
+                                                                                  "previous_results": [
+                                                                                    {
+                                                                                      "parser_fingerprint": "dca5ccf757fe5801a7d793d1addfef6d1de0e2098d027f39c4746b7cb692e621",
+                                                                                      "schema_version": "2.3.2",
+                                                                                      "parser_version": "2.3.2",
+                                                                                      "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                                                                      "tests": 342,
+                                                                                      "skips": 0,
+                                                                                      "failures": 0,
+                                                                                      "result": "passed",
+                                                                                      "completed_at": "2026-10-09T00:09:25.826184+00:00"
+                                                                                    }
+                                                                                  ]
+                                                                                }
+                                                                              ]
+                                                                            }
+                                                                          ],
+                                                                          "subsequent_failed_runs": [
+                                                                            {
+                                                                              "tests": 360,
+                                                                              "failures": 3,
+                                                                              "log": "history.zip!/reports/extract-validation-500/evidence/tests-wave-8-final-full.txt",
+                                                                              "reason": "Loss of source-supported names preceding signed status and missing deputy bureau title exposed by conservative signing-name evidence."
+                                                                            },
+                                                                            {
+                                                                              "tests": 363,
+                                                                              "failures": 1,
+                                                                              "log": "history.zip!/reports/extract-validation-500/evidence/tests-wave-8-candidate-full.txt",
+                                                                              "reason": "Reverse signed-status evidence wrongly accepted an all-uppercase source update notice as a name; new negative test preserves it as paragraph."
+                                                                            }
+                                                                          ]
+                                                                        }
+                                                                      ]
+                                                                    },
+                                                                    {
+                                                                      "parser_fingerprint": "e4d80e2d7b7606830d4e88ec5958cd5f0a1de2672f8c118698c25885e5c88d9d",
+                                                                      "schema_version": "2.3.2",
+                                                                      "parser_version": "2.3.2",
+                                                                      "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                                                      "tests": 371,
+                                                                      "skips": 0,
+                                                                      "failures": 0,
+                                                                      "errors": 0,
+                                                                      "result": "passed",
+                                                                      "evidence": "history.zip!/reports/extract-validation-500/evidence/tests-wave-8-source-reviewed-full.txt",
+                                                                      "additional_validation": {
+                                                                        "command": ".venv/bin/python -m unittest tests.regression.test_batch_capture -v",
+                                                                        "tests": 2,
+                                                                        "result": "passed",
+                                                                        "evidence": "history.zip!/reports/extract-validation-500/evidence/tests-wave-8-final-real-captures.txt"
+                                                                      }
+                                                                    },
+                                                                    {
+                                                                      "parser_fingerprint": "f1e5ec3d061506f22211fc7782cf949090a89c465b421e1f720835468694db1a",
+                                                                      "schema_version": "2.3.2",
+                                                                      "parser_version": "2.3.2",
+                                                                      "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                                                                      "tests": 385,
+                                                                      "skips": 0,
+                                                                      "failures": 0,
+                                                                      "errors": 0,
+                                                                      "result": "pass",
+                                                                      "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-9-final-tests.txt"
+                                                                    }
+                                                                  ]
+                                                                }
+                                                              ]
+                                                            }
+                                                          ]
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  }
+                                }
+                              },
+                              "additional_capture_verification": {
+                                "command": "selected184/194/197capture regression plus test_golden module",
+                                "tests": 2,
+                                "result": "pass",
+                                "exit_code": 0,
+                                "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-15-promoted-capture-and-golden-tests.txt"
+                              }
+                            },
+                            "additional_capture_verification": {
+                              "command": "selected202/218real captures plus golden module",
+                              "tests": 2,
+                              "result": "pass",
+                              "exit_code": 0,
+                              "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-16-new-captures-golden-tests.txt"
+                            },
+                            "history.zip!/reports/extract-validation-500/evidence/wave-16-final-full-tests.txt": {
+                              "command": ".venv/bin/python -m unittest discover -s tests -t . -v",
+                              "tests": 529,
+                              "skips": 0,
+                              "failures": 0,
+                              "errors": 0,
+                              "exit_code": 0,
+                              "result": "pass",
+                              "parser_fingerprint": "af70e39c3e07196329284070e1fa8ec641970248be2718354e892e87b0b6dc92",
+                              "schema_version": "2.3.2",
+                              "parser_version": "2.3.2",
+                              "evidence": "history.zip!/reports/extract-validation-500/evidence/wave-16-final-full-tests.txt"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

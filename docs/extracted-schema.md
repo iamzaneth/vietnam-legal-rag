@@ -2,7 +2,6 @@
 
 Extract is source-faithful semantic parsing. RAW HTML and its manifest remain the source of truth. EXTRACTED identifies source-backed structure without rewriting legal meaning, correcting spelling, inventing data, resolving cross-document references, summarizing, chunking or generating embeddings. Normalized will perform canonical field mapping and cross-tab merge; Chunks will create retrieval units and any deterministic structural IDs.
 
-Formal contract: [Draft 2020-12 JSON Schema](../schemas/extracted.schema.json). The packaged schema references this same file. Acceptance specification: [Extract finalization](EXTRACTION_FINALIZATION_SPEC.md). Latest actual-output verification: [finalization audit](extract-v2.3.2-finalization-audit.md), [machine-readable audit](extract-v2.3.2-finalization-audit.json). Earlier audits: [form invariant hotfix](extract-v2.3.2-form-invariant-audit.md), [V2.3.2 cleanup](extract-v2.3.2-schema-audit.md), [V2.2](extract-v2.2-report.md), [V2.3](extract-v2.3-report.md).
 
 ## Artifacts and envelope
 
@@ -135,28 +134,21 @@ The formal JSON Schema validates content, properties, history, relations and man
 ```bash
 PYTHONPATH=src .venv/bin/python -m unittest discover -s tests -t .
 PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.ingestion.extract_legal_documents --debug-tree
-PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.cli audit schema --raw data/raw/vbpl --extracted data/extracted/vbpl --before /path/to/pre-hotfix/v2.3.2/extracted --report docs/extract-v2.3.2-form-invariant-audit.json
+PYTHONPATH=src .venv/bin/python -m vietnam_legal_rag.cli audit schema --raw data/raw/vbpl --extracted data/extracted/vbpl --before /path/to/pre-hotfix/v2.3.2/extracted --report reports/validation/runtime/schema-audit.json
 ```
 
 The freeze audit includes every available representative capture: simple Decision, Decree with annexes, technical Circular with a matrix, Circular with forms/decimal annex numbering, and Resolution. Passing tests alone is insufficient; generated JSON, fallback paragraphs, form boundaries, node/property vocabularies and metadata/table regressions are inspected independently.
 
 ## Broader source validation within V2.3.2
 
-The [50-document batch report](../reports/extract-validation-50/report.md) records five interleaved Central/Local waves, generic parser repairs, source evidence, regression membership and final diagnostics. The schema and parser version remain 2.3.2: all observed structures fit the existing contract.
 
 Explicit English legal labels and legacy spaced hyphen/slash counters use the same legal hierarchy as their Vietnamese counterparts. Quoted replacement provisions, contract articles and Roman/alphabetic local outlines keep their own counter scope. An attached legal act can retain intermediate signing and letterhead blocks in the canonical body without duplicating root document sections. Annex counters and nested lists stay within their source annex/form scope.
 
 Source CSS emphasis, provision-heading classes and bold/shaded table header bands can support classification. Formula and symbol-definition tables retain their physical cells and spans using the existing key_value representation when the source supports that purpose; factual axes are never invented. Missing relation identifiers, headerless table axes, formula media, isolated possible page numbers, duplicated source legal numbers and incomplete quotations keep their diagnostics. For an incomplete quotation, an explicit next sequential amendment can bound local counters without inserting a closing mark.
 
-The final batch has schema_valid, deterministic and meaningful_text_preserved at 50/50. semantic_complete remains 41/50 because nine reviewed documents retain source warnings; the report does not override that flag. The original golden fixture retains all expected invariants and zero warnings/errors/fatals.
+The accepted collection has schema-valid, deterministic and source-faithful
+outputs for all 500 source documents. Reviewed semantic completeness is 300/500;
+200 documents retain source ambiguity. The automated Extract flag is separately
+312/500. See the canonical report and workflow for evidence and rebuilding.
 
-Reproduce validation from the retained local RAW captures:
-
-```bash
-.venv/bin/python -m vietnam_legal_rag.cli validate --help
-.venv/bin/python -m vietnam_legal_rag.cli validate audit --regenerate
-.venv/bin/python -m unittest discover -s tests -t . -q
-.venv/bin/python -m vietnam_legal_rag.cli validate report --output-dir reports/extract-validation-50/runtime/rebuilt
-```
-
-The batch audit exits nonzero when source warnings remain; review the diagnostics rather than treating command success as semantic acceptance. Capture regressions reference immutable local RAW by identity and hash, while portable pattern tests run without those captures. The crawler's existing HTML-only policy excludes Tải về and Văn bản gốc; attachment validation is outside this recorded batch.
+Formal contract: [JSON Schema](../schemas/extracted.schema.json). Acceptance rules: [specification](EXTRACTION_FINALIZATION_SPEC.md). Current evidence: [report](../reports/validation/report.md).

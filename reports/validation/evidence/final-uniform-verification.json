@@ -1,0 +1,39 @@
+{
+  "verified_at": "2026-10-15T07:40:33.523347+00:00",
+  "parser_fingerprint": "988535905f88162fd6fefc9a9636c2bba7d6fa31a632dcd9f2c233637541bbdb",
+  "target_documents": 500,
+  "actually_regenerated": 500,
+  "independently_audited": 500,
+  "raw_hashes_unchanged": 500,
+  "approved_extract_bundles_byte_identical": 500,
+  "quality_counts": {
+    "meaningful_text_preserved": 500,
+    "deterministic": 500,
+    "schema_valid": 500,
+    "semantic_complete": 312
+  },
+  "statuses": {
+    "success": 312,
+    "success_with_warnings": 188
+  },
+  "diagnostics": {
+    "info": 1354,
+    "warning": 873,
+    "error": 0,
+    "fatal": 0
+  },
+  "semantic_complete": 300,
+  "source_ambiguity_retained": 200,
+  "parser_failure": 0,
+  "unexplained_semantic_failure": 0,
+  "source_scope_counts": {
+    "trung_uong": 250,
+    "dia_phuong": 250
+  },
+  "source_review_basis": "All500 current-parser source reviews remain valid: frozen approved output/RAW hashes exactly match every forced final regeneration and independent audit.",
+  "final_test_gate_pending": false,
+  "repository_hygiene_pending": false,
+  "final_test_evidence": "evidence/final-full-tests.txt",
+  "repository_hygiene_evidence": "evidence/repository-hygiene.json",
+  "post_hygiene_test_evidence": "evidence/post-hygiene-tests.txt"
+}

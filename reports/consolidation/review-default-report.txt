@@ -1,0 +1,47 @@
+{
+  "target_total": 500,
+  "target_assembled": 500,
+  "current_parser_validated": 500,
+  "source_reviewed": 500,
+  "pending_target_assembly": 0,
+  "pending_current_parser_validation": 0,
+  "acceptance_complete": true,
+  "statuses": {
+    "success": 312,
+    "success_with_warnings": 188,
+    "failed": 0
+  },
+  "quality": {
+    "schema_valid": {
+      "count": 500,
+      "evaluated": 500,
+      "rate": 1.0
+    },
+    "deterministic": {
+      "count": 500,
+      "evaluated": 500,
+      "rate": 1.0
+    },
+    "meaningful_text_preserved": {
+      "count": 500,
+      "evaluated": 500,
+      "rate": 1.0
+    },
+    "semantic_complete": {
+      "count": 312,
+      "evaluated": 500,
+      "rate": 0.624
+    }
+  },
+  "source_ambiguity_retained": 200,
+  "parser_failure": 0,
+  "unexplained_semantic_failure": 0,
+  "diagnostics": {
+    "info": 1354,
+    "warning": 873,
+    "error": 0,
+    "fatal": 0
+  },
+  "unresolved_ids": [],
+  "corpus_validation_complete": true
+}
